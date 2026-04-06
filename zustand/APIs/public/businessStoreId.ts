@@ -5,6 +5,7 @@ export type ProfileDetails = {
   id: string;
   name: string;
   description: string;
+  phoneNumber: string,
   webSite: string;
   tikTok: string;
   instagram: string;

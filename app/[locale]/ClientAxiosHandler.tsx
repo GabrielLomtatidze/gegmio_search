@@ -12,7 +12,7 @@ export default function ClientAxiosHandler({ locale }: { locale: string }) {
             (error) => {
                 if (error.response?.status === 401) {
                     setAuthenticated(false);
-                    window.location.href = `/${locale}/login`;
+                    window.location.href = `/${locale}/auth/login`;
                 }
                 return Promise.reject(error);
             }

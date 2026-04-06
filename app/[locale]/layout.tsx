@@ -59,7 +59,7 @@ export default async function RootLayout({ children, params }: LayoutProps<'/[lo
   const { locale } = await params;
 
   return (
-    <html lang={locale}>
+    <html lang={locale} data-scroll-behavior="smooth">
       <body className="min-h-full flex flex-col bg-[#0F0F0F]">
         <NextIntlClientProvider locale={locale}>
           {children}

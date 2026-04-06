@@ -169,13 +169,13 @@
 
 "use client";
 
-import Card from "@/components/cards/card";
-import CardSkeleton from "@/components/skeletons/cardSkeleton";
 import { useEffect, useState, useMemo } from "react";
 import { Search } from "lucide-react";
 import { useTranslations } from "next-intl";
 import debounce from "lodash.debounce";
 import { useBusinessStore } from "@/zustand/APIs/public/businessStore";
+import Card from "@/components/cards/card";
+import CardSkeleton from "@/components/skeletons/cardSkeleton";
 
 export default function Main() {
   const t = useTranslations();
@@ -186,30 +186,25 @@ export default function Main() {
   const [longitude, setLongitude] = useState<number | null>(null);
   const [locationResolved, setLocationResolved] = useState(false);
 
-  // Get user location
   useEffect(() => {
     if (!navigator.geolocation) {
       setLocationResolved(true);
       return;
     }
-
     navigator.geolocation.getCurrentPosition(
       (position) => {
         setLatitude(position.coords.latitude);
         setLongitude(position.coords.longitude);
         setLocationResolved(true);
       },
-      () => {
-        setLocationResolved(true);
-      }
+      () => setLocationResolved(true)
     );
   }, []);
 
-  // Debounced fetch
   const debouncedFetchBusiness = useMemo(() => {
     return debounce(
       (query: string, lat?: number, lng?: number) => {
-        const params: any = { searchKey: query };
+        const params: Record<string, any> = { searchKey: query };
         if (lat !== undefined && lng !== undefined) {
           params.latitude = lat;
           params.longitude = lng;
@@ -220,38 +215,30 @@ export default function Main() {
     );
   }, [fetchBusiness]);
 
-  // Fetch business on search or location change
   useEffect(() => {
     if (!locationResolved) return;
 
     const hasLocation = latitude !== null && longitude !== null;
+    const params: Record<string, any> = { searchKey: search };
+
+    if (hasLocation) {
+      params.latitude = latitude!;
+      params.longitude = longitude!;
+    }
 
     if (search === "") {
-      const params: any = { searchKey: "" };
-      if (hasLocation) {
-        params.latitude = latitude!;
-        params.longitude = longitude!;
-      }
       fetchBusiness(params);
       return;
     }
 
-    debouncedFetchBusiness(
-      search,
-      hasLocation ? latitude! : undefined,
-      hasLocation ? longitude! : undefined
-    );
+    debouncedFetchBusiness(search, hasLocation ? latitude! : undefined, hasLocation ? longitude! : undefined);
 
-    return () => {
-      debouncedFetchBusiness.cancel();
-    };
+    return () => debouncedFetchBusiness.cancel();
   }, [search, latitude, longitude, locationResolved, debouncedFetchBusiness, fetchBusiness]);
-
-  const countedBusinesses = businessStore.length;
 
   return (
     <>
-      <div className="w-full flex justify-center mt-[20px]">
+      <div className="w-full flex justify-center mt-5">
         <div className="w-full max-w-7xl px-4 md:px-[100px] flex flex-col md:flex-row md:justify-between gap-3">
           <div className="flex flex-wrap md:flex-nowrap gap-3 w-full md:w-auto justify-center md:justify-start">
             <div className="flex-1 min-w-[180px] h-[42px] flex items-center bg-[#0f0f0f] px-4 border border-[#2b2b2b] rounded-xl focus-within:border-[#F94B00] transition">
@@ -289,7 +276,7 @@ export default function Main() {
           <div className="flex md:justify-center w-full md:w-[109px] gap-[8px] items-center mt-2 md:mt-0">
             <div className="w-[8px] h-[8px] bg-[#F94B00] rounded-full" />
             <h3 className="text-[16px] text-white font-bold">{t("pages.result")}</h3>
-            <h3 className="text-[16px] text-[#a7a7a7] font-bold">({countedBusinesses})</h3>
+            <h3 className="text-[16px] text-[#a7a7a7] font-bold">({businessStore.length})</h3>
           </div>
         </div>
       </div>
@@ -297,23 +284,18 @@ export default function Main() {
       <div className="flex flex-wrap justify-center gap-6 mt-6 mb-6 max-w-7xl mx-auto">
         {loading
           ? Array.from({ length: 8 }).map((_, i) => <CardSkeleton key={i} />)
-          : businessStore?.length > 0
-          ? businessStore.map((item: any) => {
-              const imageSource = item?.file?.url || "/images/start.svg";
-              return (
-                <Card
-                  key={item.id}
-                  businessId={item.id}
-                  isFavorite={item.isFavorite}
-                  title={item.name}
-                  image={imageSource}
-                  address={item.addressName}
-                  businessCategory={item.businessCategory.name}
-                  distance={item.distnace?.toFixed(2)}
-                />
-              );
-            })
-          : null}
+          : businessStore.map((item: any) => (
+              <Card
+                key={item.id}
+                businessId={item.id}
+                isFavorite={item.isFavorite}
+                title={item.name}
+                image={item.file?.url || "/images/start.svg"}
+                address={item.addressName}
+                businessCategory={item.businessCategory.name}
+                distance={item.distnace?.toFixed(2)}
+              />
+            ))}
       </div>
     </>
   );

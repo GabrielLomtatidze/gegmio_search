@@ -18,10 +18,9 @@ export default function Header() {
 
         if (token) {
             fetchUserInfo();
-            setAuthenticated(true)
+            setAuthenticated(true);
         }
-    }, [fetchUserInfo, setAuthenticated]);
-
+    }, []);
 
     const [openProfileModal, setOpenProfileModal] = useState(false);
     const [mobileMenuOpen, setMobileMenuOpen] = useState(false);

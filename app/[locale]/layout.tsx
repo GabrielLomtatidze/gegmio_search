@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import ClientAxiosHandler from "./ClientAxiosHandler";
 import "./globals.css";
 import { NextIntlClientProvider } from "next-intl";
 
@@ -62,6 +63,7 @@ export default async function RootLayout({ children, params }: LayoutProps<'/[lo
     <html lang={locale} data-scroll-behavior="smooth">
       <body className="min-h-full flex flex-col bg-[#0F0F0F]">
         <NextIntlClientProvider locale={locale}>
+          <ClientAxiosHandler locale={locale} />
           {children}
         </NextIntlClientProvider>
       </body>

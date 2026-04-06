@@ -17,13 +17,16 @@ export default function Favorite() {
     const [loading, setLoading] = useState(false);
 
     useEffect(() => {
+
+        const accessToken = localStorage.getItem("accessToken");
+
+        if (!accessToken) return;
+        
         const getFavorites = async () => {
             setLoading(true);
 
             try {
-                const accessToken = localStorage.getItem("accessToken");
 
-                if(!accessToken) return;
 
                 const params: any = {};
 
@@ -54,7 +57,7 @@ export default function Favorite() {
     }, [search]);
 
     const countedBusinesses = favorites.length;
-    
+
 
     return (
         <>

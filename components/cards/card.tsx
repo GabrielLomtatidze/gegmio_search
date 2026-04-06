@@ -3,7 +3,6 @@ import { useState, useEffect } from "react";
 import { useTranslations } from "next-intl";
 import { useAuthPositionStore } from "@/zustand/User/userPositionStore";
 import axios from "axios";
-import Link from "next/link";
 
 type Props = {
     businessId: string,
@@ -80,7 +79,6 @@ export default function Card({ businessId, isFavorite, title, image, address, bu
                     />
                 </button>
 
-                <Link href={`/Business/${businessId}`}>
                     <div className="cursor-pointer">
 
                         <div className="w-full h-[180px] relative">
@@ -119,7 +117,6 @@ export default function Card({ businessId, isFavorite, title, image, address, bu
                             </p>
                         </div>
                     </div>
-                </Link>
             </div>
         </>
     )

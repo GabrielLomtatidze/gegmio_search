@@ -8,14 +8,20 @@ import { useRouter, usePathname } from "next/navigation";
 
 export default function Header() {
     const t = useTranslations();
-    const { userInfo } = useUserStore();
+    const { userInfo, fetchUserInfo } = useUserStore();
     const setAuthenticated = useAuthPositionStore((state) => state.setAuthenticated);
     const [accessToken, setAccessToken] = useState<string | null>(null);
 
     useEffect(() => {
         const token = localStorage.getItem("accessToken");
         setAccessToken(token);
-    }, []);
+
+        if (token) {
+            fetchUserInfo();
+            setAuthenticated(true)
+        }
+    }, [fetchUserInfo, setAuthenticated]);
+
 
     const [openProfileModal, setOpenProfileModal] = useState(false);
     const [mobileMenuOpen, setMobileMenuOpen] = useState(false);

@@ -11,21 +11,6 @@ import { useUserStore } from "@/zustand/User/profileStore";
 export default function Home() {
   
 
-  
-  const { fetchUserInfo } = useUserStore();
-
-  useEffect(() => {
-
-    const accessToken = localStorage.getItem("accessToken");
-    
-    if (!accessToken) return;
-
-    fetchUserInfo();
-  }, []);
-
-
-  
-
   return (
     <div className="bg-[#0F0F0F] min-h-screen">
       <Header />

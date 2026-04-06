@@ -23,6 +23,8 @@ export default function Favorite() {
             try {
                 const accessToken = localStorage.getItem("accessToken");
 
+                if(!accessToken) return;
+
                 const params: any = {};
 
                 if (search.trim() !== "") {

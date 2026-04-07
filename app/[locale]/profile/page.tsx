@@ -3,137 +3,176 @@ import { FaChevronRight } from 'react-icons/fa';
 import { useTranslations } from "next-intl";
 import Header from '@/components/header';
 import Footer from '@/components/footer';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Eye, EyeOff } from "lucide-react";
-import { useEffect } from 'react';
 import { useUserStore } from '@/zustand/User/profileStore';
 import axios from 'axios';
-import { InputOTP, InputOTPGroup, InputOTPSlot, InputOTPSeparator, } from "@/components/ui/input-otp";
+import { Spinner } from '@/components/ui/spinner';
 
-interface Errors {
-    email: string;
+interface PasswordErrors {
     password: string;
     repeatPassword: string;
-    otp: string;
+}
+
+interface ProfileForm {
+    firstName: string;
+    lastName: string;
+    birthDate: string;
+    phoneNumber: string;
+    email: string;
+}
+
+interface ProfileErrors {
+    firstName: string;
+    lastName: string;
+    phoneNumber: string;
+    email: string;
 }
 
 export default function Profile() {
 
     const t = useTranslations();
-    const { userInfo } = useUserStore()
+    const { userInfo } = useUserStore();
 
     const [openModal, setOpenModal] = useState<boolean>(false);
-    const [email, setEmail] = useState<string>("");
-    const [password, setPassword] = useState<string>("");
-    const [showPassword, setShowPassword] = useState<boolean>(false);
-    const [repeatPassword, setRepeatPassword] = useState<string>("");
-    const [otp, setOtp] = useState<string>("");
-    const [showRepeatPassword, setShowRepeatPassword] = useState<boolean>(false);
-    const [rememberMe, setRememberMe] = useState<boolean>(false);
-    const [loading, setLoading] = useState<boolean>(false);
-    const [errors, setErrors] = useState<Errors>({ email: "", password: "", repeatPassword: "", otp: "", });
-    const [timecounter, setTimeCounter] = useState<number>(30);
-    const [isTimerActive, setIsTimerActive] = useState<boolean>(false);
-    const [showOtpInput, setShowOtpInput] = useState(false);
+    const [oldPassword, setOldPassword] = useState<string>("");
+    const [newPassword, setNewPassword] = useState<string>("");
+    const [showNewPassword, setShowNewPassword] = useState<boolean>(false);
+    const [repeatNewPassword, setRepeatNewPassword] = useState<string>("");
+    const [showRepeatNewPassword, setShowRepeatNewPassword] = useState<boolean>(false);
+    const [passwordLoading, setPasswordLoading] = useState<boolean>(false);
+    const [profileLoading, setProfileLoading] = useState<boolean>(false);
 
+    const [passwordErrors, setPasswordErrors] = useState<PasswordErrors>({ password: "", repeatPassword: "" });
+
+    const [profileForm, setProfileForm] = useState<ProfileForm>({
+        firstName: "",
+        lastName: "",
+        birthDate: "",
+        phoneNumber: "",
+        email: "",
+    });
+
+    const [profileErrors, setProfileErrors] = useState<ProfileErrors>({
+        firstName: "",
+        lastName: "",
+        phoneNumber: "",
+        email: "",
+    });
 
     useEffect(() => {
-        if (isTimerActive && timecounter > 0) {
-            const interval = setInterval(() => {
-                setTimeCounter((p) => p - 1);
-            }, 1000);
-            return () => clearInterval(interval);
-        } else if (timecounter <= 0) {
-            setIsTimerActive(false);
-            setTimeCounter(30);
+        if (userInfo) {
+            setProfileForm({
+                firstName: userInfo.firstName || "",
+                lastName: userInfo.lastName || "",
+                birthDate: userInfo.birthDate ? userInfo.birthDate.split("T")[0] : "",
+                phoneNumber: userInfo.phoneNumber || "",
+                email: userInfo.email || "",
+            });
         }
-    }, [isTimerActive, timecounter]);
+    }, [userInfo]);
 
-     const getCode = async () => {
+    const handleProfileChange = (field: keyof ProfileForm, value: string) => {
+        setProfileForm(prev => ({ ...prev, [field]: value }));
+        setProfileErrors(prev => ({ ...prev, [field]: "" }));
+    };
+
+    const validateProfile = (): boolean => {
+        const newErrors: ProfileErrors = { firstName: "", lastName: "", phoneNumber: "", email: "" };
+
+        if (!profileForm.firstName.trim()) newErrors.firstName = t("auth.errors.first_name_required");
+        if (profileForm.firstName.length > 50) newErrors.firstName = t("auth.errors.first_name_max_50");
+        if (!profileForm.lastName.trim()) newErrors.lastName = t("auth.errors.last_name_required");
+        if (profileForm.lastName.length > 50) newErrors.lastName = t("auth.errors.last_name_max_50");
+        if (!profileForm.email.trim() || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(profileForm.email)) {
+            newErrors.email = t("auth.errors.valid_email");
+        }
+        if (profileForm.phoneNumber && !/^\+\d{8,15}$/.test(profileForm.phoneNumber)) {
+            newErrors.phoneNumber = t("auth.errors.valid_phone");
+        }
+
+        setProfileErrors(newErrors);
+        return !Object.values(newErrors).some(err => err !== "");
+    };
+
+    const saveProfile = async (e: any) => {
+        e.preventDefault();
+        if (!validateProfile()) return;
 
         try {
-            const accessToken: string | null = await localStorage.getItem("accessToken");
+            setProfileLoading(true);
+            const accessToken = localStorage.getItem("accessToken");
 
-            const newErrors: Errors = {
-                email: "",
-                password: "",
-                repeatPassword: "",
-                otp: ""
-            }
-
-            if (userInfo?.email === email) {
-                await axios.post(
-                    `https://bookitcrm.runasp.net/api/v1/account/password-reset?email=${(email)}`, null,
-                    {
-                        headers: {
-                            Accept: "*/*",
-                            "Accept-Language": "ka-GE",
-                            Authorization: `Bearer ${accessToken}`,
-                            "Content-Type": "application/json",
-                        },
+            await axios.post(
+                `https://bookitcrm.runasp.net/api/v1/account/edit-profile`,
+                {
+                    firstName: profileForm.firstName,
+                    lastName: profileForm.lastName,
+                    birthDate: profileForm.birthDate ? new Date(profileForm.birthDate).toISOString() : null,
+                    phoneNumber: profileForm.phoneNumber,
+                    email: profileForm.email,
+                },
+                {
+                    headers: {
+                        Authorization: `Bearer ${accessToken}`,
                     }
-                );
+                }
+            );
 
-                setIsTimerActive(true);
-                setShowOtpInput(true);
-
-            } else {
-                newErrors.email = t("auth.errors.valid_email");
+        } catch (error: any) {
+            if (error?.response?.status === 400) {
+                setProfileErrors(prev => ({ ...prev, email: t("auth.errors.email_used") }));
             }
-            setErrors(newErrors);
-
-
-        } catch (error) {
-            console.log(error);
-        };
+        } finally {
+            setProfileLoading(false);
+        }
     };
 
     const saveUpdatedPassword = async (e: any) => {
         e.preventDefault();
 
-        let newErrors: Errors = { email: "", password: "", repeatPassword: "", otp: "" };
+        const newErrors: PasswordErrors = { password: "", repeatPassword: "" };
 
-        if (!otp || otp.length < 6) {
-            newErrors.otp = "Enter valid code";
-        }
-
-        if (password !== repeatPassword) {
+        if (newPassword !== repeatNewPassword) {
             newErrors.repeatPassword = t("auth.errors.password_mismatch");
         }
 
-        setErrors(newErrors);
-
-        const hasError = Object.values(newErrors).some((err) => err !== "");
-        if (hasError) return;
+        setPasswordErrors(newErrors);
+        if (Object.values(newErrors).some(err => err !== "")) return;
 
         try {
-            setLoading(true);
+            setPasswordLoading(true);
+            const accessToken = localStorage.getItem("accessToken");
 
             await axios.post(
-                `https://bookitcrm.runasp.net/api/v1/account/password-confirmation`,
+                `https://bookitcrm.runasp.net/api/v1/account/change-password`,
                 {
-                    confirmationCode: otp,
-                    newPassword: password,
-                    newPasswordConfirm: repeatPassword,
+                    oldPassword,
+                    newPassword,
+                    newPasswordConfirm: repeatNewPassword,
+                },
+                {
+                    headers: {
+                        Authorization: `Bearer ${accessToken}`,
+                    }
                 }
             );
 
-            setEmail("");
-            setOtp("");
-            setPassword("");
-            setRepeatPassword("");
-            setShowOtpInput(false);
+            setOldPassword("");
+            setNewPassword("");
+            setRepeatNewPassword("");
+            setOpenModal(false);
 
-        } catch (error) {
-            console.log(error);
+        } catch (error: any) {
+            if (error?.response?.status === 400) {
+                setPasswordErrors(prev => ({ ...prev, password: t("auth.errors.wrong_old_password") }));
+            }
         } finally {
-            setLoading(false);
+            setPasswordLoading(false);
         }
     };
 
-
     return (
-
         <>
             <div className="min-h-screen flex flex-col bg-[#0F0F0F]">
 
@@ -158,68 +197,96 @@ export default function Profile() {
                                     <p className="text-[#a7a7a7] text-sm">{t("pages.profile_subtitle")}</p>
                                 </div>
 
-                                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                <form onSubmit={saveProfile}>
+                                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
 
-                                    <div className="flex flex-col gap-2">
-                                        <label className="text-[14px] text-white">{t("pages.full_name")}</label>
-                                        <input
-                                            type="text"
-                                            placeholder={t("pages.full_name")}
-                                            className="bg-transparent h-[48px] text-[14px] border border-[#2b2b2b] rounded-lg p-3 outline-none focus:border-white transition"
-                                        />
+                                        <div className="flex flex-col gap-2">
+                                            <label className="text-[14px] text-white">{t("auth.first_name")}</label>
+                                            <input
+                                                type="text"
+                                                placeholder={t("auth.first_name")}
+                                                value={profileForm.firstName}
+                                                onChange={(e) => handleProfileChange("firstName", e.target.value)}
+                                                className="bg-transparent h-[48px] text-[14px] border border-[#2b2b2b] rounded-lg p-3 outline-none focus:border-white transition"
+                                            />
+                                            {profileErrors.firstName && <span className="text-red-500 text-sm">{profileErrors.firstName}</span>}
+                                        </div>
+
+                                        <div className="flex flex-col gap-2">
+                                            <label className="text-[14px] text-white">{t("auth.last_name")}</label>
+                                            <input
+                                                type="text"
+                                                placeholder={t("auth.last_name")}
+                                                value={profileForm.lastName}
+                                                onChange={(e) => handleProfileChange("lastName", e.target.value)}
+                                                className="bg-transparent h-[48px] text-[14px] border border-[#2b2b2b] rounded-lg p-3 outline-none focus:border-white transition"
+                                            />
+                                            {profileErrors.lastName && <span className="text-red-500 text-sm">{profileErrors.lastName}</span>}
+                                        </div>
+
+                                        <div className="flex flex-col gap-2">
+                                            <label className="text-[14px] text-white">{t("auth.birth_date")}</label>
+                                            <input
+                                                type="date"
+                                                value={profileForm.birthDate}
+                                                onChange={(e) => handleProfileChange("birthDate", e.target.value)}
+                                                className="bg-transparent h-[48px] text-[14px] border border-[#2b2b2b] rounded-lg p-3 outline-none focus:border-white transition"
+                                            />
+                                        </div>
+
+                                        <div className="flex flex-col gap-2">
+                                            <label className="text-[14px] text-white">{t("auth.email_label")}</label>
+                                            <input
+                                                type="email"
+                                                placeholder="your@gmail.com"
+                                                value={profileForm.email}
+                                                onChange={(e) => handleProfileChange("email", e.target.value)}
+                                                className="bg-transparent h-[48px] text-[14px] border border-[#2b2b2b] rounded-lg p-3 outline-none focus:border-white transition"
+                                            />
+                                            {profileErrors.email && <span className="text-red-500 text-sm">{profileErrors.email}</span>}
+                                        </div>
+
+                                        <div className="flex flex-col gap-2">
+                                            <label className="text-[14px] text-white">{t("pages.mobile_number")}</label>
+                                            <input
+                                                type="text"
+                                                placeholder="+99555555555"
+                                                value={profileForm.phoneNumber}
+                                                onChange={(e) => handleProfileChange("phoneNumber", e.target.value)}
+                                                className="bg-transparent h-[48px] text-[14px] border border-[#2b2b2b] rounded-lg px-4 py-3 outline-none focus:border-white transition"
+                                            />
+                                            {profileErrors.phoneNumber && <span className="text-red-500 text-sm">{profileErrors.phoneNumber}</span>}
+                                        </div>
+
                                     </div>
 
-                                    <div className="flex flex-col gap-2">
-                                        <label className="text-[14px] text-white">
-                                            {t("pages.birth_date")}
-                                        </label>
-                                        <input
-                                            type="date"
-                                            className="bg-transparent h-[48px] text-[14px] border border-[#2b2b2b] rounded-lg p-3 outline-none focus:border-white transition"
-                                        />
-                                    </div>
-
-                                    <div className="flex flex-col gap-2">
-                                        <label className="text-[14px] text-white">{t("pages.email")}</label>
-                                        <input
-                                            type="email"
-                                            placeholder="your@gmail.com"
-                                            className="bg-transparent h-[48px] text-[14px] border border-[#2b2b2b] rounded-lg p-3 outline-none focus:border-white transition"
-                                        />
-                                    </div>
-
-                                    <div className="flex flex-col gap-2">
-                                        <label className="text-[14px] text-white">{t("pages.mobile_number")}</label>
-                                        <input
-                                            type="text"
-                                            placeholder="555 555 555"
-                                            className="bg-transparent h-[48px] text-[14px] border border-[#2b2b2b] rounded-lg px-4 py-3 outline-none focus:border-white transition"
-                                        />
-                                    </div>
-
-                                </div>
-
-                                <div className="mt-6" onClick={() => setOpenModal(true)}>
-                                    <div className="flex items-center justify-between bg-[#22140E] rounded-xl p-4 cursor-pointer hover:bg-[#22120c] transition">
-                                        <div className="flex items-center gap-3">
+                                    <div className="mt-6" onClick={() => setOpenModal(true)}>
+                                        <div className="flex items-center justify-between bg-[#22140E] rounded-xl p-4 cursor-pointer hover:bg-[#22120c] transition">
+                                            <div className="flex items-center gap-3">
+                                                <div className="w-10 h-10 flex items-center justify-center rounded-lg bg-[#FFEDE5]">
+                                                    <img src="/images/lock.svg" alt="lock" />
+                                                </div>
+                                                <div>
+                                                    <p className="font-medium">{t("pages.password_section")}</p>
+                                                    <p className="text-sm text-[#a7a7a7]">{t("pages.password_subtext")}</p>
+                                                </div>
+                                            </div>
                                             <div className="w-10 h-10 flex items-center justify-center rounded-lg bg-[#FFEDE5]">
-                                                <img src="/images/lock.svg" alt="lock" />
+                                                <FaChevronRight color="#F94B00" />
                                             </div>
-                                            <div>
-                                                <p className="font-medium">{t("pages.password_section")}</p>
-                                                <p className="text-sm text-[#a7a7a7]">{t("pages.password_subtext")}</p>
-                                            </div>
-                                        </div>
-
-                                        <div className="w-10 h-10 flex items-center justify-center rounded-lg bg-[#FFEDE5]">
-                                            <FaChevronRight color="#F94B00" />
                                         </div>
                                     </div>
-                                </div>
 
-                                <div className="mt-6 flex justify-end">
-                                    <button className="bg-[#2b2b2b] text-[#a7a7a7] px-6 py-3 rounded-lg cursor-not-allowed">{t("pages.save_changes")}</button>
-                                </div>
+                                    <div className="mt-6 flex justify-end">
+                                        <button
+                                            type="submit"
+                                            disabled={profileLoading}
+                                            className="bg-[#F94B00] text-white px-6 py-3 rounded-lg disabled:opacity-50 disabled:cursor-not-allowed transition"
+                                        >
+                                            {profileLoading ? <Spinner /> : t("pages.save_changes")}
+                                        </button>
+                                    </div>
+                                </form>
 
                             </div>
                         </div>
@@ -227,8 +294,8 @@ export default function Profile() {
                 </div>
 
                 {openModal && (
-                    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 bg-opacity-70" onClick={() => setOpenModal(false)} >
-                        <div className="w-[376px] h-[494px] flex flex-col border border-[#2b2b2b] rounded-xl bg-[#0F0F0F] p-[24px]" onClick={(e) => e.stopPropagation()}>
+                    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50" onClick={() => setOpenModal(false)}>
+                        <div className="w-[390px] flex flex-col border border-[#2b2b2b] rounded-xl bg-[#0F0F0F] p-[24px]" onClick={(e) => e.stopPropagation()}>
 
                             <div className="w-full flex flex-col justify-center items-center">
                                 <h3 className="text-white text-[18px] font-bold">
@@ -242,92 +309,62 @@ export default function Profile() {
                             <form onSubmit={saveUpdatedPassword} className="flex flex-col gap-4 mt-[32px]">
 
                                 <div>
-                                    <label className="text-sm text-gray-300 mb-1 block">
-                                        {t("auth.email_label")}
+                                    <label className="text-sm text-white mb-1 block">
+                                        {t("auth.old_password")}
                                     </label>
-
-                                    <div className="relative">
-                                        <input placeholder="your@gmail.com" className="w-full h-[48px] rounded-xl text-white px-4 bg-transparent border border-[#2b2b2b]" value={email} onChange={(e) =>setEmail(e.target.value.replace(/\s/g, "")) } />
-
-                                        <button
-                                            type="button"
-                                            onClick={getCode}
-                                            disabled={isTimerActive}
-                                            className="absolute right-2 top-1/2 -translate-y-1/2 px-[10px] py-[5px] text-sm bg-[#F94B00] text-white rounded-lg"
-                                        >
-                                            {isTimerActive ? `${timecounter}s` : t("pages.get_code")}
-                                        </button>
-                                    </div>
-
-                                    {errors.email && (
-                                        <span className="text-red-500 text-sm">{errors.email}</span>
+                                    <input
+                                        type="password"
+                                        placeholder="********"
+                                        className="w-full h-[48px] rounded-xl text-white px-4 bg-transparent border border-[#2b2b2b]"
+                                        value={oldPassword}
+                                        onChange={(e) => setOldPassword(e.target.value.replace(/\s/g, ""))}
+                                    />
+                                    {passwordErrors.password && (
+                                        <span className="text-red-500 text-sm">{passwordErrors.password}</span>
                                     )}
                                 </div>
 
-                                {showOtpInput && (
-                                    <div>
-                                        <InputOTP maxLength={6} onChange={setOtp}>
-                                            <InputOTPGroup className="gap-2">
-                                                {[0, 1, 2].map((i) => (
-                                                    <InputOTPSlot key={i} index={i} className="w-10 h-12 rounded-lg text-lg border border-[#2B2B2B] bg-transparent text-white" />
-                                                ))}
-                                            </InputOTPGroup>
-
-                                            <InputOTPSeparator className="mx-2 text-gray-500" />
-
-                                            <InputOTPGroup className="gap-2">
-                                                {[3, 4, 5].map((i) => (
-                                                    <InputOTPSlot key={i} index={i} className="w-10 h-12 rounded-lg text-lg border border-[#2B2B2B] bg-transparent text-white" />
-                                                ))}
-                                            </InputOTPGroup>
-                                        </InputOTP>
-
-                                        {errors.otp && (
-                                            <span className="text-red-500 text-sm">{errors.otp}</span>
-                                        )}
-                                    </div>
-                                )}
-
                                 <div className="relative">
+                                    <label className="text-sm text-white mb-1 block">
+                                        {t("auth.password_label")}
+                                    </label>
                                     <input
-                                        type={showPassword ? "text" : "password"}
+                                        type={showNewPassword ? "text" : "password"}
                                         placeholder="********"
                                         className="w-full h-[48px] rounded-xl text-white px-4 bg-transparent border border-[#2b2b2b]"
-                                        value={password}
-                                        onChange={(e) => setPassword(e.target.value)}
+                                        value={newPassword}
+                                        onChange={(e) => setNewPassword(e.target.value)}
                                     />
-                                    <button
-                                        type="button"
-                                        onClick={() => setShowPassword(!showPassword)}
-                                        className="absolute right-4 top-1/2 -translate-y-1/2 text-white"
-                                    >
-                                        {showPassword ? <EyeOff size={20} /> : <Eye size={20} />}
+                                    <button type="button" onClick={() => setShowNewPassword(!showNewPassword)} className="absolute right-4 top-[38px] text-white">
+                                        {showNewPassword ? <EyeOff size={20} /> : <Eye size={20} />}
                                     </button>
                                 </div>
 
                                 <div className="relative">
+                                    <label className="text-sm text-white mb-1 block">
+                                        {t("auth.repeat_password")}
+                                    </label>
                                     <input
-                                        type={showRepeatPassword ? "text" : "password"}
+                                        type={showRepeatNewPassword ? "text" : "password"}
                                         placeholder="********"
                                         className="w-full h-[48px] rounded-xl text-white px-4 bg-transparent border border-[#2b2b2b]"
-                                        value={repeatPassword}
-                                        onChange={(e) => setRepeatPassword(e.target.value)}
+                                        value={repeatNewPassword}
+                                        onChange={(e) => setRepeatNewPassword(e.target.value)}
                                     />
-                                    <button
-                                        type="button"
-                                        onClick={() => setShowRepeatPassword(!showRepeatPassword)}
-                                        className="absolute right-4 top-1/2 -translate-y-1/2 text-white"
-                                    >
-                                        {showRepeatPassword ? <EyeOff size={20} /> : <Eye size={20} />}
+                                    <button type="button" onClick={() => setShowRepeatNewPassword(!showRepeatNewPassword)} className="absolute right-4 top-[38px] text-white">
+                                        {showRepeatNewPassword ? <EyeOff size={20} /> : <Eye size={20} />}
                                     </button>
+                                    {passwordErrors.repeatPassword && (
+                                        <span className="text-red-500 text-sm">{passwordErrors.repeatPassword}</span>
+                                    )}
                                 </div>
 
                                 <button
                                     type="submit"
-                                    className="w-full h-[48px] mt-3 rounded-xl bg-[#F94B00] text-white"
-                                    disabled={loading}
+                                    className="w-full h-[48px] mt-3 rounded-xl bg-[#F94B00] text-white disabled:opacity-50 disabled:cursor-not-allowed transition"
+                                    disabled={passwordLoading}
                                 >
-                                    {loading ? "დელოდე..." : t("auth.change_password")}
+                                    {passwordLoading ? <Spinner /> : t("auth.change_password")}
                                 </button>
 
                             </form>
@@ -335,10 +372,8 @@ export default function Profile() {
                     </div>
                 )}
 
-
                 <Footer />
             </div>
-
         </>
     )
 }

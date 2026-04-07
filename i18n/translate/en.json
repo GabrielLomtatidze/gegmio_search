@@ -33,6 +33,7 @@
         "existing_account": "Existing Account",
         "complete_verification": "Complete verification",
         "register_prompt": "To use all Gegmio services, please register",
+        "old_password": "`Old passowrd`",
         "errors": {
             "only_letters": "Please enter letters only",
             "only_number": "Please enter numbers only",

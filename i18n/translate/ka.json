@@ -31,6 +31,7 @@
         "existing_account": "არსებული ანგარიში",
         "complete_verification": "გაიარე ვერიფიკაცია",
         "register_prompt": "Gegmio-ს ყველა სერვისის გამოსაყენებლად გაიარე რეგისტრაცია",
+        "old_password": "ძველი პაროლი",
         "errors": {
             "only_letters": "გთხოვთ, შეიყვანოთ მხოლოდ ასოები",
             "only_number": "გთხოვთ, შეიყვანოთ მხოლოდ ნომერი",

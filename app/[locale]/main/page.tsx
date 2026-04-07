@@ -4,45 +4,63 @@ import { Search } from "lucide-react";
 import { useTranslations } from "next-intl";
 import debounce from "lodash.debounce";
 import { useBusinessStore } from "@/zustand/APIs/public/businessStore";
+import { useRegionsStore } from "@/zustand/APIs/public/regionsStore";
 import Card from "@/components/cards/card";
 import CardSkeleton from "@/components/skeletons/cardSkeleton";
 import Link from "next/link";
 
-// wogofaj349@fftube.com
-
 export default function Main() {
   const t = useTranslations();
   const { businessStore, loading, fetchBusiness } = useBusinessStore();
+  const { regionsStore, fetchRegionsInfo } = useRegionsStore();
 
-  const [search, setSearch] = useState<string>("");
+  const [search, setSearch] = useState("");
   const [latitude, setLatitude] = useState<number | null>(null);
   const [longitude, setLongitude] = useState<number | null>(null);
   const [locationResolved, setLocationResolved] = useState(false);
+  const [selectedRegionId, setSelectedRegionId] = useState(0);
+
+  const hasLocation = latitude !== null && longitude !== null;
+
+  const buildParams = (query: string, lat?: number, lng?: number, regionId?: number) => {
+    const params: Record<string, any> = { searchKey: query };
+
+    if (lat !== undefined && lng !== undefined) {
+      params.latitude = lat;
+      params.longitude = lng;
+    }
+
+    if (regionId && regionId !== 0) {
+      params.regionId = regionId;
+    }
+
+    return params;
+  };
 
   useEffect(() => {
     if (!navigator.geolocation) {
       setLocationResolved(true);
       return;
     }
+
     navigator.geolocation.getCurrentPosition(
-      (position) => {
-        setLatitude(position.coords.latitude);
-        setLongitude(position.coords.longitude);
+      ({ coords }) => {
+        setLatitude(coords.latitude);
+        setLongitude(coords.longitude);
         setLocationResolved(true);
       },
       () => setLocationResolved(true)
     );
   }, []);
 
+  useEffect(() => {
+    fetchRegionsInfo();
+  }, []);
+
   const debouncedFetchBusiness = useMemo(() => {
     return debounce(
-      (query: string, lat?: number, lng?: number) => {
-        const params: Record<string, any> = { searchKey: query };
-        if (lat !== undefined && lng !== undefined) {
-          params.latitude = lat;
-          params.longitude = lng;
-        }
-        fetchBusiness(params);
+      (query: string, lat?: number, lng?: number, regionId?: number) => {
+        fetchBusiness(buildParams(query, lat, lng, regionId));
       },
       500
     );
@@ -51,24 +69,20 @@ export default function Main() {
   useEffect(() => {
     if (!locationResolved) return;
 
-    const hasLocation = latitude !== null && longitude !== null;
-    const params: Record<string, any> = { searchKey: search };
-
-    if (hasLocation) {
-      params.latitude = latitude!;
-      params.longitude = longitude!;
-    }
+    const lat = hasLocation ? latitude! : undefined;
+    const lng = hasLocation ? longitude! : undefined;
+    const regionId =
+      selectedRegionId !== 0 ? selectedRegionId : undefined;
 
     if (search === "") {
-      fetchBusiness(params);
+      fetchBusiness(buildParams("", lat, lng, regionId));
       return;
     }
 
-    debouncedFetchBusiness(search, hasLocation ? latitude! : undefined, hasLocation ? longitude! : undefined);
+    debouncedFetchBusiness(search, lat, lng, regionId);
 
     return () => debouncedFetchBusiness.cancel();
-  }, [search, latitude, longitude, locationResolved, debouncedFetchBusiness, fetchBusiness]);
-
+  }, [search, latitude, longitude, locationResolved, selectedRegionId, debouncedFetchBusiness, fetchBusiness,]);
   return (
     <>
       <div className="w-full flex justify-center mt-5">
@@ -90,13 +104,18 @@ export default function Main() {
             </div>
 
             <div className="hidden md:flex gap-2 text-[#a7a7a7]">
-              <select className="border border-[#2b2b2b] bg-[#0f0f0f] p-[10px] rounded-xl">
-                <option value="">{t("pages.city")}</option>
-                <option value="tbilisi">თბილისი</option>
-                <option value="qutaisi">ქუთაისი</option>
-                <option value="batumi">ბათუმი</option>
-                <option value="ozurgeti">ოზურგეთი</option>
+              <select
+                value={selectedRegionId}
+                onChange={(e) => setSelectedRegionId(Number(e.target.value))}
+                className="border border-[#2b2b2b] bg-[#0f0f0f] p-[10px] rounded-xl" >
+                <option value={0}>{t("pages.city")}</option>
+                {regionsStore.map((item: any) => (
+                  <option key={item.id} value={item.id}>
+                    {item.name}
+                  </option>
+                ))}
               </select>
+
               <select className="border border-[#2b2b2b] bg-[#0f0f0f] p-[10px] rounded-xl">
                 <option value="">შენთან ახლოს</option>
                 <option value="#">შორს</option>
@@ -108,19 +127,24 @@ export default function Main() {
 
           <div className="flex md:justify-center w-full md:w-[109px] gap-[8px] items-center mt-2 md:mt-0">
             <div className="w-[8px] h-[8px] bg-[#F94B00] rounded-full" />
-            <h3 className="text-[16px] text-white font-bold">{t("pages.result")}</h3>
-            <h3 className="text-[16px] text-[#a7a7a7] font-bold">({businessStore.length})</h3>
+            <h3 className="text-[16px] text-white font-bold">
+              {t("pages.result")}
+            </h3>
+            <h3 className="text-[16px] text-[#a7a7a7] font-bold">
+              ({businessStore.length})
+            </h3>
           </div>
         </div>
       </div>
 
       <div className="flex flex-wrap justify-center gap-6 mt-6 mb-6 max-w-7xl mx-auto">
         {loading
-          ? Array.from({ length: 8 }).map((_, i) => <CardSkeleton key={i} />)
+          ? Array.from({ length: 8 }).map((_, i) => (
+            <CardSkeleton key={i} />
+          ))
           : businessStore.map((item: any) => (
-            <Link key={item.id} href={`/Business/${item.id}`} className="cursor-pointer" prefetch={false}>
+            <Link key={item.id} href={`/Business/${item.id}`} className="cursor-pointer" prefetch={false} >
               <Card
-                key={item.id}
                 businessId={item.id}
                 isFavorite={item.isFavorite}
                 title={item.name}
@@ -130,7 +154,6 @@ export default function Main() {
                 distance={item.distnace?.toFixed(2)}
               />
             </Link>
-
           ))}
       </div>
     </>

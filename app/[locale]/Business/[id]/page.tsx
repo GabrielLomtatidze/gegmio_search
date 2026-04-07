@@ -164,7 +164,7 @@ export default function Business() {
 
             <div className="max-w-7xl mx-auto px-4 md:px-[100px] py-6 relative">
 
-                <div className="absolute top-4 left-4 right-4 flex justify-between z-20 md:hidden">
+                <div className="absolute top-7 left-7 right-7 flex justify-between z-20 md:hidden">
                     <a href="/" className="bg-black/50 p-2 rounded-full">
                         <img src="/images/arrow_left.svg" />
                     </a>

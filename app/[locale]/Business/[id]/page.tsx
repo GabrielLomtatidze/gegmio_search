@@ -126,7 +126,9 @@ export default function Business() {
     const images = business.files || [];
     const rating = 3.5;
 
-    const formatPhone = (number: string, isAuthenticated: boolean) => {
+    const formatPhone = (number: string | null | undefined, isAuthenticated: boolean ) => {
+        if (!number) return "No phone number";
+
         if (isAuthenticated) return number;
 
         const visiblePart = number.slice(0, -4);

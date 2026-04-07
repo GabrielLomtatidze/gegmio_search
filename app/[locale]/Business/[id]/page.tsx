@@ -126,7 +126,7 @@ export default function Business() {
     const images = business.files || [];
     const rating = 3.5;
 
-    const formatPhone = (number: string | null | undefined, isAuthenticated: boolean ) => {
+    const formatPhone = (number: string | null | undefined, isAuthenticated: boolean) => {
         if (!number) return "No phone number";
 
         if (isAuthenticated) return number;
@@ -155,10 +155,7 @@ export default function Business() {
                             <img src="/images/map_pin.svg" className="w-[12px] ml-2" />
                         </div>
 
-                        <div
-                            onClick={addFavorite}
-                            className="w-[42px] h-[42px] border border-[#2b2b2b] bg-[#141414] rounded-full flex justify-center items-center cursor-pointer"
-                        >
+                        <div onClick={addFavorite} className="w-[42px] h-[42px] border border-[#2b2b2b] bg-[#141414] rounded-full flex justify-center items-center cursor-pointer" >
                             <img src={favorite ? "/images/fill-heart.svg" : "/images/heart.svg"} />
                         </div>
                     </div>
@@ -177,10 +174,7 @@ export default function Business() {
                             {business.distnace} {t("pages.distance")}
                         </div>
 
-                        <div
-                            onClick={addFavorite}
-                            className="bg-black/50 p-2 rounded-full"
-                        >
+                        <div onClick={addFavorite} className="bg-black/50 p-2 rounded-full" >
                             <img src={favorite ? "/images/fill-heart.svg" : "/images/heart.svg"} />
                         </div>
                     </div>
@@ -222,11 +216,14 @@ export default function Business() {
             </div>
 
             <div className="max-w-7xl mx-auto px-4 md:px-[100px]">
-                <div className="w-fill flex justify-between">
-                    <div className="w-[35%] flex gap-[12px] ">
-                        <h1 className="text-white text-2xl font-bold">{business.name}</h1>
+                <div className="flex flex-col md:flex-row md:justify-between gap-4">
 
-                        <div className="flex gap-1 mt-2 text-[#FFB83F]">
+                    <div className="w-full md:w-[35%] flex flex-col gap-2">
+                        <h1 className="text-white text-xl md:text-2xl font-bold">
+                            {business.name}
+                        </h1>
+
+                        <div className="flex gap-1 text-[#FFB83F]">
                             {[1, 2, 3, 4, 5].map((i) => {
                                 if (rating >= i) return <FaStar key={i} />;
                                 if (rating >= i - 0.5) return <FaStarHalfAlt key={i} />;
@@ -234,10 +231,41 @@ export default function Business() {
                             })}
                         </div>
                     </div>
-                    <button className="px-4 py-3 rounded-xl flex items-center gap-2 bg-[#00D34D] text-white font-bold whitespace-nowrap cursor-pointer" onClick={() => { if (!isAuthenticated) { setOpenModal(true) } }}>
+
+                    <button className="w-full md:w-auto px-4 py-3 rounded-xl flex items-center justify-center gap-2 bg-[#00D34D] text-white font-bold whitespace-nowrap" onClick={() => { if (!isAuthenticated) setOpenModal(true); }} >
                         <img src="/images/call.svg" alt="call" className="w-5 h-5" />
                         {formatPhone(business.phoneNumber, isAuthenticated)}
                     </button>
+                </div>
+
+                <div className="flex flex-col md:flex-row md:justify-between gap-4 mt-4">
+
+                    <div className="w-full md:w-[35%]">
+                        <div className="w-full h-[42px] rounded-xl border border-[#2b2b2b] flex gap-[6px] px-[12px] items-center">
+                            <img src="/images/map_pin.svg" alt="map" />
+                            <h3 className="text-[#a7a7a7] text-[14px] truncate">
+                                {business.businessAddressName}
+                            </h3>
+                            <img src="/images/arrow_right.svg" alt="arrowRight" />
+                        </div>
+                    </div>
+
+                    <div className="flex gap-4 justify-start md:justify-end">
+                        <a href="https://www.facebook.com/profile.php?id=61583853083725" target="_blank" className="group w-[42px] h-[42px] border-2 border-[#2b2b2b] rounded-full flex items-center justify-center relative overflow-hidden" >
+                            <img src="/images/facebook-big.svg" className="absolute opacity-100 group-hover:opacity-0 transition duration-300" />
+                            <img src="/images/fill_facebook_icon.svg" className="absolute opacity-0 group-hover:opacity-100 transition duration-300" />
+                        </a>
+
+                        <a href="#" className="group w-[42px] h-[42px] border-2 border-[#2b2b2b] rounded-full flex items-center justify-center relative overflow-hidden" >
+                            <img src="/images/tiktok-big.svg" className="absolute opacity-100 group-hover:opacity-0 transition duration-300" />
+                            <img src="/images/fill_tiktok_icon.svg" className="absolute opacity-0 group-hover:opacity-100 transition duration-300" />
+                        </a>
+
+                        <a href="#" className="group w-[42px] h-[42px] border-2 border-[#2b2b2b] rounded-full flex items-center justify-center relative overflow-hidden" >
+                            <img src="/images/Linkedin.svg" className="absolute opacity-100 group-hover:opacity-0 transition duration-300" />
+                            <img src="/images/fill_linkedin_icon.svg" className="absolute opacity-0 group-hover:opacity-100 transition duration-300" />
+                        </a>
+                    </div>
                 </div>
             </div>
 

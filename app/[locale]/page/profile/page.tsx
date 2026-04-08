@@ -164,8 +164,11 @@ export default function Profile() {
             setOpenModal(false);
 
         } catch (error: any) {
-            if (error?.response?.status === 400) {
-                setPasswordErrors(prev => ({ ...prev, password: t("auth.errors.wrong_old_password") }));
+            if (error?.response?.status === 500) {
+                setPasswordErrors(prev => ({
+                    ...prev,
+                    password: error?.response?.data?.detail || t("auth.errors.wrong_old_password")
+                }));
             }
         } finally {
             setPasswordLoading(false);
@@ -319,9 +322,7 @@ export default function Profile() {
                                         value={oldPassword}
                                         onChange={(e) => setOldPassword(e.target.value.replace(/\s/g, ""))}
                                     />
-                                    {passwordErrors.password && (
-                                        <span className="text-red-500 text-sm">{passwordErrors.password}</span>
-                                    )}
+                                    {passwordErrors.password && <p className="text-red-500 mt-[5px]">{passwordErrors.password}</p>}
                                 </div>
 
                                 <div className="relative">
@@ -361,9 +362,8 @@ export default function Profile() {
 
                                 <button
                                     type="submit"
-                                    className="w-full h-[48px] mt-3 rounded-xl bg-[#F94B00] text-white disabled:opacity-50 disabled:cursor-not-allowed transition"
-                                    disabled={passwordLoading}
-                                >
+                                    className="w-full h-[48px] mt-3 flex justify-center items-center rounded-xl bg-[#F94B00] text-white disabled:opacity-50 disabled:cursor-not-allowed transition"
+                                    disabled={passwordLoading || !oldPassword || !newPassword || !repeatNewPassword}  >
                                     {passwordLoading ? <Spinner /> : t("auth.change_password")}
                                 </button>
 

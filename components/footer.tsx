@@ -52,7 +52,7 @@ export default function Footer() {
                         <ul className="gap-3 flex flex-col font-semibold text-sm">
                             <li><a href="#">{t("components.information")}</a></li>
                             <li className="mt-2">
-                                <a href="/privacypolicy" className="text-[#A7A7A7]">
+                                <a href="/page/privacypolicy" className="text-[#A7A7A7]">
                                     {t("components.privacy_policy")}
                                 </a>
                             </li>

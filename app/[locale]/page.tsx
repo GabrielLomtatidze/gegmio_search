@@ -1,7 +1,7 @@
 "use client";
 import Header from "../../components/header";
 import Footer from "../../components/footer";
-import Main from "./main/page";
+import Main from "./page/main/page";
 
 
 // wogofaj349@fftube.com

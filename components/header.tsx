@@ -90,10 +90,12 @@ export default function Header() {
                                 </>)
                                 :
                                 (<>
-                                    <div>
-                                        <Link href="/auth/registration">დარეგისტრირდი</Link>
-
-                                    </div>
+                                    <Link href="/auth/login" prefetch={false}>
+                                        <div className="px-[12px] py-[8px] border-[1px] border-[#2b2b2b] flex justify-center items-center rounded-xl gap-[8px] cursor-pointer">
+                                            <img src="/images/white_profile.svg" alt="profile" />
+                                            <h3>{t("auth.login_button")}</h3>
+                                        </div>
+                                    </Link>
                                 </>)}
 
                             {openProfileModal && (

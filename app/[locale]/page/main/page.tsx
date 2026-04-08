@@ -143,7 +143,7 @@ export default function Main() {
             <CardSkeleton key={i} />
           ))
           : businessStore.map((item: any) => (
-            <Link key={item.id} href={`/Business/${item.id}`} className="cursor-pointer" prefetch={false} >
+            <Link key={item.id} href={`/page/business/${item.id}`} className="cursor-pointer" prefetch={false} >
               <Card
                 businessId={item.id}
                 isFavorite={item.isFavorite}

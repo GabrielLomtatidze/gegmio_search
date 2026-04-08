@@ -10,6 +10,7 @@ export default function Header() {
     const t = useTranslations();
     const { userInfo, fetchUserInfo } = useUserStore();
     const setAuthenticated = useAuthPositionStore((state) => state.setAuthenticated);
+    const isAuthenticated = useAuthPositionStore((state) => state.isAuthenticated);
     const [accessToken, setAccessToken] = useState<string | null>(null);
 
     useEffect(() => {
@@ -151,11 +152,25 @@ export default function Header() {
             <div className={`fixed top-0 right-0 w-full h-screen bg-[#0F0F0F] z-[9999] transform transition-transform duration-300 ${mobileMenuOpen ? "translate-x-0" : "translate-x-full"}`}>
                 <div className="h-[92px] flex justify-between items-center px-[16px] border-b border-[#242424]">
                     <div className="flex items-center gap-3">
-                        <div className="w-[44px] h-[44px] flex items-center justify-center rounded-full bg-[#2A2A2A] text-white font-semibold">{userInitial}</div>
-                        <div className="min-w-0">
-                            <p className="text-white text-sm font-medium truncate">{userInfo?.lastName}</p>
-                            <p className="text-[#9CA3AF] text-xs truncate">{userInfo?.email}</p>
-                        </div>
+                        {isAuthenticated ? (
+                            <>
+                                <div className="w-[44px] h-[44px] flex items-center justify-center rounded-full bg-[#2A2A2A] text-white font-semibold">{userInitial}</div>
+                                <div className="min-w-0">
+                                    <p className="text-white text-sm font-medium truncate">{userInfo?.lastName}</p>
+                                    <p className="text-[#9CA3AF] text-xs truncate">{userInfo?.email}</p>
+                                </div>
+                            </>
+                        ) : (
+                            <>
+                                <Link href="/auth/login" prefetch={false}>
+                                    <div className="px-[12px] py-[8px] border-[1px] border-[#2b2b2b] flex justify-center items-center rounded-xl gap-[8px] cursor-pointer">
+                                        <img src="/images/white_profile.svg" alt="profile" />
+                                        <h3 className="text-white">{t("auth.login_button")}</h3>
+                                    </div>
+                                </Link>
+                            </>
+                        )}
+
                     </div>
 
                     <button onClick={() => setMobileMenuOpen(false)} className="w-[41px] h-[42px] border border-[#2b2b2b] rounded-xl">
@@ -164,6 +179,7 @@ export default function Header() {
                 </div>
 
                 <div className="flex flex-col gap-6 px-[16px] text-white mt-[12px]">
+                    {isAuthenticated ? (<></>) : (<></>)}
                     <Link href="/page/profile">
                         <button className="flex items-center gap-3 px-2 py-2 rounded-lg hover:bg-[#1A1A1A] transition cursor-pointer">
                             <img src="/images/grey_profile.svg" alt="profile" />

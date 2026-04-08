@@ -1,9 +1,11 @@
 "use client";
 import { useTranslations } from "next-intl";
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Eye, EyeOff } from "lucide-react";
 import axios from 'axios';
 import { InputOTP, InputOTPGroup, InputOTPSlot, InputOTPSeparator, } from "@/components/ui/input-otp";
+import { Spinner } from "@/components/ui/spinner";
+import { useRouter } from "next/navigation";
 
 
 interface Errors {
@@ -16,6 +18,8 @@ interface Errors {
 export default function changePassord() {
 
     const t = useTranslations();
+    const router = useRouter();
+
 
     const [email, setEmail] = useState<string>("");
     const [password, setPassword] = useState<string>("");
@@ -28,6 +32,19 @@ export default function changePassord() {
     const [timecounter, setTimeCounter] = useState<number>(30);
     const [isTimerActive, setIsTimerActive] = useState<boolean>(false);
     const [showOtpInput, setShowOtpInput] = useState(false);
+
+
+    useEffect(() => {
+        if (isTimerActive && timecounter > 0) {
+            const interval = setInterval(() => {
+                setTimeCounter((p) => p - 1);
+            }, 1000);
+            return () => clearInterval(interval);
+        } else if (timecounter <= 0) {
+            setIsTimerActive(false);
+            setTimeCounter(30);
+        }
+    }, [isTimerActive, timecounter]);
 
 
     const getCode = async () => {
@@ -101,6 +118,7 @@ export default function changePassord() {
             setPassword("");
             setRepeatPassword("");
             setShowOtpInput(false);
+            router.replace("/auth/login");
 
         } catch (error) {
             console.log(error);
@@ -112,7 +130,7 @@ export default function changePassord() {
 
 
         <>
-            <div className="w-[376px] h-[494px] flex flex-col border border-[#2b2b2b] rounded-xl bg-[#0F0F0F] p-[24px]" onClick={(e) => e.stopPropagation()}>
+            <div className="w-[400px] flex flex-col border border-[#2b2b2b] rounded-xl bg-[#0F0F0F] p-[24px]" onClick={(e) => e.stopPropagation()}>
 
                 <div className="w-full flex flex-col justify-center items-center">
                     <h3 className="text-white text-[18px] font-bold">
@@ -206,12 +224,8 @@ export default function changePassord() {
                         </button>
                     </div>
 
-                    <button
-                        type="submit"
-                        className="w-full h-[48px] mt-3 rounded-xl bg-[#F94B00] text-white"
-                        disabled={loading}
-                    >
-                        {loading ? "დელოდე..." : t("auth.change_password")}
+                    <button type="submit" className="w-full h-[48px] flex justify-center items-center mt-3 rounded-xl bg-[#F94B00] text-white" disabled={loading} >
+                        {loading ? <Spinner /> : t("auth.change_password")}
                     </button>
 
                 </form>

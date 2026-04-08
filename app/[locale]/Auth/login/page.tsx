@@ -97,7 +97,10 @@ export default function Login() {
                 <div>
                     <div className="flex justify-between items-center mb-1">
                         <label className="text-sm text-gray-300">{t("auth.password_label")}</label>
-                        <span className="text-sm text-[#F94B00] cursor-pointer hover:underline">{t("auth.forgot_password")}</span>
+                        <Link href="/auth/changePassword" prefetch={false}>
+                            <span className="text-sm text-[#F94B00] cursor-pointer hover:underline">{t("auth.forgot_password")}</span>
+                        </Link>
+
                     </div>
                     <div className="relative">
                         <input
@@ -129,7 +132,7 @@ export default function Login() {
                 </button>
 
                 <label className="w-full flex justify-center items-center gap-2 text-sm mt-2">
-                    <Link href="/auth/registration">
+                    <Link href="/auth/registration" prefetch={false}>
                         <span className="text-[#F94B00] underline cursor-pointer">
                             {t("auth.create_profile")}
                         </span>

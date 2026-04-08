@@ -66,7 +66,7 @@ export default async function RootLayout({ children, params }: LayoutProps<'/[lo
         <NextIntlClientProvider locale={locale}>
           <ClientAxiosHandler locale={locale} />
           {children}
-          <GoogleAnalytics gaId="G-CRHT9DC0B4" />
+          <GoogleAnalytics gaId="G-4X4SFKF9H2" />
         </NextIntlClientProvider>
       </body>
     </html>

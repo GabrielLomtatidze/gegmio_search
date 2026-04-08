@@ -36,7 +36,7 @@ export default function Business() {
 
     const navItems = [
         { id: 0, name: t("pages.menu_service") },
-        { id: 1, name: t("pages.reviews") },
+        // { id: 1, name: t("pages.reviews") },
         { id: 2, name: t("pages.details") },
     ];
 
@@ -306,9 +306,9 @@ export default function Business() {
                         <MenuService />
                     </div>
 
-                    <div className={selectedNavId === 1 ? "block" : "hidden"}>
+                    {/* <div className={selectedNavId === 1 ? "block" : "hidden"}>
                         <Reviews />
-                    </div>
+                    </div> */}
 
                     <div className={selectedNavId === 2 ? "block" : "hidden"}>
                         <Details />

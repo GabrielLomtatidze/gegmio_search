@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import ClientAxiosHandler from "./ClientAxiosHandler";
 import "./globals.css";
 import { NextIntlClientProvider } from "next-intl";
+import { GoogleAnalytics } from "@next/third-parties/google"
 
 export const metadata: Metadata = {
   title: {
@@ -65,6 +66,7 @@ export default async function RootLayout({ children, params }: LayoutProps<'/[lo
         <NextIntlClientProvider locale={locale}>
           <ClientAxiosHandler locale={locale} />
           {children}
+          <GoogleAnalytics gaId="G-CRHT9DC0B4" />
         </NextIntlClientProvider>
       </body>
     </html>

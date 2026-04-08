@@ -179,26 +179,37 @@ export default function Header() {
                 </div>
 
                 <div className="flex flex-col gap-6 px-[16px] text-white mt-[12px]">
-                    {isAuthenticated ? (<></>) : (<></>)}
-                    <Link href="/page/profile">
-                        <button className="flex items-center gap-3 px-2 py-2 rounded-lg hover:bg-[#1A1A1A] transition cursor-pointer">
-                            <img src="/images/grey_profile.svg" alt="profile" />
-                            <span className="text-[#a7a7a7] text-sm font-bold">{t("components.my_profile")}</span>
-                        </button>
-                    </Link>
+                    {isAuthenticated ? (<>
+                        <Link href="/page/profile">
+                            <button className="flex items-center gap-3 px-2 py-2 rounded-lg hover:bg-[#1A1A1A] transition cursor-pointer">
+                                <img src="/images/grey_profile.svg" alt="profile" />
+                                <span className="text-[#a7a7a7] text-sm font-bold">{t("components.my_profile")}</span>
+                            </button>
+                        </Link>
 
-                    <Link href="/page/favorite">
-                        <button className="flex items-center gap-3 px-2 py-2 rounded-lg hover:bg-[#1A1A1A] transition cursor-pointer">
-                            <img src="/images/grey_heart.svg" alt="heart" />
-                            <span className="text-[#a7a7a7] text-sm font-bold">{t("components.favorites")}</span>
+                        <Link href="/page/favorite">
+                            <button className="flex items-center gap-3 px-2 py-2 rounded-lg hover:bg-[#1A1A1A] transition cursor-pointer">
+                                <img src="/images/grey_heart.svg" alt="heart" />
+                                <span className="text-[#a7a7a7] text-sm font-bold">{t("components.favorites")}</span>
+                            </button>
+                        </Link>
+                        <button className="flex items-center gap-3 px-2 py-2 rounded-lg hover:bg-[#1A1A1A] transition w-full cursor-pointer" onClick={logOut}>
+                            <img src="/images/log_out.svg" alt="logout" />
+                            <span className="text-[#FF2A2A] text-sm font-bold">{t("components.logout")}</span>
                         </button>
-                    </Link>
-                    <button className="flex items-center gap-3 px-2 py-2 rounded-lg hover:bg-[#1A1A1A] transition w-full cursor-pointer" onClick={logOut}>
-                        <img src="/images/log_out.svg" alt="logout" />
-                        <span className="text-[#FF2A2A] text-sm font-bold">{t("components.logout")}</span>
-                    </button>
 
-                    <button className="h-[42px] bg-[#F94B00] rounded-xl font-bold">{t("components.add_business_button")}</button>
+                        <button className="h-[42px] bg-[#F94B00] rounded-xl font-bold">{t("components.add_business_button")}</button>
+
+                    </>
+                    ) :
+                        (
+                            <>
+                                <div className="w-full h-full p-[18px] flex flex-col justify-center items-center">
+                                    <h1 className="text-[24px] text-white font-bold">{t("components.welcome_message")}</h1>
+                                    <h3 className="text-[14px] text-[#a7a7a7]">{t("components.info_message")}</h3>
+                                </div>
+                            </>
+                        )}
 
                     <div className="h-[279px] w-full absolute bottom-[24px] left-0 px-[16px]">
                         <h3 className="text-[#a7a7a7] text-[14px] mt-[12px]">{t("layout.contact_info")}</h3>

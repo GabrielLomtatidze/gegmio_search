@@ -123,7 +123,9 @@
         "privacy_policy": "Privacy Policy",
         "terms_conditions": "Terms and Conditions",
         "footer_description": "Chvkiani Reservations is an app and system that connects businesses with customers and solves all problems",
-        "search_placeholder": "What are you looking for?"
+        "search_placeholder": "What are you looking for?",
+        "welcome_message": "Welcome",
+        "info_message": "For more information, log in or register in the system"
     },
     "privacy_policy_page": {
         "privacy_policy": "Privacy Policy",

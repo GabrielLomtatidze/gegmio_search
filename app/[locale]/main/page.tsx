@@ -17,8 +17,8 @@ export default function Main() {
   const [search, setSearch] = useState("");
   const [latitude, setLatitude] = useState<number | null>(null);
   const [longitude, setLongitude] = useState<number | null>(null);
-  const [locationResolved, setLocationResolved] = useState(false);
-  const [selectedRegionId, setSelectedRegionId] = useState(0);
+  const [locationResolved, setLocationResolved] = useState<boolean>(false);
+  const [selectedRegionId, setSelectedRegionId] = useState<number>(0);
 
   const hasLocation = latitude !== null && longitude !== null;
 

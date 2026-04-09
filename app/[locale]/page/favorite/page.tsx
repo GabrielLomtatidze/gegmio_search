@@ -1,5 +1,5 @@
 "use client";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useMemo } from "react";
 import axios from "axios";
 import Header from "@/components/header";
 import Footer from "@/components/footer";
@@ -7,54 +7,111 @@ import { useTranslations } from "next-intl";
 import { Search } from "lucide-react";
 import CardSkeleton from "@/components/skeletons/cardSkeleton";
 import Card from "@/components/cards/card";
+import { useRegionsStore } from "@/zustand/APIs/public/regionsStore";
+import debounce from "lodash.debounce";
+
 
 export default function Favorite() {
-
     const t = useTranslations();
+    const { regionsStore, fetchRegionsInfo } = useRegionsStore();
 
     const [favorites, setFavorites] = useState<any[]>([]);
-    const [search, setSearch] = useState("");
-    const [loading, setLoading] = useState(false);
+    const [search, setSearch] = useState<string>("");
+    const [loading, setLoading] = useState<boolean>(false);
+    const [selectedRegionId, setSelectedRegionId] = useState<number>(0);
+
+    const [latitude, setLatitude] = useState<number | null>(null);
+    const [longitude, setLongitude] = useState<number | null>(null);
+    const [locationResolved, setLocationResolved] = useState<boolean>(false);
+
+    const hasLocation = latitude !== null && longitude !== null;
 
     useEffect(() => {
+        fetchRegionsInfo();
+    }, [fetchRegionsInfo]);
 
-        const accessToken = localStorage.getItem("accessToken");
+    useEffect(() => {
+        if (!navigator.geolocation) {
+            setLocationResolved(true);
+            return;
+        }
 
-        if (!accessToken) return;
+        navigator.geolocation.getCurrentPosition(
+            ({ coords }) => {
+                setLatitude(coords.latitude);
+                setLongitude(coords.longitude);
+                setLocationResolved(true);
+            },
+            () => setLocationResolved(true)
+        );
+    }, []);
 
-        const getFavorites = async () => {
-            setLoading(true);
+    const buildParams = (query: string, lat?: number, lng?: number, regionId?: number) => {
+        const params: Record<string, any> = {};
 
-            try {
+        if (query.trim() !== "") {
+            params.searchKey = query;
+        }
 
+        if (lat !== undefined && lng !== undefined) {
+            params.latitude = lat;
+            params.longitude = lng;
+        }
 
-                const params: any = {};
+        if (regionId && regionId !== 0) {
+            params.regionId = regionId;
+        }
 
-                if (search.trim() !== "") {
-                    params.searchKey = search;
+        return params;
+    };
+
+    const debouncedFetchFavorites = useMemo(() => {
+        return debounce(
+            async (query: string, lat?: number, lng?: number, regionId?: number) => {
+                const accessToken = localStorage.getItem("accessToken");
+                if (!accessToken) return;
+
+                setLoading(true);
+
+                try {
+                    const response = await axios.get(
+                        "https://bookitcrm.runasp.net/api/v1/favorites",
+                        {
+                            headers: {
+                                Authorization: `Bearer ${accessToken}`,
+                            },
+                            params: buildParams(query, lat, lng, regionId),
+                        }
+                    );
+
+                    setFavorites(response.data);
+                } catch (error) {
+                    console.log("error loading favorites", error);
+                } finally {
+                    setLoading(false);
                 }
+            },
+            500
+        );
+    }, []);
 
-                const response = await axios.get("https://bookitcrm.runasp.net/api/v1/favorites", {
-                    headers: {
-                        Authorization: `Bearer ${accessToken}`,
-                    },
-                    params,
-                });
+    useEffect(() => {
+        if (!locationResolved) return;
 
-                setFavorites(response.data);
-            } catch (error) {
-                console.log("error loading favorites", error);
-            } finally {
-                setLoading(false);
-            }
-        };
+        const lat = hasLocation ? latitude! : undefined;
+        const lng = hasLocation ? longitude! : undefined;
+        const regionId =
+            selectedRegionId !== 0 ? selectedRegionId : undefined;
 
-        const delay = setTimeout(() => {
-            getFavorites();
-        }, 500);
+        if (search === "") {
+            debouncedFetchFavorites("", lat, lng, regionId);
+            return;
+        }
 
-        return () => clearTimeout(delay);
-    }, [search]);
+        debouncedFetchFavorites(search, lat, lng, regionId);
+
+        return () => debouncedFetchFavorites.cancel();
+    }, [search, selectedRegionId, latitude, longitude, locationResolved, debouncedFetchFavorites,]);
 
     const countedBusinesses = favorites.length;
 
@@ -63,15 +120,20 @@ export default function Favorite() {
         <>
             <Header />
             <div className="w-full justify-center mt-[20px]">
-
                 <div className="w-full flex justify-center mt-[20px]">
-                    <div className="w-full max-w-7xl  px-4 md:px-[100px] flex flex-col md:flex-row md:justify-between gap-3">
-                        <h2 className="text-[#a7a7a7]">{t("pages.main_page_title")} <span className="mx-2">&gt;</span> <span className="text-white font-bold">{t("pages.favorite_page")}</span></h2>
+                    <div className="w-full max-w-7xl px-4 md:px-[100px] flex flex-col md:flex-row md:justify-between gap-3">
+                        <h2 className="text-[#a7a7a7]">
+                            {t("pages.main_page_title")}
+                            <span className="mx-2">&gt;</span>
+                            <span className="text-white font-bold">
+                                {t("pages.favorite_page")}
+                            </span>
+                        </h2>
                     </div>
                 </div>
-                <div className="w-full flex justify-center mt-[20px]">
-                    <div className="w-full max-w-7xl  px-4 md:px-[100px] flex flex-col md:flex-row md:justify-between gap-3">
 
+                <div className="w-full flex justify-center mt-[20px]">
+                    <div className="w-full max-w-7xl px-4 md:px-[100px] flex flex-col md:flex-row md:justify-between gap-3">
                         <div className="flex flex-wrap md:flex-nowrap gap-3 w-full md:w-auto justify-center md:justify-start">
 
                             <div className="flex-1 min-w-[180px] h-[42px] flex items-center bg-[#0f0f0f] px-4 border border-[#2b2b2b] rounded-xl focus-within:border-[#F94B00] transition">
@@ -90,13 +152,15 @@ export default function Favorite() {
                             </div>
 
                             <div className="hidden md:flex gap-2 text-[#a7a7a7]">
-                                <select className="border border-[#2b2b2b] bg-[#0f0f0f] p-[10px] rounded-xl">
-                                    <option value="">{t("pages.city")}</option>
-                                    <option value="tbilisi">თბილისი</option>
-                                    <option value="qutaisi">ქუთაისი</option>
-                                    <option value="batumi">ბათუმი</option>
-                                    <option value="ozurgeti">ოზურგეთი</option>
+                                <select value={selectedRegionId} onChange={(e) => setSelectedRegionId(Number(e.target.value))} className="border border-[#2b2b2b] bg-[#0f0f0f] p-[10px] rounded-xl" >
+                                    <option value={0}>{t("pages.city")}</option>
+                                    {regionsStore.map((item: any) => (
+                                        <option key={item.id} value={item.id}>
+                                            {item.name}
+                                        </option>
+                                    ))}
                                 </select>
+
                                 <select className="border border-[#2b2b2b] bg-[#0f0f0f] p-[10px] rounded-xl">
                                     <option value="">შენთან ახლოს</option>
                                     <option value="#">შორს</option>
@@ -108,8 +172,12 @@ export default function Favorite() {
 
                         <div className="flex md:justify-center w-full md:w-[109px] gap-[8px] items-center mt-2 md:mt-0">
                             <div className="w-[8px] h-[8px] bg-[#F94B00] rounded-full" />
-                            <h3 className="text-[16px] text-white font-bold">{t("pages.result")}</h3>
-                            <h3 className="text-[16px] text-[#a7a7a7] font-bold">({countedBusinesses})</h3>
+                            <h3 className="text-[16px] text-white font-bold">
+                                {t("pages.result")}
+                            </h3>
+                            <h3 className="text-[16px] text-[#a7a7a7] font-bold">
+                                ({countedBusinesses})
+                            </h3>
                         </div>
                     </div>
                 </div>
@@ -119,27 +187,22 @@ export default function Favorite() {
                         Array.from({ length: 8 }).map((_, i) => (
                             <CardSkeleton key={i} />
                         ))
-                    ) : favorites?.length > 0 ? (
-                        favorites.map((item: any) => {
-                            const imageSource = item?.file?.url || "/images/start.svg";
-
-                            return (
-                                <Card
-                                    key={item.id}
-                                    businessId={item.id}
-                                    isFavorite={true}
-                                    title={item.name}
-                                    image={imageSource}
-                                    address={item.addressName}
-                                    businessCategory={item.businessCategory.name}
-                                    distance={item.distnace?.toFixed(2)}
-                                />
-                            );
-                        })
+                    ) : favorites.length > 0 ? (
+                        favorites.map((item: any) => (
+                            <Card
+                                key={item.id}
+                                businessId={item.id}
+                                isFavorite={true}
+                                title={item.name}
+                                image={item.file?.url || "/images/start.svg"}
+                                address={item.addressName}
+                                businessCategory={item.businessCategory.name}
+                                distance={item.distnace?.toFixed(2)}
+                            />
+                        ))
                     ) : (
                         <></>
                     )}
-
                 </div>
             </div>
 

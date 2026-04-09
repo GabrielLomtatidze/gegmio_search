@@ -127,7 +127,7 @@ export default function Favorite() {
                                 <Card
                                     key={item.id}
                                     businessId={item.id}
-                                    isFavorite={item.isFavorite}
+                                    isFavorite={true}
                                     title={item.name}
                                     image={imageSource}
                                     address={item.addressName}

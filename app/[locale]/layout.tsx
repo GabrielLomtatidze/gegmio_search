@@ -2,7 +2,9 @@ import type { Metadata } from "next";
 import ClientAxiosHandler from "./ClientAxiosHandler";
 import "./globals.css";
 import { NextIntlClientProvider } from "next-intl";
-import { GoogleAnalytics } from "@next/third-parties/google"
+import { GoogleAnalytics } from "@next/third-parties/google";
+
+// fikipo1000@agoalz.com
 
 export const metadata: Metadata = {
   title: {

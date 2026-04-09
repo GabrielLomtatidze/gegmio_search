@@ -1,5 +1,10 @@
 import { useTranslations } from "next-intl";
+import { Metadata } from "next";
 
+
+export const metadata: Metadata = {
+    title: "Privacy Polocy"
+}
 
 export default function PrivacyPolicy() {
     

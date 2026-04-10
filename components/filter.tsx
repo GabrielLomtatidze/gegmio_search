@@ -43,6 +43,7 @@ export default function Filter({ regions, businessTypes, onApply, onClose }: Pro
     const fetchDistricts = useDistrictStore((state) => state.fetchDistricts);
 
     const [searchCity, setSearchCity] = useState<string>();
+    const [searchdistricts, setSearchDistricts] = useState<string>()
     const [filterRouter, setFilterRouter] = useState("");
     const [selectedRegion, setSelectedRegion] = useState<Item | null>(null);
     const [selectedDistricts, setSelectedDistricts] = useState<Item[]>([]);
@@ -109,6 +110,10 @@ export default function Filter({ regions, businessTypes, onApply, onClose }: Pro
         r.name.toLowerCase().includes((searchCity ?? "").toLowerCase())
     );
 
+    const filteredDistricts = districts.filter((r) =>
+        r.name.toLowerCase().includes((searchdistricts ?? "").toLowerCase())
+    );
+
     const clear = () => {
         setSelectedRegion(null);
         setSearchCity("");
@@ -160,8 +165,24 @@ export default function Filter({ regions, businessTypes, onApply, onClose }: Pro
 
                 {filterRouter === "district" && (
                     <>
-                        <button onClick={() => setFilterRouter("")}>←</button>
-                        {districts.map((item) => {
+                        <div className="w-full h-[42px] flex gap-[8px] justify-between items-center">
+                            <button onClick={() => setFilterRouter("")} className="w-[42px] h-[42px] bg-[#171717] flex justify-center items-center rounded-full">
+                                <img src="/images/arrow_left.svg" alt="arrow_left" />
+                            </button>
+                            <div className="flex-1 min-w-[100px] h-[42px] flex items-center bg-[#0f0f0f] px-4 border border-[#2b2b2b] rounded-xl focus-within:border-[#F94B00] transition">
+                                <Search className="w-5 h-5 text-white mr-3" />
+                                <input
+                                    type="text"
+                                    value={searchdistricts || ""}
+                                    onChange={(e) => setSearchDistricts(e.target.value)}
+                                    className="bg-transparent outline-none text-white placeholder-[#a7a7a7] w-full text-[14px]"
+                                />
+                            </div>
+
+                            <h3 className="text-[14px] font-bold" onClick={() => { setSelectedDistricts([]); setSearchDistricts(""); }}>{t("components.cancel")}</h3>
+                        </div>
+
+                        {filteredDistricts.map((item) => {
                             const isSelected = selectedDistricts.some((d) => d.id === item.id);
 
                             return (

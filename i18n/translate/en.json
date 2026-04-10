@@ -125,7 +125,20 @@
         "footer_description": "Chvkiani Reservations is an app and system that connects businesses with customers and solves all problems",
         "search_placeholder": "What are you looking for?",
         "welcome_message": "Welcome",
-        "info_message": "For more information, log in or register in the system"
+        "info_message": "For more information, log in or register in the system",
+        "all": "All",
+        "closed": "Closed",
+        "nearby": "Nearby",
+        "latest": "Latest",
+        "city": "City",
+        "filter": "Filter",
+        "cancel": "Cancel",
+        "district": "District",
+        "status": "Status",
+        "sort": "Sort",
+        "apply_filter": "Apply Filter",
+        "close": "Close",
+        "clear": "Clear"
     },
     "privacy_policy_page": {
         "privacy_policy": "Privacy Policy",

@@ -54,30 +54,30 @@ export default function Filter({ regions, businessTypes, onApply, onClose }: Pro
     const statis: Status[] = [
         {
             id: 0,
-            title: "ყველა"
+            title: t("components.all")
         },
         {
             id: 1,
-            title: "ღიაა ახლა"
+            title: t("components.profile_open_now")
         },
         {
             id: 2,
-            title: "დაკეტილია"
+            title: t("components.closed")
         }
     ]
 
     const sorting: Sorting[] = [
         {
             id: 0,
-            title: "შენთან ახლოს"
+            title: t("components.nearby")
         },
         {
             id: 1,
-            title: "რეიტინგი"
+            title: t("components.rating")
         },
         {
             id: 2,
-            title: "უახლესი"
+            title: t("components.latest")
         }
     ]
 
@@ -123,7 +123,7 @@ export default function Filter({ regions, businessTypes, onApply, onClose }: Pro
             <div className="absolute bottom-0 left-0 w-full h-[70vh] bg-[#0f0f0f] rounded-t-2xl p-4 animate-slideUp overflow-y-auto">
 
                 <div className="w-full flex justify-center mb-4">
-                    <h2 className="text-white font-bold"> {filterRouter === "city" ? "ქალაქი" : "ფილტრი"}</h2>
+                    <h2 className="text-white font-bold"> {filterRouter === "city" ? t("components.city") : t("components.filter")}</h2>
                 </div>
 
                 {filterRouter === "city" && (
@@ -142,7 +142,7 @@ export default function Filter({ regions, businessTypes, onApply, onClose }: Pro
                                 />
                             </div>
 
-                            <h3 className="text-[14px] font-bold" onClick={() => { setSelectedRegion(null); setSearchCity(""); }}>გაუქმება</h3>
+                            <h3 className="text-[14px] font-bold" onClick={() => { setSelectedRegion(null); setSearchCity(""); }}>{t("components.cancel")}</h3>
                         </div>
 
                         <div className="mt-2 max-h-[400px] overflow-y-auto">
@@ -184,7 +184,7 @@ export default function Filter({ regions, businessTypes, onApply, onClose }: Pro
 
                         <div className="space-y-4">
                             <div onClick={() => setFilterRouter("city")} className="h-[64px] flex justify-between items-center text-[14px] text-[#a7a7a7] border-b border-[#2b2b2b]" >
-                                <span className="text-[#a7a7a7] text-[14px]">ქალაქი</span>
+                                <span className="text-[#a7a7a7] text-[14px]">{t("components.city")}</span>
                                 <div className="flex items-center justofy-cetner">
                                     <span className="text-white">{selectedRegion?.name}</span>
                                     <img src="/images/arrow_right.svg" alt="arrow_right" />
@@ -192,7 +192,7 @@ export default function Filter({ regions, businessTypes, onApply, onClose }: Pro
                             </div>
 
                             <div onClick={() => selectedRegion && setFilterRouter("district")} className={`h-[64px] flex justify-between items-center text-[14px] text-[#a7a7a7] border-b border-[#2b2b2b] pb-2 ${!selectedRegion && "opacity-40 pointer-events-none "}`}  >
-                                <span className="text-[#a7a7a7] text-[14px]">უბანი</span>
+                                <span className="text-[#a7a7a7] text-[14px]">{t("components.district")}</span>
                                 <div className="flex items-center justofy-cetner">
                                     <span className="text-white">{selectedDistricts.length > 0 && `${selectedDistricts.length} არჩეული`}</span>
                                     <img src="/images/arrow_right.svg" alt="" />
@@ -200,7 +200,7 @@ export default function Filter({ regions, businessTypes, onApply, onClose }: Pro
                             </div>
 
                             <div className="flex flex-col justify-between border-b border-[#2b2b2b] pb-2 " >
-                                <span className="text-[#a7a7a7] text-[14px]">სტატუსი</span>
+                                <span className="text-[#a7a7a7] text-[14px]">{t("components.status")}</span>
                                 <div className="w-full h-[42px] flex gap-[8px] mt-[12px]">
                                     {statis.map((item: any) => {
 
@@ -216,7 +216,7 @@ export default function Filter({ regions, businessTypes, onApply, onClose }: Pro
                             </div>
 
                             <div className="flex flex-col justify-between border-b border-[#2b2b2b] pb-2 " >
-                                <span className="text-[#a7a7a7] text-[14px]">დახარისხება</span>
+                                <span className="text-[#a7a7a7] text-[14px]">{t("components.sort")}</span>
                                 <div className="w-full h-[140px] flex flex-col gap-[8px] mt-[12px]">
                                     {sorting.map((item: any) => {
 
@@ -234,15 +234,15 @@ export default function Filter({ regions, businessTypes, onApply, onClose }: Pro
 
 
                         <button onClick={apply} className="w-full bg-[#F94B00] mt-6 p-3 rounded-xl font-bold"      >
-                            გაფილტვრა
+                            {t("components.apply_filter")}
                         </button>
 
                         <div className="w-full h-[48px] mt-[12px] flex justify-center items-center">
                             <div className="w-[50%] f-full flex justify-center items-center" onClick={onClose}>
-                                <h3>დახურვა</h3>
+                                <h3>{t("components.close")}</h3>
                             </div>
                             <div className="w-[50%] h-full flex justify-center items-center border border-[#2b2b2b] rounded-[12px]" onClick={clear}>
-                                <h3>გასუფთავება</h3>
+                                <h3>{t("components.clear")}</h3>
                             </div>
                         </div>
                     </>

@@ -153,7 +153,7 @@ export default function Filter({ regions, businessTypes, onApply }: Props) {
                             <div onClick={() => selectedRegion && setFilterRouter("district")} className={`h-[64px] flex justify-between items-center text-[14px] text-[#a7a7a7] border-b border-[#2b2b2b] pb-2 ${!selectedRegion && "opacity-40 pointer-events-none "}`}  >
                                 უბანი
                                 <div className="flex items-center justofy-cetner">
-                                    <span>  {selectedDistricts.length > 0 && `${selectedDistricts.length} არჩეული`}</span>
+                                    <span className="text-white">{selectedDistricts.length > 0 && `${selectedDistricts.length} არჩეული`}</span>
                                     <img src="/images/arrow_right.svg" alt="" />
                                 </div>
                             </div>

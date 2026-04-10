@@ -11,6 +11,7 @@ import Link from "next/link";
 import Filter from "@/components/filter";
 
 export default function Main() {
+  
   const t = useTranslations();
   const { businessStore, loading, fetchBusiness } = useBusinessStore();
   const { regionsStore, fetchRegionsInfo } = useRegionsStore();
@@ -23,7 +24,7 @@ export default function Main() {
 
   const [openFilter, setOpenFilter] = useState(false);
 
- 
+
 
   const districtsStore = [
     { id: 1, name: "ვაკე", regionId: 1 },
@@ -174,28 +175,16 @@ export default function Main() {
       </div>
       {openFilter && (
         <div className="fixed inset-0 z-50 md:hidden">
-          
-          <div
-            className="absolute inset-0 bg-black/50"
-            onClick={() => setOpenFilter(false)}
+          <div className="absolute inset-0 bg-black/50" onClick={() => setOpenFilter(false)}        />
+          <Filter
+            regions={regionsStore}
+            districts={districtsStore}
+            businessTypes={businessTypes}
+            onApply={(data) => {
+              console.log(data);
+              setOpenFilter(false);
+            }}
           />
-
-         <div className="absolute bottom-0 left-0 w-full h-[70vh] bg-[#0f0f0f] rounded-t-2xl p-4 animate-slideUp overflow-y-auto">
-
-            <div className="w-full flex justify-center mb-4">
-              <h2 className="text-white font-bold">ფილტრი</h2>
-            </div>
-
-            <Filter
-              regions={regionsStore}
-              districts={districtsStore}
-              businessTypes={businessTypes}
-              onApply={(data) => {
-                console.log(data);
-                setOpenFilter(false);
-              }}
-            />
-          </div>
         </div>
       )}
     </>

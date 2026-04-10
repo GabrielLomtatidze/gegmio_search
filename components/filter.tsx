@@ -1,8 +1,8 @@
 "use client";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Search } from "lucide-react";
 import { useTranslations } from "next-intl";
-
+import { useDistrictStore } from "@/zustand/APIs/public/districtStore";
 
 type Item = {
     id: number;
@@ -23,11 +23,12 @@ type Props = {
     businessTypes: Item[];
     onApply?: (data: FilterValues) => void;
 };
-
-export default function Filter({ regions, districts, businessTypes, onApply, }: Props) {
+export default function Filter({ regions, businessTypes, onApply }: Props) {
 
     const t = useTranslations();
 
+    const districts = useDistrictStore((state) => state.districts);
+    const fetchDistricts = useDistrictStore((state) => state.fetchDistricts);
 
     const [searchCity, setSearchCity] = useState<string>();
     const [filterRouter, setFilterRouter] = useState("");
@@ -35,6 +36,10 @@ export default function Filter({ regions, districts, businessTypes, onApply, }: 
     const [selectedDistricts, setSelectedDistricts] = useState<Item[]>([]);
     const [selectedBusiness, setSelectedBusiness] = useState<Item | null>(null);
     const [sortBy, setSortBy] = useState("distance");
+
+    useEffect(() => {
+        fetchDistricts(selectedRegion?.id ?? null);
+    }, [selectedRegion, fetchDistricts]);
 
     const toggleDistrict = (district: Item) => {
         if (selectedDistricts.some((d) => d.id === district.id)) {
@@ -84,14 +89,13 @@ export default function Filter({ regions, districts, businessTypes, onApply, }: 
                                 />
                             </div>
 
-
-                            <h3 className="text-[14px] font-bold" onClick={() => {setSelectedRegion(null), setSearchCity("")}}>გაუქმება</h3>
+                            <h3 className="text-[14px] font-bold" onClick={() => { setSelectedRegion(null); setSearchCity(""); }}>გაუქმება</h3>
                         </div>
 
                         <div className="mt-2 max-h-[400px] overflow-y-auto">
                             {filteredRegions.map((item) => (
                                 <div key={item.id} onClick={() => { setSelectedRegion(item); setSelectedDistricts([]); setFilterRouter(""); }} className="h-[64px] p-4 border-b border-[#2b2b2b] flex justify-between" >
-                                    <span>{item.name}</span>
+                                    <span className={`text-[${selectedRegion?.id === item.id ? "#F94B00" : "white"}]`}>{item.name}</span>
                                     {selectedRegion?.id === item.id && (
                                         <img src="/images/fill_mark.svg" alt="mark" />
                                     )}
@@ -104,18 +108,21 @@ export default function Filter({ regions, districts, businessTypes, onApply, }: 
                 {filterRouter === "district" && (
                     <>
                         <button onClick={() => setFilterRouter("")}>←</button>
-                        {districts
-                            .filter((d) => d.regionId === selectedRegion?.id)
-                            .map((item) => (
-                                <div
-                                    key={item.id}
-                                    onClick={() => toggleDistrict(item)}
-                                    className="p-4 border-b border-[#2b2b2b] flex justify-between"
-                                >
-                                    {item.name}
-                                    {selectedDistricts.some((d) => d.id === item.id) && "✓"}
+                        {districts.map((item) => {
+                            const isSelected = selectedDistricts.some((d) => d.id === item.id);
+
+                            return (
+                                <div key={item.id} onClick={() => toggleDistrict(item)} className="h-[64px] p-4 border-b border-[#2b2b2b] flex justify-between items-center"      >
+                                    <span className={`text-[${isSelected ? "#F94B00" : "white"}]`}>
+                                        {item.name}
+                                    </span>
+
+                                    {isSelected && (
+                                        <img src="/images/fill_mark.svg" alt="mark" />
+                                    )}
                                 </div>
-                            ))}
+                            );
+                        })}
                     </>
                 )}
 
@@ -123,14 +130,7 @@ export default function Filter({ regions, districts, businessTypes, onApply, }: 
                     <>
                         <button onClick={() => setFilterRouter("")}>←</button>
                         {businessTypes.map((item) => (
-                            <div
-                                key={item.id}
-                                onClick={() => {
-                                    setSelectedBusiness(item);
-                                    setFilterRouter("");
-                                }}
-                                className="p-4 border-b border-[#2b2b2b] flex justify-between"
-                            >
+                            <div key={item.id} onClick={() => { setSelectedBusiness(item); setFilterRouter(""); }} className="p-4 border-b border-[#2b2b2b] flex justify-between"  >
                                 {item.name}
                                 {selectedBusiness?.id === item.id && "✓"}
                             </div>

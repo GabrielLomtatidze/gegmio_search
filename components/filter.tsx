@@ -23,6 +23,12 @@ type Props = {
     businessTypes: Item[];
     onApply?: (data: FilterValues) => void;
 };
+
+type Status = {
+    id: number,
+    title: string
+}
+
 export default function Filter({ regions, businessTypes, onApply }: Props) {
 
     const t = useTranslations();
@@ -36,6 +42,23 @@ export default function Filter({ regions, businessTypes, onApply }: Props) {
     const [selectedDistricts, setSelectedDistricts] = useState<Item[]>([]);
     const [selectedBusiness, setSelectedBusiness] = useState<Item | null>(null);
     const [sortBy, setSortBy] = useState("distance");
+    const [selectedStatus, setSelectedStatus] = useState<number>(0);
+
+    const statis: Status[] = [
+        {
+            id: 0,
+            title: "ყველა"
+        },
+        {
+            id: 1,
+            title: "ღიაა ახლა"
+        },
+        {
+            id: 2,
+            title: "დაკეტილია"
+        }
+    ]
+
 
     useEffect(() => {
         fetchDistricts(selectedRegion?.id ?? null);
@@ -126,24 +149,12 @@ export default function Filter({ regions, businessTypes, onApply }: Props) {
                     </>
                 )}
 
-                {filterRouter === "object" && (
-                    <>
-                        <button onClick={() => setFilterRouter("")}>←</button>
-                        {businessTypes.map((item) => (
-                            <div key={item.id} onClick={() => { setSelectedBusiness(item); setFilterRouter(""); }} className="p-4 border-b border-[#2b2b2b] flex justify-between"  >
-                                {item.name}
-                                {selectedBusiness?.id === item.id && "✓"}
-                            </div>
-                        ))}
-                    </>
-                )}
-
                 {filterRouter === "" && (
                     <>
 
                         <div className="space-y-4">
                             <div onClick={() => setFilterRouter("city")} className="h-[64px] flex justify-between items-center text-[14px] text-[#a7a7a7] border-b border-[#2b2b2b]" >
-                                ქალაქი
+                                <span className="text-[#a7a7a7] text-[14px]">ქალაქი</span>
                                 <div className="flex items-center justofy-cetner">
                                     <span className="text-white">{selectedRegion?.name}</span>
                                     <img src="/images/arrow_right.svg" alt="arrow_right" />
@@ -151,16 +162,27 @@ export default function Filter({ regions, businessTypes, onApply }: Props) {
                             </div>
 
                             <div onClick={() => selectedRegion && setFilterRouter("district")} className={`h-[64px] flex justify-between items-center text-[14px] text-[#a7a7a7] border-b border-[#2b2b2b] pb-2 ${!selectedRegion && "opacity-40 pointer-events-none "}`}  >
-                                უბანი
+                                <span className="text-[#a7a7a7] text-[14px]">უბანი</span>
                                 <div className="flex items-center justofy-cetner">
                                     <span className="text-white">{selectedDistricts.length > 0 && `${selectedDistricts.length} არჩეული`}</span>
                                     <img src="/images/arrow_right.svg" alt="" />
                                 </div>
                             </div>
 
-                            <div onClick={() => setFilterRouter("object")} className="flex justify-between border-b border-[#2b2b2b] pb-2"   >
-                                ობიექტი
-                                <span>{selectedBusiness?.name}</span>
+                            <div className="flex flex-col justify-between border-b border-[#2b2b2b] pb-2 " >
+                                <span className="text-[#a7a7a7] text-[14px]">სტატუსი</span>
+                                <div className="w-full h-[42px] flex gap-[8px] mt-[12px]">
+                                    {statis.map((item: any) => {
+
+                                        const isSelected = item.id === selectedStatus;
+
+                                        return (
+                                            <div key={item.id} className={`w-full h-full rounded-[12px] border border-[${isSelected ? "#F94B00" : "#2b2b2b"}] bg-[${isSelected ? "#22140E" : "transparant"}] flex justify-center items-center`} onClick={() => setSelectedStatus(item.id)}>
+                                                <h3 className={`text-[${isSelected ? "white" : "#a7a7a7"}] text-[14px]`}>{item.title}</h3>
+                                            </div>
+                                        )
+                                    })}
+                                </div>
                             </div>
                         </div>
 

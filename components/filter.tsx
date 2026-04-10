@@ -29,6 +29,11 @@ type Status = {
     title: string
 }
 
+type Sorting = {
+    id: number,
+    title: string
+}
+
 export default function Filter({ regions, businessTypes, onApply }: Props) {
 
     const t = useTranslations();
@@ -43,6 +48,7 @@ export default function Filter({ regions, businessTypes, onApply }: Props) {
     const [selectedBusiness, setSelectedBusiness] = useState<Item | null>(null);
     const [sortBy, setSortBy] = useState("distance");
     const [selectedStatus, setSelectedStatus] = useState<number>(0);
+    const [selectedSorting, setSelectedSorting] = useState<number>(0);
 
     const statis: Status[] = [
         {
@@ -56,6 +62,21 @@ export default function Filter({ regions, businessTypes, onApply }: Props) {
         {
             id: 2,
             title: "დაკეტილია"
+        }
+    ]
+
+    const sorting: Sorting[] = [
+        {
+            id: 0,
+            title: "შენთან ახლოს"
+        },
+        {
+            id: 1,
+            title: "რეიტინგი"
+        },
+        {
+            id: 2,
+            title: "უახლესი"
         }
     ]
 
@@ -184,29 +205,24 @@ export default function Filter({ regions, businessTypes, onApply }: Props) {
                                     })}
                                 </div>
                             </div>
+
+                            <div className="flex flex-col justify-between border-b border-[#2b2b2b] pb-2 " >
+                                <span className="text-[#a7a7a7] text-[14px]">დახარისხება</span>
+                                <div className="w-full h-[140px] flex flex-col gap-[8px] mt-[12px]">
+                                    {sorting.map((item: any) => {
+
+                                        const isSelected = item.id === selectedSorting;
+
+                                        return (
+                                            <div key={item.id} className={`w-full h-full rounded-[12px] border border-[${isSelected ? "#F94B00" : "#2b2b2b"}] bg-[${isSelected ? "#22140E" : "transparant"}] flex justify-center items-center`} onClick={() => setSelectedSorting(item.id)}>
+                                                <h3 className={`text-[${isSelected ? "white" : "#a7a7a7"}] text-[14px]`}>{item.title}</h3>
+                                            </div>
+                                        )
+                                    })}
+                                </div>
+                            </div>
                         </div>
 
-                        <div className="mt-6 flex gap-2">
-                            <button
-                                onClick={() => setSortBy("distance")}
-                                className={`w-1/2 p-2 rounded ${sortBy === "distance"
-                                    ? "bg-[#F94B00]"
-                                    : "border border-[#F94B00]"
-                                    }`}
-                            >
-                                დისტანცია
-                            </button>
-
-                            <button
-                                onClick={() => setSortBy("rating")}
-                                className={`w-1/2 p-2 rounded ${sortBy === "rating"
-                                    ? "bg-[#F94B00]"
-                                    : "border border-[#F94B00]"
-                                    }`}
-                            >
-                                რეიტინგი
-                            </button>
-                        </div>
 
                         <button
                             onClick={apply}

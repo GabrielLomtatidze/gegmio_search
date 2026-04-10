@@ -85,7 +85,7 @@ export default function Filter({ regions, districts, businessTypes, onApply, }: 
                             </div>
 
 
-                            <h3 className="text-[14px] font-bold">გაუქმება</h3>
+                            <h3 className="text-[14px] font-bold" onClick={() => {setSelectedRegion(null), setSearchCity("")}}>გაუქმება</h3>
                         </div>
 
                         <div className="mt-2 max-h-[400px] overflow-y-auto">

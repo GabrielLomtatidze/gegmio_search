@@ -22,6 +22,7 @@ type Props = {
     districts: Item[];
     businessTypes: Item[];
     onApply?: (data: FilterValues) => void;
+    onClose?: () => void;
 };
 
 type Status = {
@@ -34,7 +35,7 @@ type Sorting = {
     title: string
 }
 
-export default function Filter({ regions, businessTypes, onApply }: Props) {
+export default function Filter({ regions, businessTypes, onApply, onClose }: Props) {
 
     const t = useTranslations();
 
@@ -107,6 +108,14 @@ export default function Filter({ regions, businessTypes, onApply }: Props) {
     const filteredRegions = regions.filter((r) =>
         r.name.toLowerCase().includes((searchCity ?? "").toLowerCase())
     );
+
+    const clear = () => {
+        setSelectedRegion(null);
+        setSearchCity("");
+        setSelectedDistricts([])
+        setSelectedStatus(0);
+        setSelectedSorting(0);
+    }
 
     return (
         <div className="w-full text-white">
@@ -224,12 +233,18 @@ export default function Filter({ regions, businessTypes, onApply }: Props) {
                         </div>
 
 
-                        <button
-                            onClick={apply}
-                            className="w-full bg-[#F94B00] mt-6 p-3 rounded-xl font-bold"
-                        >
+                        <button onClick={apply} className="w-full bg-[#F94B00] mt-6 p-3 rounded-xl font-bold"      >
                             გაფილტვრა
                         </button>
+
+                        <div className="w-full h-[48px] mt-[12px] flex justify-center items-center">
+                            <div className="w-[50%] f-full flex justify-center items-center" onClick={onClose}>
+                                <h3>დახურვა</h3>
+                            </div>
+                            <div className="w-[50%] h-full flex justify-center items-center border border-[#2b2b2b] rounded-[12px]" onClick={clear}>
+                                <h3>გასუფთავება</h3>
+                            </div>
+                        </div>
                     </>
                 )}
             </div>

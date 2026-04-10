@@ -11,7 +11,7 @@ import Link from "next/link";
 import Filter from "@/components/filter";
 
 export default function Main() {
-  
+
   const t = useTranslations();
   const { businessStore, loading, fetchBusiness } = useBusinessStore();
   const { regionsStore, fetchRegionsInfo } = useRegionsStore();
@@ -175,15 +175,13 @@ export default function Main() {
       </div>
       {openFilter && (
         <div className="fixed inset-0 z-50 md:hidden">
-          <div className="absolute inset-0 bg-black/50" onClick={() => setOpenFilter(false)}        />
+          <div className="absolute inset-0 bg-black/50" onClick={() => setOpenFilter(false)} />
           <Filter
             regions={regionsStore}
             districts={districtsStore}
             businessTypes={businessTypes}
-            onApply={(data) => {
-              console.log(data);
-              setOpenFilter(false);
-            }}
+            onApply={() => { setOpenFilter(false); }}
+            onClose={() => setOpenFilter(false)}
           />
         </div>
       )}

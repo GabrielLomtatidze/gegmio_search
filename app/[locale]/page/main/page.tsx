@@ -8,6 +8,7 @@ import { useRegionsStore } from "@/zustand/APIs/public/regionsStore";
 import Card from "@/components/cards/card";
 import CardSkeleton from "@/components/skeletons/cardSkeleton";
 import Link from "next/link";
+import Filter from "@/components/filter";
 
 export default function Main() {
   const t = useTranslations();
@@ -19,6 +20,21 @@ export default function Main() {
   const [longitude, setLongitude] = useState<number | null>(null);
   const [locationResolved, setLocationResolved] = useState(false);
   const [selectedRegionId, setSelectedRegionId] = useState(0);
+
+  const [openFilter, setOpenFilter] = useState(false);
+
+ 
+
+  const districtsStore = [
+    { id: 1, name: "ვაკე", regionId: 1 },
+    { id: 2, name: "საბურთალო", regionId: 1 },
+  ];
+
+  const businessTypes = [
+    { id: 1, name: "კაფე" },
+    { id: 2, name: "რესტორანი" },
+  ];
+
 
   const hasLocation = latitude !== null && longitude !== null;
 
@@ -99,7 +115,7 @@ export default function Main() {
               />
             </div>
 
-            <div className="md:hidden w-[44px] h-[42px] bg-[#F94B00] rounded-xl flex justify-center items-center">
+            <div className="md:hidden w-[44px] h-[42px] bg-[#F94B00] rounded-xl flex justify-center items-center" onClick={() => setOpenFilter(true)}>
               <img src="/images/filter.svg" alt="filter" className="w-[20px] h-[20px]" />
             </div>
 
@@ -156,6 +172,32 @@ export default function Main() {
             </Link>
           ))}
       </div>
+      {openFilter && (
+        <div className="fixed inset-0 z-50 md:hidden">
+          
+          <div
+            className="absolute inset-0 bg-black/50"
+            onClick={() => setOpenFilter(false)}
+          />
+
+         <div className="absolute bottom-0 left-0 w-full h-[70vh] bg-[#0f0f0f] rounded-t-2xl p-4 animate-slideUp overflow-y-auto">
+
+            <div className="w-full flex justify-center mb-4">
+              <h2 className="text-white font-bold">ფილტრი</h2>
+            </div>
+
+            <Filter
+              regions={regionsStore}
+              districts={districtsStore}
+              businessTypes={businessTypes}
+              onApply={(data) => {
+                console.log(data);
+                setOpenFilter(false);
+              }}
+            />
+          </div>
+        </div>
+      )}
     </>
   );
 }

@@ -7,6 +7,7 @@ import axios from "axios";
 type Props = {
     businessId: string,
     isFavorite: boolean,
+    isOpen: boolean,
     title: string,
     image: string,
     address: string,
@@ -15,7 +16,7 @@ type Props = {
 }
 
 
-export default function Card({ businessId, isFavorite, title, image, address, businessCategory, distance }: Props) {
+export default function Card({ businessId, isFavorite, isOpen, title, image, address, businessCategory, distance }: Props) {
 
     const t = useTranslations();
     const { isAuthenticated } = useAuthPositionStore();
@@ -74,8 +75,16 @@ export default function Card({ businessId, isFavorite, title, image, address, bu
 
                         <div className="absolute inset-0 flex flex-col justify-between p-[10px]">
                             <div className="inline-flex px-[12px] py-[8px] backdrop-blur-sm bg-black/50 rounded-2xl items-center gap-2 w-fit">
-                                <div className="w-[8px] h-[8px] bg-[#00d34d] rounded-full" />
-                                <h3 className="text-white">{t("components.profile_open_now")}</h3>
+                                {isOpen ? (
+                                    <>
+                                        <div className="w-[8px] h-[8px] bg-[#00d34d] rounded-full" />
+                                        <h3 className="text-white">{t("components.profile_open_now")}</h3>
+                                    </>) :
+                                    (<>
+                                        <div className="w-[8px] h-[8px] bg-red-500 rounded-full" />
+                                        <h3 className="text-white">{t("components.is_closed")}</h3>
+                                    </>)}
+
                             </div>
                         </div>
 

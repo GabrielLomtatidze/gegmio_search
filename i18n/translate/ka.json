@@ -101,6 +101,7 @@
     },
     "components": {
         "profile_open_now": "ღიაა ახლა",
+        "is_closed": "ეხლა დაკეტილია",
         "rating": "რეიტინგი",
         "distance": "კმ",
         "business_category": "ბიზნეს კატეგორია",

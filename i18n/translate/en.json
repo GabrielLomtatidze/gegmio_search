@@ -103,6 +103,7 @@
     },
     "components": {
         "profile_open_now": "Open Now",
+        "is_closed": "Is closed",
         "rating": "Rating",
         "distance": "km",
         "business_category": "Business Category",

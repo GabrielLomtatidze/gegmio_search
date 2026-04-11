@@ -1,6 +1,6 @@
 import { create } from "zustand";
 import axios from "axios";
-import qs from "qs"
+import qs from "qs";
 
 type File = {
     id: number;
@@ -47,54 +47,66 @@ interface BusinessStore {
     fetchBusiness: (params: FetchBusinessParams) => Promise<void>;
 }
 
+function getLocalDateTimeWithOffset() {
+    const now = new Date();
+    const pad = (n: number) => String(n).padStart(2, "0");
+
+    const year = now.getFullYear();
+    const month = pad(now.getMonth() + 1);
+    const day = pad(now.getDate());
+    const hours = pad(now.getHours());
+    const minutes = pad(now.getMinutes());
+    const seconds = pad(now.getSeconds());
+
+    const offset = -now.getTimezoneOffset();
+    const sign = offset >= 0 ? "+" : "-";
+    const offsetHours = pad(Math.floor(Math.abs(offset) / 60));
+    const offsetMinutes = pad(Math.abs(offset) % 60);
+
+    return `${year}-${month}-${day}T${hours}:${minutes}:${seconds}${sign}${offsetHours}:${offsetMinutes}`;
+}
 
 export const useBusinessStore = create<BusinessStore>((set) => ({
     businessStore: [],
     loading: false,
 
-    fetchBusiness: async ({
-        regionId,
-        districtIds = [],
-        latitude,
-        longitude,
-        searchKey,
-    }) => {
+    fetchBusiness: async ({ regionId, districtIds = [], latitude, longitude, searchKey, }) => {
         set({ loading: true });
 
         try {
-            const accessToken = await localStorage.getItem("accessToken");
+            const accessToken = localStorage.getItem("accessToken");
+
             const params: any = {
                 RegionId: regionId,
                 Latitude: latitude,
                 Longtitude: longitude,
                 DistrictIds: districtIds.length ? districtIds : undefined,
+                LocalTime: getLocalDateTimeWithOffset(),
             };
 
             if (searchKey && searchKey.trim().length > 0) {
                 params.SearchKey = searchKey.trim();
             }
-            const response = await axios.get<BusinessResponse>(
 
+            const response = await axios.get<BusinessResponse>(
                 "https://bookitcrm.runasp.net/api/v1/public",
                 {
                     params,
                     paramsSerializer: (params) =>
-                        qs.stringify(params, { arrayFormat: "repeat" }), ...(accessToken && {
-                            headers: {
-                                Authorization: `Bearer ${accessToken}`,
-                            },
-                        }),
+                        qs.stringify(params, { arrayFormat: "repeat" }),
+                    ...(accessToken && {
+                        headers: {
+                            Authorization: `Bearer ${accessToken}`,
+                        },
+                    }),
                 }
-
             );
-
 
             set({
                 businessStore: response.data.data,
                 loading: false,
             });
         } catch (error) {
-            console.error("Error fetching business data:", error);
             set({ loading: false });
         }
     },

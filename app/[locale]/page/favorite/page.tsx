@@ -26,6 +26,26 @@ export default function Favorite() {
 
     const hasLocation = latitude !== null && longitude !== null;
 
+    function getLocalDateTimeWithOffset() {
+        const now = new Date();
+
+        const pad = (n: number) => String(n).padStart(2, "0");
+
+        const year = now.getFullYear();
+        const month = pad(now.getMonth() + 1);
+        const day = pad(now.getDate());
+        const hours = pad(now.getHours());
+        const minutes = pad(now.getMinutes());
+        const seconds = pad(now.getSeconds());
+
+        const offset = -now.getTimezoneOffset(); // minutes
+        const sign = offset >= 0 ? "+" : "-";
+        const offsetHours = pad(Math.floor(Math.abs(offset) / 60));
+        const offsetMinutes = pad(Math.abs(offset) % 60);
+
+        return `${year}-${month}-${day}T${hours}:${minutes}:${seconds}${sign}${offsetHours}:${offsetMinutes}`;
+    }
+
     useEffect(() => {
         fetchRegionsInfo();
     }, [fetchRegionsInfo]);
@@ -50,17 +70,19 @@ export default function Favorite() {
         const params: Record<string, any> = {};
 
         if (query.trim() !== "") {
-            params.searchKey = query;
+            params.SearchKey = query;
         }
 
         if (lat !== undefined && lng !== undefined) {
-            params.latitude = lat;
-            params.longitude = lng;
+            params.Latitude = lat;
+            params.Longtitude = lng;
         }
 
         if (regionId && regionId !== 0) {
-            params.regionId = regionId;
+            params.RegionId = regionId;
         }
+
+        params.LocalTime = getLocalDateTimeWithOffset();
 
         return params;
     };
@@ -193,6 +215,7 @@ export default function Favorite() {
                                 key={item.id}
                                 businessId={item.id}
                                 isFavorite={true}
+                                isOpen={item.isOpen}
                                 title={item.name}
                                 image={item.file?.url || "/images/start.svg"}
                                 address={item.addressName}

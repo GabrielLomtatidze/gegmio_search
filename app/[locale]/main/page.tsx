@@ -147,6 +147,7 @@ export default function Main() {
               <Card
                 businessId={item.id}
                 isFavorite={item.isFavorite}
+                isOpen={item.isOpen}
                 title={item.name}
                 image={item.file?.url || "/images/start.svg"}
                 address={item.addressName}

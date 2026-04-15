@@ -26,6 +26,7 @@ type Menu = {
 
 
 export default function MenuService() {
+    const apiUrl = process.env.NEXT_PUBLIC_API_URL;
 
     const params = useParams();
     const id = params?.id as string;
@@ -64,7 +65,7 @@ export default function MenuService() {
     const getFiltertext = async (): Promise<void> => {
         try {
             const response = await axios.get(
-                `https://bookitcrm.runasp.net/api/v1/public/service-categories/${id}`
+                `${apiUrl}/api/v1/public/service-categories/${id}`
             );
 
             const data = response.data;
@@ -83,7 +84,7 @@ export default function MenuService() {
     const getMenu = async (): Promise<void> => {
 
         try {
-            const response = await axios.get(`https://bookitcrm.runasp.net/api/v1/public/services/${id}`)
+            const response = await axios.get(`${apiUrl}/api/v1/public/services/${id}`)
 
             const data = response.data;
 
@@ -95,14 +96,14 @@ export default function MenuService() {
     }
 
 
-   useEffect(() => {
-    if (!id || hasFetched.current) return;
+    useEffect(() => {
+        if (!id || hasFetched.current) return;
 
-    getFiltertext();
-    getMenu();
+        getFiltertext();
+        getMenu();
 
-    hasFetched.current = true;
-}, [id]);
+        hasFetched.current = true;
+    }, [id]);
 
 
 

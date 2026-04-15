@@ -12,6 +12,9 @@ import debounce from "lodash.debounce";
 
 
 export default function Favorite() {
+    
+    const apiUrl = process.env.NEXT_PUBLIC_API_URL;
+
     const t = useTranslations();
     const { regionsStore, fetchRegionsInfo } = useRegionsStore();
 
@@ -97,7 +100,7 @@ export default function Favorite() {
 
                 try {
                     const response = await axios.get(
-                        "https://bookitcrm.runasp.net/api/v1/favorites",
+                        `${apiUrl}/api/v1/favorites`,
                         {
                             headers: {
                                 Authorization: `Bearer ${accessToken}`,

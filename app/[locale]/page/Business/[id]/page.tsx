@@ -18,6 +18,8 @@ import Link from "next/link";
 
 export default function Business() {
 
+    const apiUrl = process.env.NEXT_PUBLIC_API_URL;
+
     const t = useTranslations();
     const params = useParams();
     const id = params?.id as string;
@@ -65,7 +67,7 @@ export default function Business() {
             if (!guessMode && business) {
                 if (!favorite) {
                     await axios.post(
-                        `https://bookitcrm.runasp.net/api/v1/favorites/${id}`,
+                        `${apiUrl}/api/v1/favorites/${id}`,
                         {},
                         {
                             headers: {
@@ -77,7 +79,7 @@ export default function Business() {
                     );
                 } else {
                     await axios.delete(
-                        `https://bookitcrm.runasp.net/api/v1/favorites/${id}`,
+                        `${apiUrl}/api/v1/favorites/${id}`,
                         {
                             headers: {
                                 Authorization: `Bearer ${accessToken}`,

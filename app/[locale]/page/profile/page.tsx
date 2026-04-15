@@ -31,6 +31,8 @@ interface ProfileErrors {
 
 export default function Profile() {
 
+    const apiUrl = process.env.NEXT_PUBLIC_API_URL;
+
     const t = useTranslations();
     const { userInfo } = useUserStore();
 
@@ -104,7 +106,7 @@ export default function Profile() {
             const accessToken = localStorage.getItem("accessToken");
 
             await axios.post(
-                `https://bookitcrm.runasp.net/api/v1/account/edit-profile`,
+                `${apiUrl}/api/v1/account/edit-profile`,
                 {
                     firstName: profileForm.firstName,
                     lastName: profileForm.lastName,
@@ -145,7 +147,7 @@ export default function Profile() {
             const accessToken = localStorage.getItem("accessToken");
 
             await axios.post(
-                `https://bookitcrm.runasp.net/api/v1/account/change-password`,
+                `${apiUrl}/api/v1/account/change-password`,
                 {
                     oldPassword,
                     newPassword,

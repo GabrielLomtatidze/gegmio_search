@@ -14,6 +14,7 @@ interface Errors {
 }
 
 export default function Login() {
+    const apiUrl = process.env.NEXT_PUBLIC_API_URL;
 
     const router = useRouter();
     const t = useTranslations();
@@ -50,7 +51,7 @@ export default function Login() {
         setLoading(true);
 
         try {
-            const response = await axios.post(`https://bookitcrm.runasp.net/api/v1/account/login`, {
+            const response = await axios.post(`${apiUrl}4/api/v1/account/login`, {
                 email,
                 password,
             });

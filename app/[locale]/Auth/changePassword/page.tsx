@@ -16,6 +16,7 @@ interface Errors {
 }
 
 export default function changePassord() {
+    const apiUrl = process.env.NEXT_PUBLIC_API_URL;
 
     const t = useTranslations();
     const router = useRouter();
@@ -61,7 +62,7 @@ export default function changePassord() {
 
 
             await axios.post(
-                `https://bookitcrm.runasp.net/api/v1/account/password-reset?email=${(email)}`, null,
+                `${apiUrl}/api/v1/account/password-reset?email=${(email)}`, null,
                 {
                     headers: {
                         Accept: "*/*",

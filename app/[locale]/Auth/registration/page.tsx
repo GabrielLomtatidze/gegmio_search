@@ -26,6 +26,7 @@ type Errors = {
 };
 
 export default function RegistrationPage() {
+  const apiUrl = process.env.NEXT_PUBLIC_API_URL;
 
   const t = useTranslations();
   const router = useRouter();
@@ -64,7 +65,7 @@ export default function RegistrationPage() {
   useEffect(() => {
     const getGender = async () => {
       try {
-        const res = await axios.get(`https://bookitcrm.runasp.net/api/v1/account/gender-dropdown`);
+        const res = await axios.get(`${apiUrl}}/api/v1/account/gender-dropdown`);
         setGenderOptions(res.data);
       } catch (err) {
         console.log(err);
@@ -150,7 +151,7 @@ export default function RegistrationPage() {
 
     try {
       await axios.post(
-        `https://bookitcrm.runasp.net/api/v1/account/register`,
+        `${apiUrl}/api/v1/account/register`,
         {
           firstName,
           lastName,

@@ -14,12 +14,13 @@ type Errors = {
 }
 
 export default function Otp() {
+    const apiUrl = process.env.NEXT_PUBLIC_API_URL;
 
     const t = useTranslations();
     const { email, password, clear } = useAuthStore();
     const router = useRouter();
     const setAuthenticated = useAuthPositionStore((state) => state.setAuthenticated);
-    
+
     const [otp, setOtp] = useState<string>("");
     const [loading, setLoading] = useState<boolean>(false);
     const [errors, setErrors] = useState<Errors>({ count: "", valid: "" });
@@ -34,12 +35,10 @@ export default function Otp() {
                 return;
             }
 
-            console.log(otp);
+           
+            const confirmResponse = await axios.get(`${apiUrl}}/api/v1/account/confirm-email?ConfirmationCode=${otp}`);
 
-
-            const confirmResponse = await axios.get(`https://bookitcrm.runasp.net/api/v1/account/confirm-email?ConfirmationCode=${otp}`);
-
-            const loginResponse = await axios.post(`https://bookitcrm.runasp.net/api/v1/account/login`, {
+            const loginResponse = await axios.post(`${apiUrl}}/api/v1/account/login`, {
                 email,
                 phoneNumber: null,
                 password

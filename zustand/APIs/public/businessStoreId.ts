@@ -41,6 +41,8 @@ type BusinessByIdState = {
   reset: () => void;
 };
 
+const apiUrl = process.env.NEXT_PUBLIC_API_URL;
+
 export const useBusinessStoreId = create<BusinessByIdState>((set, get) => ({
   business: null,
   loading: false,
@@ -59,7 +61,7 @@ export const useBusinessStoreId = create<BusinessByIdState>((set, get) => ({
 
       const accessToken = localStorage.getItem("accessToken");
 
-      const res = await axios.get(`https://bookitcrm.runasp.net/api/v1/public/${id}`, {
+      const res = await axios.get(`${apiUrl}/api/v1/public/${id}`, {
         ...(accessToken && {
           headers: {
             Authorization: `Bearer ${accessToken}`,

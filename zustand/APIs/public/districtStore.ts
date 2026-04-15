@@ -14,6 +14,8 @@ type DistrictStore = {
   fetchDistricts: (regionId: number | null) => Promise<void>;
 };
 
+const apiUrl = process.env.NEXT_PUBLIC_API_URL;
+
 export const useDistrictStore = create<DistrictStore>((set) => ({
   districts: [],
   selectedDistricts: [],
@@ -27,7 +29,7 @@ export const useDistrictStore = create<DistrictStore>((set) => ({
 
     try {
       const response = await axios.get<District[]>(
-        `https://bookitcrm.runasp.net/api/v1/public/districts/${regionId}`
+        `${apiUrl}/api/v1/public/districts/${regionId}`
       );
 
       set({ districts: response.data });

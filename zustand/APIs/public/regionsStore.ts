@@ -12,6 +12,8 @@ type RegionsStore = {
     fetchRegionsInfo: () => Promise<void>;
 };
 
+const apiUrl = process.env.NEXT_PUBLIC_API_URL;
+
 export const useRegionsStore = create<RegionsStore>((set, get) => ({
     regionsStore: [],
     regionsCount: 0,
@@ -23,7 +25,7 @@ export const useRegionsStore = create<RegionsStore>((set, get) => ({
         };
         try {
             const accessToken = await localStorage.getItem("accessToken");
-            const response = await axios.get("https://bookitcrm.runasp.net/api/v1/public/regions", {
+            const response = await axios.get(`${apiUrl}/api/v1/public/regions`, {
                 ...(accessToken && {
                     headers: {
                         Authorization: `Bearer ${accessToken}`,

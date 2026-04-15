@@ -66,6 +66,8 @@ function getLocalDateTimeWithOffset() {
     return `${year}-${month}-${day}T${hours}:${minutes}:${seconds}${sign}${offsetHours}:${offsetMinutes}`;
 }
 
+const apiUrl = process.env.NEXT_PUBLIC_API_URL;
+
 export const useBusinessStore = create<BusinessStore>((set) => ({
     businessStore: [],
     loading: false,
@@ -89,7 +91,7 @@ export const useBusinessStore = create<BusinessStore>((set) => ({
             }
 
             const response = await axios.get<BusinessResponse>(
-                "https://bookitcrm.runasp.net/api/v1/public",
+                `${apiUrl}/api/v1/public`,
                 {
                     params,
                     paramsSerializer: (params) =>

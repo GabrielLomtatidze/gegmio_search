@@ -8,6 +8,8 @@ interface CurrentServicesState {
     fetchServices: (currentBusinessId: string, filterId?: number | null, search?: string) => Promise<void>;
 }
 
+const apiUrl = process.env.NEXT_PUBLIC_API_URL;
+
 export const useCurrentServicesStore = create<CurrentServicesState>((set) => ({
     currentServices: null,
     loadingServices: false,
@@ -16,7 +18,7 @@ export const useCurrentServicesStore = create<CurrentServicesState>((set) => ({
         set({ loadingServices: true });
         try {
             const accessToken = await localStorage.getItem("accessToken");
-            const response = await axios.get(`https://bookitcrm.runasp.net/api/v1/public/services/${currentBusinessId}`, {
+            const response = await axios.get(`${apiUrl}/api/v1/public/services/${currentBusinessId}`, {
                 params: {
                     categoryId: filterId ?? undefined,
                     filterKey: search || undefined

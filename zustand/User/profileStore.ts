@@ -36,6 +36,8 @@ type UserStore = {
     fetchUserInfo: () => Promise<void>;
 };
 
+const apiUrl = process.env.NEXT_PUBLIC_API_URL;
+
 export const useUserStore = create<UserStore>((set, get) => ({
     userInfo: null,
     fetched: false,
@@ -49,7 +51,7 @@ export const useUserStore = create<UserStore>((set, get) => ({
             if (!accessToken) return;
 
             const response = await axios.get(
-                'https://bookitcrm.runasp.net/api/v1/account/profile',
+                `${apiUrl}/api/v1/account/profile`,
                 {
                     headers: {
                         Authorization: `Bearer ${accessToken}`,

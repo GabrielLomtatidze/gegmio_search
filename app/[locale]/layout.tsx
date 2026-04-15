@@ -59,7 +59,7 @@ export const metadata: Metadata = {
   metadataBase: new URL("https://gegmio.com"),
 };
 
-export default async function RootLayout({ children, params }: LayoutProps<'/[locale]'>) {
+export default async function RootLayout({ children, params, }: { children: React.ReactNode; params: { locale: string }; }) {
   const { locale } = await params;
 
   return (

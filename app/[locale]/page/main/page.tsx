@@ -137,7 +137,6 @@ export default function Main() {
                 <option value="">შენთან ახლოს</option>
                 <option value="#">შორს</option>
                 <option value="#1">შორიახლოს</option>
-                <option value="#2">ძაან იქით</option>
               </select>
             </div>
           </div>
@@ -181,7 +180,7 @@ export default function Main() {
             regions={regionsStore}
             districts={districtsStore}
             businessTypes={businessTypes}
-            onApply={() => { setOpenFilter(false); }}
+            onApply={() => { setOpenFilter(false)}}
             onClose={() => setOpenFilter(false)}
           />
         </div>

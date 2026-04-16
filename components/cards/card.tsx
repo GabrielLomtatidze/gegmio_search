@@ -62,7 +62,7 @@ export default function Card({ businessId, isFavorite, isOpen, title, image, add
 
     return (
         <>
-            <div className="w-[252px] h-[260px] border-[1px] border-[#2b2b2b] rounded-xl overflow-hidden relative">
+            <div className="w-[252px] border-[1px] border-[#2b2b2b] rounded-xl overflow-hidden relative">
 
                 <button type="button" onClick={(e) => { e.preventDefault(); e.stopPropagation(); addFavirite(); }} className="absolute top-[10px] right-[10px] z-20 w-[32px] h-[32px] backdrop-blur-xl bg-black/40 rounded-full flex justify-center items-center"   >
                     <img src={`/images/${heart ? "fill-heart.svg" : "heart.svg"}`} alt="heart" className="w-5 h-5" />
@@ -78,11 +78,11 @@ export default function Card({ businessId, isFavorite, isOpen, title, image, add
                                 {isOpen ? (
                                     <>
                                         <div className="w-[8px] h-[8px] bg-[#00d34d] rounded-full" />
-                                        <h3 className="text-white">{t("components.profile_open_now")}</h3>
+                                        <h3 className="text-white text-[14px]">{t("components.profile_open_now")}</h3>
                                     </>) :
                                     (<>
                                         <div className="w-[8px] h-[8px] bg-red-500 rounded-full" />
-                                        <h3 className="text-white">{t("components.is_closed")}</h3>
+                                        <h3 className="text-white text-[14px]">{t("components.is_closed")}</h3>
                                     </>)}
 
                             </div>
@@ -91,7 +91,7 @@ export default function Card({ businessId, isFavorite, isOpen, title, image, add
                         <div className="absolute inset-0 bg-gradient-to-t from-black via-black/10 to-transparent"></div>
                     </div>
 
-                    <div className="p-[10px]">
+                    <div className="p-[12px]">
                         <div className="w-full flex justify-between text-[14px]">
                             <h3 className="text-[#a7a7a7]">
                                 {businessCategory}
@@ -101,7 +101,7 @@ export default function Card({ businessId, isFavorite, isOpen, title, image, add
                                 <span>
                                     {distance}<span className="ml-[1px]">{t("components.distance")}</span>
                                 </span>
-                                <img src="/images/map_pin.svg" alt="map" className="ml-[5px]" />
+                                <img src="/images/map_pin.svg" alt="map" className="w-[14px] ml-[5px]"/>
                             </div>
                         </div>
 

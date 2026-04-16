@@ -93,7 +93,7 @@ export default function Card({ businessId, isFavorite, isOpen, title, image, add
 
                     <div className="p-[12px]">
                         <div className="w-full flex justify-between text-[14px]">
-                            <h3 className="text-[#a7a7a7]">
+                            <h3 className="text-[#a7a7a7] text-[10px]">
                                 {businessCategory}
                             </h3>
 
@@ -101,11 +101,11 @@ export default function Card({ businessId, isFavorite, isOpen, title, image, add
                                 <span>
                                     {distance}<span className="ml-[1px]">{t("components.distance")}</span>
                                 </span>
-                                <img src="/images/map_pin.svg" alt="map" className="w-[14px] ml-[5px]"/>
+                                <img src="/images/map_pin.svg" alt="map" className="w-[12px] ml-[5px]" />
                             </div>
                         </div>
 
-                        <h1 className="text-[16px] text-white mt-[2px]">
+                        <h1 className="text-[16px] text-white">
                             {title}
                         </h1>
 

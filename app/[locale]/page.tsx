@@ -7,12 +7,14 @@ import Main from "./page/main/page";
 // wogofaj349@fftube.com
 
 export default function Home() {
-  
+
 
   return (
     <div className="bg-[#0F0F0F] min-h-screen">
       <Header />
-          <Main />
+      <div className="mb-[150px]">
+        <Main />
+      </div>
       < Footer />
     </div>
   );

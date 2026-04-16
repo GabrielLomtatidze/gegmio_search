@@ -39,35 +39,35 @@ export default function Footer() {
 
                 <div className="links flex lg:justify-end gap-11">
 
-                    <nav className="nav flex items-center">
+                    <nav className="nav flex">
                         <ul className="font-semibold text-sm flex flex-col gap-3">
                             <li><a href="#">{t("components.company")}</a></li>
-                            <li className="mt-2"><a href="#" className="text-[#A7A7A7]">{t("components.home")}</a></li>
-                            <li className="mt-2"><a href="#about" className="text-[#A7A7A7]">{t("components.about_us")}</a></li>
-                            <li className="mt-2"><a href="#contact" className="text-[#A7A7A7]">{t("components.contact")}</a></li>
+                            <li className="mt-2"><a href="#" className="text-[#A7A7A7] font-extralight">{t("components.home")}</a></li>
+                            <li className="mt-2"><a href="#about" className="text-[#A7A7A7] font-extralight">{t("components.about_us")}</a></li>
+                            <li className="mt-2"><a href="#contact" className="text-[#A7A7A7] font-extralight">{t("components.contact")}</a></li>
                         </ul>
                     </nav>
 
-                    <nav className="nav flex items-center">
+                    <nav className="nav flex">
                         <ul className="gap-3 flex flex-col font-semibold text-sm">
                             <li><a href="#">{t("components.information")}</a></li>
                             <li className="mt-2">
-                                <a href="/page/privacypolicy" className="text-[#A7A7A7]">
+                                <a href="/page/privacypolicy" className="text-[#A7A7A7] font-extralight">
                                     {t("components.privacy_policy")}
                                 </a>
                             </li>
                             <li className="mt-2">
-                                <a href="/terms" className="text-[#A7A7A7]">
+                                <a href="/terms" className="text-[#A7A7A7] font-extralight">
                                     {t("components.terms_conditions")}
                                 </a>
                             </li>
                             <li className="mt-2">
-                                <a href="#about" className="text-[#A7A7A7]">
+                                <a href="#about" className="text-[#A7A7A7] font-extralight">
                                     info@gegmio.com
                                 </a>
                             </li>
                             <li className="mt-2">
-                                <a href="#contact" className="text-[#A7A7A7]">
+                                <a href="#contact" className="text-[#A7A7A7] font-extralight">
                                     568-90-24-10
                                 </a>
                             </li>
@@ -76,6 +76,6 @@ export default function Footer() {
                 </div>
             </div>
         </footer>
-        
+
     )
 }

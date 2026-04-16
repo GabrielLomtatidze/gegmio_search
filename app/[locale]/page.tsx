@@ -15,7 +15,7 @@ export default function Home() {
       <div className="mb-[150px]">
         <Main />
       </div>
-      < Footer />
+      <Footer />
     </div>
   );
 }

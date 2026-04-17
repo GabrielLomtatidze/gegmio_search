@@ -303,18 +303,16 @@ export default function Business() {
                     ))}
                 </div>
 
-                <div className="mt-4">
-                    <div className={selectedNavId === 0 ? "block" : "hidden"}>
-                        <MenuService />
-                    </div>
+                <div className={selectedNavId === 0 ? "block" : "hidden"}>
+                    <MenuService />
+                </div>
 
-                    {/* <div className={selectedNavId === 1 ? "block" : "hidden"}>
+                {/* <div className={selectedNavId === 1 ? "block" : "hidden"}>
                         <Reviews />
                     </div> */}
 
-                    <div className={selectedNavId === 2 ? "block" : "hidden"}>
-                        <Details />
-                    </div>
+                <div className={selectedNavId === 2 ? "block" : "hidden"}>
+                    <Details />
                 </div>
             </div>
 

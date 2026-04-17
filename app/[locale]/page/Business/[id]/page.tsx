@@ -254,17 +254,17 @@ export default function Business() {
 
                     <div className="flex gap-4 justify-start md:justify-end">
                         <a href="https://www.facebook.com/profile.php?id=61583853083725" target="_blank" className="group w-[42px] h-[42px] border-2 border-[#2b2b2b] rounded-full flex items-center justify-center relative overflow-hidden" >
-                            <img src="/images/facebook-big.svg" className="absolute opacity-100 group-hover:opacity-0 transition duration-300" />
+                            <img src="/images/facebook-big.svg" className="w-[24px] absolute opacity-100 group-hover:opacity-0 transition duration-300" />
                             <img src="/images/fill_facebook_icon.svg" className="absolute opacity-0 group-hover:opacity-100 transition duration-300" />
                         </a>
 
                         <a href="#" className="group w-[42px] h-[42px] border-2 border-[#2b2b2b] rounded-full flex items-center justify-center relative overflow-hidden" >
-                            <img src="/images/tiktok-big.svg" className="absolute opacity-100 group-hover:opacity-0 transition duration-300" />
+                            <img src="/images/tiktok-big.svg" className="w-[24px] absolute opacity-100 group-hover:opacity-0 transition duration-300" />
                             <img src="/images/fill_tiktok_icon.svg" className="absolute opacity-0 group-hover:opacity-100 transition duration-300" />
                         </a>
 
                         <a href="#" className="group w-[42px] h-[42px] border-2 border-[#2b2b2b] rounded-full flex items-center justify-center relative overflow-hidden" >
-                            <img src="/images/Linkedin.svg" className="absolute opacity-100 group-hover:opacity-0 transition duration-300" />
+                            <img src="/images/Linkedin.svg" className="w-[24px] absolute opacity-100 group-hover:opacity-0 transition duration-300" />
                             <img src="/images/fill_linkedin_icon.svg" className="absolute opacity-0 group-hover:opacity-100 transition duration-300" />
                         </a>
                     </div>

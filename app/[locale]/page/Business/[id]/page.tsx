@@ -234,7 +234,7 @@ export default function Business() {
                         </div>
                     </div>
 
-                    <button className="w-full md:w-auto px-4 py-3 rounded-xl flex items-center justify-center gap-2 bg-[#00D34D] text-white font-bold whitespace-nowrap" onClick={() => { if (!isAuthenticated) setOpenModal(true); }} >
+                    <button className="w-full h-[42px] md:w-auto px-4 rounded-xl flex items-center justify-center gap-2 bg-[#00D34D] text-white font-bold whitespace-nowrap" onClick={() => { if (!isAuthenticated) setOpenModal(true); }} >
                         <img src="/images/call.svg" alt="call" className="w-5 h-5" />
                         {formatPhone(business.phoneNumber, isAuthenticated)}
                     </button>

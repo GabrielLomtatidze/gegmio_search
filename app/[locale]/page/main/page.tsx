@@ -121,23 +121,33 @@ export default function Main() {
             </div>
 
             <div className="hidden md:flex gap-2 text-[#a7a7a7]">
-              <select
-                value={selectedRegionId}
-                onChange={(e) => setSelectedRegionId(Number(e.target.value))}
-                className="border border-[#2b2b2b] bg-[#0f0f0f] p-[10px] rounded-xl" >
-                <option value={0}>{t("pages.city")}</option>
-                {regionsStore.map((item: any) => (
-                  <option key={item.id} value={item.id}>
-                    {item.name}
-                  </option>
-                ))}
-              </select>
+              <div className="relative">
+                <select value={selectedRegionId} onChange={(e) => setSelectedRegionId(Number(e.target.value))} className="border border-[#2b2b2b] bg-[#0f0f0f] py-[10px] px-[12px] pr-[40px] rounded-xl appearance-none w-full text-white" >
+                  <option value={0}>{t("pages.city")}</option>
+                  {regionsStore.map((item: any) => (
+                    <option key={item.id} value={item.id}>
+                      {item.name}
+                    </option>
+                  ))}
+                </select>
 
-              <select className="border border-[#2b2b2b] bg-[#0f0f0f] p-[10px] rounded-xl">
-                <option value="">შენთან ახლოს</option>
-                <option value="#">შორს</option>
-                <option value="#1">შორიახლოს</option>
-              </select>
+                <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-[12px] text-white">
+                  <img src="/images/arrow_down.svg" alt="arrow_down" />
+                </div>
+              </div>
+
+              <div className="relative">
+                <select className="border border-[#2b2b2b] bg-[#0f0f0f] py-[10px] px-[12px] pr-[40px] rounded-xl appearance-none w-full text-white">
+                  <option value="">შენთან ახლოს</option>
+                  <option value="#">შორს</option>
+                  <option value="#1">შორიახლოს</option>
+                </select>
+
+                <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-[12px] text-white">
+                  <img src="/images/arrow_down.svg" alt="arrow_down" />
+                </div>
+              </div>
+
             </div>
           </div>
 
@@ -180,7 +190,7 @@ export default function Main() {
             regions={regionsStore}
             districts={districtsStore}
             businessTypes={businessTypes}
-            onApply={() => { setOpenFilter(false)}}
+            onApply={() => { setOpenFilter(false) }}
             onClose={() => setOpenFilter(false)}
           />
         </div>

@@ -64,18 +64,18 @@ export default function Header() {
                             <div className="relative w-full h-full bg-[#111] rounded-full flex">
                                 <div className={`absolute top-0 h-full w-1/2 bg-[#F94B00] rounded-xl transition-all duration-300 ${currentLocale === "en" ? "left-0" : "left-1/2"}`} />
 
-                                <button onClick={() => changeLanguage("en")} className={`w-1/2 z-10 text-sm font-semibold ${currentLocale === "en" ? "text-white" : "text-[#6C6C6C]"}`}>
+                                <button onClick={() => changeLanguage("en")} className={`w-1/2 z-10 text-sm cursor-pointer font-semibold ${currentLocale === "en" ? "text-white" : "text-[#6C6C6C]"}`}>
                                     EN
                                 </button>
 
-                                <button onClick={() => changeLanguage("ka")} className={`w-1/2 z-10 text-sm font-semibold ${currentLocale === "ka" ? "text-white" : "text-[#6C6C6C]"}`}>
+                                <button onClick={() => changeLanguage("ka")} className={`w-1/2 z-10 text-sm cursor-pointer font-semibold ${currentLocale === "ka" ? "text-white" : "text-[#6C6C6C]"}`}>
                                     GE
                                 </button>
                             </div>
                         </div>
 
-                        <button className="hidden md:block w-[214px] h-full bg-[#F94B00] rounded-xl text-white font-bold text-sm">
-                            {t("components.add_business_button")}
+                        <button className="hidden md:block w-[214px] h-full bg-[#F94B00] rounded-xl text-white font-bold text-sm cursor-pointer">
+                            {t("components.become_partner")}
                         </button>
 
                         <div className="relative hidden md:block">

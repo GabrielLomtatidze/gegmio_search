@@ -5,6 +5,7 @@ import { useTranslations } from "next-intl";
 import { useAuthPositionStore } from "@/zustand/User/userPositionStore";
 import Link from "next/link";
 import { useRouter, usePathname } from "next/navigation";
+import PartnerForm from "./form/partnerForm";
 
 export default function Header() {
     const t = useTranslations();
@@ -246,6 +247,7 @@ export default function Header() {
                     </div>
                 </div>
             </div>
+            <PartnerForm />
         </>
     );
 }

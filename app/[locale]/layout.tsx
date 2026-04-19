@@ -52,7 +52,12 @@ export const metadata: Metadata = {
   },
 
   icons: {
-    icon: "/images/logo.svg",
+     icon: [
+      {
+        url: "/favicon.ico",
+        type: "image/ico",
+      }
+    ],
     shortcut: "/images/logo.svg",
   },
 

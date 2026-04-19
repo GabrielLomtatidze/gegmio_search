@@ -76,11 +76,8 @@ export default function PartnerForm() {
     //   };
 
     return (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50">
-            <div
-                className="w-[376px] flex flex-col justify-center border border-[#2b2b2b] rounded-xl bg-[#0F0F0F] p-[24px]"
-                onClick={(e) => e.stopPropagation()}
-            >
+        <>
+            <div className="w-[376px] flex flex-col justify-center border border-[#2b2b2b] rounded-xl bg-[#0F0F0F] p-[24px]" onClick={(e) => e.stopPropagation()}       >
                 <div className="w-full flex justify-center">
                     <h1 className="text-[18px] text-bold text-white">
                         {t("components.become_partner")}
@@ -151,6 +148,6 @@ export default function PartnerForm() {
                     </button>
                 </form>
             </div>
-        </div>
+        </>
     );
 }

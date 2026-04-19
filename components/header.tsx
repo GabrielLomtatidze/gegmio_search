@@ -13,6 +13,7 @@ export default function Header() {
     const setAuthenticated = useAuthPositionStore((state) => state.setAuthenticated);
     const isAuthenticated = useAuthPositionStore((state) => state.isAuthenticated);
     const [accessToken, setAccessToken] = useState<string | null>(null);
+    const [bePartner, setBePartner] = useState<boolean>(false);
 
     useEffect(() => {
         const token = localStorage.getItem("accessToken");
@@ -75,7 +76,7 @@ export default function Header() {
                             </div>
                         </div>
 
-                        <button className="hidden md:block w-[214px] h-full bg-[#F94B00] rounded-xl text-white font-bold text-sm cursor-pointer">
+                        <button className="hidden md:block w-[214px] h-full bg-[#F94B00] rounded-xl text-white font-bold text-sm cursor-pointer" onClick={() => setBePartner(true)}>
                             {t("components.become_partner")}
                         </button>
 
@@ -247,7 +248,12 @@ export default function Header() {
                     </div>
                 </div>
             </div>
-            <PartnerForm />
+            {bePartner ?
+                (<div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50" onClick={() => setBePartner(false)}>
+                    <PartnerForm />
+                </div>) :
+                (<></>)
+            }
         </>
     );
 }

@@ -304,11 +304,7 @@ export default function RegistrationPage() {
         </label>
         {errors.checkbox && <p className="text-red-500 text-sm">{errors.checkbox}</p>}
 
-        <button
-          type="submit"
-          disabled={loading}
-          className="mt-3 h-[52px] rounded-xl bg-[#F94B00] font-medium"
-        >
+        <button type="submit" disabled={loading} className="mt-3 h-[52px] rounded-xl bg-[#F94B00] font-medium cursor-pointer hover:bg-[#C73C00]" >
           {loading ? t("auth.loading") : t("auth.create_account")}
         </button>
 

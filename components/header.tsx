@@ -76,7 +76,7 @@ export default function Header() {
                             </div>
                         </div>
 
-                        <button className="hidden md:block w-[214px] h-full bg-[#F94B00] rounded-xl text-white font-bold text-sm cursor-pointer" onClick={() => setBePartner(true)}>
+                        <button className="hidden md:block w-[214px] h-full bg-[#F94B00] rounded-xl text-white font-bold text-sm cursor-pointer hover:bg-[#C73C00]" onClick={() => setBePartner(true)}>
                             {t("components.become_partner")}
                         </button>
 

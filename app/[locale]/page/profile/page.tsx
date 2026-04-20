@@ -177,6 +177,9 @@ export default function Profile() {
         }
     };
 
+
+    const disabledPassowrdChange = passwordLoading || !oldPassword || !newPassword || !repeatNewPassword
+
     return (
         <>
             <div className="min-h-screen flex flex-col bg-[#0F0F0F]">
@@ -283,11 +286,7 @@ export default function Profile() {
                                     </div>
 
                                     <div className="mt-6 flex justify-end">
-                                        <button
-                                            type="submit"
-                                            disabled={profileLoading}
-                                            className="bg-[#F94B00] text-white px-6 py-3 rounded-lg disabled:opacity-50 disabled:cursor-not-allowed transition"
-                                        >
+                                        <button type="submit" disabled={profileLoading} className="bg-[#F94B00] text-white px-6 py-3 rounded-lg disabled:opacity-50 text-white disabled:cursor-not-allowed transition cursor-pointer hover:bg-[#C73C00]"  >
                                             {profileLoading ? <Spinner /> : t("pages.save_changes")}
                                         </button>
                                     </div>
@@ -364,8 +363,8 @@ export default function Profile() {
 
                                 <button
                                     type="submit"
-                                    className="w-full h-[48px] mt-3 flex justify-center items-center rounded-xl bg-[#F94B00] text-white disabled:opacity-50 disabled:cursor-not-allowed transition"
-                                    disabled={passwordLoading || !oldPassword || !newPassword || !repeatNewPassword}  >
+                                    className="w-full h-[48px] mt-3 flex justify-center items-center rounded-xl bg-[#F94B00] text-white transition hover:bg-[#C73C00] hover:cursor-pointer disabled:bg-[#464646] disabled:text-[#A7A7A7] disabled:opacity-100 disabled:cursor-not-allowed"
+                                    disabled={disabledPassowrdChange}  >
                                     {passwordLoading ? <Spinner /> : t("auth.change_password")}
                                 </button>
 

@@ -111,7 +111,7 @@ export default function Login() {
                             value={password}
                             onChange={(e) => setPassword(e.target.value.replace(/\s/g, ""))}
                         />
-                        <button type="button" onClick={() => setShowPassword(!showPassword)} className="absolute right-4 top-1/2 -translate-y-1/2 text-white" >
+                        <button type="button" onClick={() => setShowPassword(!showPassword)} className="absolute right-4 top-1/2 -translate-y-1/2 text-white cursor-pointer" >
                             {showPassword ? <EyeOff size={20} /> : <Eye size={20} />}
                         </button>
                     </div>
@@ -121,14 +121,14 @@ export default function Login() {
                 <div className="flex items-center gap-2 mt-1">
                     <input
                         type="checkbox"
-                        className="w-5 h-5 accent-[#F94B00] rounded-xl"
+                        className="w-5 h-5 accent-[#F94B00] rounded-xl cursor-pointer"
                         checked={rememberMe}
                         onChange={() => setRememberMe(!rememberMe)}
                     />
                     <span className="text-sm text-gray-300">{t("auth.remember_me")}</span>
                 </div>
 
-                <button type="submit" className="w-full h-[52px] mt-3 rounded-xl bg-[#F94B00] flex items-center justify-center font-medium cursor-pointer" disabled={loading}>
+                <button type="submit" className="w-full h-[52px] mt-3 rounded-xl bg-[#F94B00] flex items-center justify-center font-medium cursor-pointer hover:bg-[#C73C00]" disabled={loading}>
                     {loading ? <Spinner /> : t("auth.login_button")}
                 </button>
 

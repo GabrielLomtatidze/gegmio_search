@@ -96,7 +96,7 @@ export default function Otp() {
                 </InputOTPGroup>
             </InputOTP>
 
-            <button className="w-full h-12 rounded-xl bg-[#F94B00] transition font-medium cursor-pointer" onClick={finish} >
+            <button className="w-full h-12 rounded-xl bg-[#F94B00] transition font-medium cursor-pointer hover:bg-[#C73C00]" onClick={finish} >
                 {t("auth.register_button")}
             </button>
 

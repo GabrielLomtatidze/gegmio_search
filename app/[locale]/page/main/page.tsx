@@ -122,7 +122,7 @@ export default function Main() {
 
             <div className="hidden md:flex gap-2 text-[#a7a7a7]">
               <div className="relative">
-                <select value={selectedRegionId} onChange={(e) => setSelectedRegionId(Number(e.target.value))} className="border border-[#2b2b2b] bg-[#0f0f0f] py-[10px] px-[12px] pr-[40px] rounded-xl appearance-none w-full text-white" >
+                <select value={selectedRegionId} onChange={(e) => setSelectedRegionId(Number(e.target.value))} className={`border py-[10px] px-[12px] pr-[40px] rounded-xl appearance-none w-full text-white bg-[#0f0f0f] outline-none focus:border-[#F94B00] ${selectedRegionId !== 0 ? "border-[#F94B00]" : "border-[#2b2b2b]"}`}>
                   <option value={0}>{t("pages.city")}</option>
                   {regionsStore.map((item: any) => (
                     <option key={item.id} value={item.id}>
@@ -136,7 +136,7 @@ export default function Main() {
                 </div>
               </div>
 
-              <div className="relative">
+              {/* <div className="relative">
                 <select className="border border-[#2b2b2b] bg-[#0f0f0f] py-[10px] px-[12px] pr-[40px] rounded-xl appearance-none w-full text-white">
                   <option value="">შენთან ახლოს</option>
                   <option value="#">შორს</option>
@@ -146,7 +146,7 @@ export default function Main() {
                 <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-[12px] text-white">
                   <img src="/images/arrow_down.svg" alt="arrow_down" />
                 </div>
-              </div>
+              </div> */}
 
             </div>
           </div>

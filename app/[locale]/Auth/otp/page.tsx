@@ -36,9 +36,9 @@ export default function Otp() {
             }
 
            
-            const confirmResponse = await axios.get(`${apiUrl}}/api/v1/account/confirm-email?ConfirmationCode=${otp}`);
+            const confirmResponse = await axios.get(`${apiUrl}/api/v1/account/confirm-email?ConfirmationCode=${otp}`);
 
-            const loginResponse = await axios.post(`${apiUrl}}/api/v1/account/login`, {
+            const loginResponse = await axios.post(`${apiUrl}/api/v1/account/login`, {
                 email,
                 phoneNumber: null,
                 password

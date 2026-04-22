@@ -9,18 +9,21 @@ import Card from "@/components/cards/card";
 import CardSkeleton from "@/components/skeletons/cardSkeleton";
 import Link from "next/link";
 import Filter from "@/components/filter";
+import { useBusinessCategoriesStore } from "@/zustand/APIs/public/businessCatecoryStore";
+
 
 export default function Main() {
 
   const t = useTranslations();
   const { businessStore, loading, fetchBusiness } = useBusinessStore();
   const { regionsStore, fetchRegionsInfo } = useRegionsStore();
+  const { categories, fetchCategories } = useBusinessCategoriesStore()
 
   const [search, setSearch] = useState("");
   const [latitude, setLatitude] = useState<number | null>(null);
   const [longitude, setLongitude] = useState<number | null>(null);
-  const [locationResolved, setLocationResolved] = useState(false);
-  const [selectedRegionId, setSelectedRegionId] = useState(0);
+  const [locationResolved, setLocationResolved] = useState<boolean>(false);
+  const [selectedRegionId, setSelectedRegionId] = useState<number>(0);
 
   const [openFilter, setOpenFilter] = useState(false);
 
@@ -35,6 +38,18 @@ export default function Main() {
     { id: 1, name: "კაფე" },
     { id: 2, name: "რესტორანი" },
   ];
+
+  const categoryImages: Record<number, string> = {
+    1: "/images/business_category/restaurant.svg",
+    2: "/images/business_category/salon.svg",
+    3: "/images/business_category/home.svg",
+    4: "/images/business_category/cut.svg",
+    5: "/images/business_category/engine.svg",
+    6: "/images/business_category/medic.svg",
+    7: "/images/business_category/team.svg",
+    8: "/images/business_category/wash.svg",
+  };
+
 
 
   const hasLocation = latitude !== null && longitude !== null;
@@ -72,6 +87,7 @@ export default function Main() {
 
   useEffect(() => {
     fetchRegionsInfo();
+    fetchCategories()
   }, []);
 
   const debouncedFetchBusiness = useMemo(() => {
@@ -103,40 +119,50 @@ export default function Main() {
   return (
     <>
       <div className="w-full flex justify-center mt-5">
-        <div className="w-full max-w-7xl px-4 md:px-[100px] flex flex-col md:flex-row md:justify-between gap-3">
-          <div className="flex flex-wrap md:flex-nowrap gap-3 w-full md:w-auto justify-center md:justify-start">
-            <div className="flex-1 min-w-[180px] h-[42px] flex items-center bg-[#0f0f0f] px-4 border border-[#2b2b2b] rounded-xl focus-within:border-[#F94B00] transition">
-              <Search className="w-5 h-5 text-white mr-3" />
-              <input
-                type="text"
-                value={search}
-                onChange={(e) => setSearch(e.target.value)}
-                placeholder={t("pages.search_placeholder")}
-                className="bg-transparent outline-none text-white placeholder-[#a7a7a7] w-full"
-              />
-            </div>
+        <div className="w-full max-w-7xl px-4 md:px-[100px] flex flex-col gap-5">
 
-            <div className="md:hidden w-[44px] h-[42px] bg-[#F94B00] rounded-xl flex justify-center items-center" onClick={() => setOpenFilter(true)}>
-              <img src="/images/filter.svg" alt="filter" className="w-[20px] h-[20px]" />
-            </div>
+          <div className="flex gap-6 border-[#2b2b2b] overflow-x-auto">
+            {categories?.map((item) => (
+              <div key={item.id} className="cursor-pointer py-2 flex flex-col items-center">
+                <img src={categoryImages[item.id]} alt={item.name} className="w-8 h-8 mb-1" />
+                <h2 className="text-sm text-white mt-[10px]">{item.name}</h2>
+              </div>
+            ))}
+          </div>
 
-            <div className="hidden md:flex gap-2 text-[#a7a7a7]">
-              <div className="relative">
-                <select value={selectedRegionId} onChange={(e) => setSelectedRegionId(Number(e.target.value))} className={`border py-[10px] px-[12px] pr-[40px] rounded-xl appearance-none w-full text-white bg-[#0f0f0f] outline-none focus:border-[#F94B00] ${selectedRegionId !== 0 ? "border-[#F94B00]" : "border-[#2b2b2b]"}`}>
-                  <option value={0}>{t("pages.city")}</option>
-                  {regionsStore.map((item: any) => (
-                    <option key={item.id} value={item.id}>
-                      {item.name}
-                    </option>
-                  ))}
-                </select>
-
-                <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-[12px] text-white">
-                  <img src="/images/arrow_down.svg" alt="arrow_down" />
-                </div>
+          <div className="flex flex-col md:flex-row md:justify-between gap-3">
+            <div className="flex flex-wrap md:flex-nowrap gap-3 w-full md:w-auto justify-center md:justify-start">
+              <div className="flex-1 min-w-[180px] h-[42px] flex items-center bg-[#0f0f0f] px-4 border border-[#2b2b2b] rounded-xl focus-within:border-[#F94B00] transition">
+                <Search className="w-5 h-5 text-white mr-3" />
+                <input
+                  type="text"
+                  value={search}
+                  onChange={(e) => setSearch(e.target.value)}
+                  placeholder={t("pages.search_placeholder")}
+                  className="bg-transparent outline-none text-white placeholder-[#a7a7a7] w-full h-[42px] text-[14px]"
+                />
               </div>
 
-              {/* <div className="relative">
+              <div className="md:hidden w-[44px] h-[42px] bg-[#F94B00] rounded-xl flex justify-center items-center" onClick={() => setOpenFilter(true)}>
+                <img src="/images/filter.svg" alt="filter" className="w-[20px] h-[20px]" />
+              </div>
+
+              <div className="hidden md:flex gap-2 text-[#a7a7a7]">
+                <div className="relative">
+                  <select value={selectedRegionId} onChange={(e) => setSelectedRegionId(Number(e.target.value))} className={`border py-[10px] px-[12px] pr-[40px] rounded-xl appearance-none w-full text-white bg-[#0f0f0f] text-[14px] outline-none focus:border-[#F94B00] ${selectedRegionId !== 0 ? "border-[#F94B00]" : "border-[#2b2b2b]"}`} >
+                    <option value={0}>{t("pages.city")}</option>
+                    {regionsStore.map((item: any) => (
+                      <option key={item.id} value={item.id}>
+                        {item.name}
+                      </option>
+                    ))}
+                  </select>
+
+                  <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-[12px] text-white">
+                    <img src="/images/arrow_down.svg" alt="arrow_down" />
+                  </div>
+
+                  {/* <div className="relative">
                 <select className="border border-[#2b2b2b] bg-[#0f0f0f] py-[10px] px-[12px] pr-[40px] rounded-xl appearance-none w-full text-white">
                   <option value="">შენთან ახლოს</option>
                   <option value="#">შორს</option>
@@ -147,19 +173,21 @@ export default function Main() {
                   <img src="/images/arrow_down.svg" alt="arrow_down" />
                 </div>
               </div> */}
+                </div>
+              </div>
+            </div>
 
+            <div className="flex md:justify-center w-full md:w-[109px] gap-[8px] items-center mt-2 md:mt-0">
+              <div className="w-[8px] h-[8px] bg-[#F94B00] rounded-full" />
+              <h3 className="text-[16px] text-white font-bold">
+                {t("pages.result")}
+              </h3>
+              <h3 className="text-[16px] text-[#a7a7a7] font-bold">
+                ({businessStore.length})
+              </h3>
             </div>
           </div>
 
-          <div className="flex md:justify-center w-full md:w-[109px] gap-[8px] items-center mt-2 md:mt-0">
-            <div className="w-[8px] h-[8px] bg-[#F94B00] rounded-full" />
-            <h3 className="text-[16px] text-white font-bold">
-              {t("pages.result")}
-            </h3>
-            <h3 className="text-[16px] text-[#a7a7a7] font-bold">
-              ({businessStore.length})
-            </h3>
-          </div>
         </div>
       </div>
 

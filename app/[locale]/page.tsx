@@ -4,7 +4,7 @@ import Footer from "../../components/footer";
 import Main from "./page/main/page";
 
 
-// wogofaj349@fftube.com
+// fixob42208@ryzid.com
 
 export default function Home() {
 

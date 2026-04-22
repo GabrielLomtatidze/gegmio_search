@@ -65,7 +65,7 @@ export default function RegistrationPage() {
   useEffect(() => {
     const getGender = async () => {
       try {
-        const res = await axios.get(`${apiUrl}}/api/v1/account/gender-dropdown`);
+        const res = await axios.get(`${apiUrl}/api/v1/account/gender-dropdown`);
         setGenderOptions(res.data);
       } catch (err) {
         console.log(err);

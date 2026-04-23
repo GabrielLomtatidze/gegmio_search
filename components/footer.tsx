@@ -48,7 +48,7 @@ export default function Footer() {
                                 </a>
                             </li>
                             <li className="mt-2">
-                                <a href="/terms" className="text-[#A7A7A7] font-extralight">
+                                <a href="/page/terms" className="text-[#A7A7A7] font-extralight">
                                     {t("components.terms_conditions")}
                                 </a>
                             </li>

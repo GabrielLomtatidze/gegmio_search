@@ -39,6 +39,7 @@ interface FetchBusinessParams {
     searchKey?: string;
     latitude?: number;
     longitude?: number;
+    businessCategoryId?: number;
 }
 
 interface BusinessStore {
@@ -72,7 +73,14 @@ export const useBusinessStore = create<BusinessStore>((set) => ({
     businessStore: [],
     loading: false,
 
-    fetchBusiness: async ({ regionId, districtIds = [], latitude, longitude, searchKey, }) => {
+    fetchBusiness: async ({
+        regionId,
+        districtIds = [],
+        latitude,
+        longitude,
+        searchKey,
+        businessCategoryId,
+    }) => {
         set({ loading: true });
 
         try {
@@ -84,6 +92,10 @@ export const useBusinessStore = create<BusinessStore>((set) => ({
                 Longtitude: longitude,
                 DistrictIds: districtIds.length ? districtIds : undefined,
                 LocalTime: getLocalDateTimeWithOffset(),
+                BusinessCategoryId:
+                    businessCategoryId && businessCategoryId !== 0
+                        ? businessCategoryId
+                        : undefined,
             };
 
             if (searchKey && searchKey.trim().length > 0) {

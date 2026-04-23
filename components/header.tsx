@@ -83,22 +83,34 @@ export default function Header() {
                         <div className="relative hidden md:block">
                             {accessToken ?
                                 (<>
-                                    <div className="px-[12px] py-[8px] border-[1px] border-[#2b2b2b] flex justify-center items-center rounded-xl gap-[8px] cursor-pointer" onClick={() => setOpenProfileModal(!openProfileModal)} >
-                                        <div className="w-[28px] h-[28px] bg-[#242424] rounded-full flex justify-center items-center">
-                                            {userInitial}
+                                    <div className="flex gap-[16px]">
+                                        <Link href="https://gegmiov2.netlify.app/"  className="px-[12px] py-[8px] border-[1px] border-[#2b2b2b] flex justify-center items-center rounded-xl cursor-pointer">
+                                            <h3>{t("components.your_business_account")}</h3>
+                                        </Link>
+                                        <div className="px-[12px] py-[8px] border-[1px] border-[#2b2b2b] flex justify-center items-center rounded-xl gap-[8px] cursor-pointer" onClick={() => setOpenProfileModal(!openProfileModal)} >
+                                            <div className="w-[28px] h-[28px] bg-[#242424] rounded-full flex justify-center items-center">
+                                                {userInitial}
+                                            </div>
+                                            <h3 className="font-bold">{userInfo?.firstName}</h3>
+                                            <img src="/images/arrow_down.svg" alt="arrow_down" />
                                         </div>
-                                        <h3 className="font-bold">{userInfo?.firstName}</h3>
-                                        <img src="/images/arrow_down.svg" alt="arrow_down" />
                                     </div>
                                 </>)
                                 :
                                 (<>
-                                    <Link href="/auth/login" prefetch={false}>
-                                        <div className="px-[12px] py-[8px] border-[1px] border-[#2b2b2b] flex justify-center items-center rounded-xl gap-[8px] cursor-pointer">
-                                            <img src="/images/white_profile.svg" alt="profile" />
-                                            <h3>{t("auth.login_button")}</h3>
-                                        </div>
-                                    </Link>
+                                    <div className="flex gap-[16px]">
+                                        <Link href="https://gegmiov2.netlify.app/" className="px-[12px] py-[8px] border-[1px] border-[#2b2b2b] flex justify-center items-center rounded-xl cursor-pointer">
+                                            <h3>{t("components.your_business_account")}</h3>
+                                        </Link>
+                                        <Link href="/auth/login" prefetch={false}>
+                                            <div className="px-[12px] py-[8px] border-[1px] border-[#2b2b2b] flex justify-center items-center rounded-xl gap-[8px] cursor-pointer">
+                                                <img src="/images/white_profile.svg" alt="profile" />
+                                                <h3>{t("auth.login_button")}</h3>
+                                            </div>
+                                        </Link>
+
+                                    </div>
+
                                 </>)}
 
                             {openProfileModal && (
@@ -200,7 +212,7 @@ export default function Header() {
                             <span className="text-[#FF2A2A] text-sm font-bold">{t("components.logout")}</span>
                         </button>
 
-                        <button className="h-[42px] bg-[#F94B00] rounded-xl font-bold" onClick={() => {setBePartner(true), setMobileMenuOpen(false)}}>{t("components.add_business_button")}</button>
+                        <button className="h-[42px] bg-[#F94B00] rounded-xl font-bold" onClick={() => { setBePartner(true), setMobileMenuOpen(false) }}>{t("components.add_business_button")}</button>
 
                     </>
                     ) :
@@ -209,7 +221,7 @@ export default function Header() {
                                 <div className="w-full h-full p-[18px] flex flex-col justify-center items-center">
                                     <h1 className="text-[24px] text-white font-bold">{t("components.welcome_message")}</h1>
                                     <h3 className="text-[14px] text-[#a7a7a7]">{t("components.info_message")}</h3>
-                                    <button className="h-[42px] w-full bg-[#F94B00] rounded-xl font-bold mt-[20px]" onClick={() => {setBePartner(true), setMobileMenuOpen(false)}}>{t("components.add_business_button")}</button>
+                                    <button className="h-[42px] w-full bg-[#F94B00] rounded-xl font-bold mt-[20px]" onClick={() => { setBePartner(true), setMobileMenuOpen(false) }}>{t("components.add_business_button")}</button>
                                 </div>
                             </>
                         )}

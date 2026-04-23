@@ -143,7 +143,9 @@
         "sort": "დახარისხება",
         "apply_filter": "გაფილტვრა",
         "close": "დახურვა",
-        "clear": "გასუფტავება"
+        "clear": "გასუფტავება",
+        "request_sent_successfully": "მოთხოვნა წარმატებით გაიგზავნა",
+        "your_business_account": "შენი ბიზნეს ანგარიში"
     },
     "privacy_policy_page": {
         "privacy_policy": "წესები და პირობები",

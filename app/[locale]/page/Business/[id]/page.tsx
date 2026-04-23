@@ -291,7 +291,7 @@ export default function Business() {
                         </div>
                         <h5 className="text-[14px] text-bold text-[#a7a7a7] text-center mt-[8px]">{t("auth.register_prompt")}</h5>
                         <Link href="/auth/registration">
-                            <button className="w-full h-[48px] bg-[#F94B00] mt-[24px] rounded-xl text-white font-bold text-white">
+                            <button className="w-full h-[48px] bg-[#F94B00] mt-[24px] rounded-xl text-white font-bold text-white cursor-pointer">
                                 {t("auth.create_account")}
                             </button>
                         </Link>

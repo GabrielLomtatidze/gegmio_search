@@ -30,7 +30,7 @@ export default function Footer() {
                             <img src="/images/fill_tiktok_icon.svg" alt="tiktok" className="absolute opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
                         </a>
 
-                        <a href="#" className="group w-15 h-15 border-3 border-[#2b2b2b] rounded-full flex items-center justify-center relative overflow-hidden">
+                        <a href="https://www.linkedin.com/company/109813159/admin/dashboard/" className="group w-15 h-15 border-3 border-[#2b2b2b] rounded-full flex items-center justify-center relative overflow-hidden">
                             <img src="/images/Linkedin.svg" alt="linkedin" className="absolute opacity-100 group-hover:opacity-0 transition-opacity duration-300" />
                             <img src="/images/fill_linkedin_icon.svg" alt="linkedin" className="absolute opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
                         </a>
@@ -38,15 +38,6 @@ export default function Footer() {
                 </div>
 
                 <div className="links flex lg:justify-end gap-11">
-
-                    <nav className="nav flex">
-                        <ul className="font-semibold text-sm flex flex-col gap-3">
-                            <li><a href="#">{t("components.company")}</a></li>
-                            <li className="mt-2"><a href="#" className="text-[#A7A7A7] font-extralight">{t("components.home")}</a></li>
-                            <li className="mt-2"><a href="#about" className="text-[#A7A7A7] font-extralight">{t("components.about_us")}</a></li>
-                            <li className="mt-2"><a href="#contact" className="text-[#A7A7A7] font-extralight">{t("components.contact")}</a></li>
-                        </ul>
-                    </nav>
 
                     <nav className="nav flex">
                         <ul className="gap-3 flex flex-col font-semibold text-sm">

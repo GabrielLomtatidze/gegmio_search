@@ -16,6 +16,8 @@ export type ProfileDetails = {
   distnace: number;
   serviceCount: number;
   isFavorite: boolean;
+  googleMapURL: string,
+  averagePricePerPerson: number,
   businessBookingTime: {
     businessBookingTimeTypeId: number;
     name: string;

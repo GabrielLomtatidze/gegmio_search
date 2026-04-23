@@ -62,7 +62,7 @@ export default function Card({ businessId, isFavorite, isOpen, title, image, add
 
     return (
         <>
-            <div className="w-[252px] border-[1px] border-[#2b2b2b] rounded-xl overflow-hidden relative">
+            <div className="w-[252px] h-[260px] border-[1px] border-[#2b2b2b] rounded-xl overflow-hidden relative">
 
                 <button type="button" onClick={(e) => { e.preventDefault(); e.stopPropagation(); addFavirite(); }} className="absolute top-[10px] right-[10px] z-20 w-[32px] h-[32px] backdrop-blur-xl bg-black/40 rounded-full flex justify-center items-center cursor-pointer"   >
                     <img src={`/images/${heart ? "fill-heart.svg" : "heart.svg"}`} alt="heart" className="w-5 h-5" />

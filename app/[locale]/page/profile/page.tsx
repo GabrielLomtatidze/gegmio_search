@@ -185,7 +185,7 @@ export default function Profile() {
             <div className="min-h-screen flex flex-col bg-[#0F0F0F]">
 
                 <Header />
-                <div className="w-full bg-[#0F0F0F] flex justify-center">
+                <div className="w-full bg-[#0F0F0F] flex justify-center mb-[150px]">
                     <div className="text-white flex flex-col w-full max-w-7xl px-4 py-5 md:px-[100px]">
 
                         <a href="/">

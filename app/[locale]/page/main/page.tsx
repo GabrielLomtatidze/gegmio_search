@@ -25,15 +25,6 @@ export default function Main() {
   const [selectedCategoryId, setSelectedCategoryId] = useState<number>(0);
   const [openFilter, setOpenFilter] = useState(false);
 
-  const districtsStore = [
-    { id: 1, name: "ვაკე", regionId: 1 },
-    { id: 2, name: "საბურთალო", regionId: 1 },
-  ];
-
-  const businessTypes = [
-    { id: 1, name: "კაფე" },
-    { id: 2, name: "რესტორანი" },
-  ];
 
   const categoryImages: Record<number, string> = {
     0: "/images/business_category/home.svg",
@@ -244,8 +235,6 @@ export default function Main() {
           <div className="absolute inset-0 bg-black/50" onClick={() => setOpenFilter(false)} />
           <Filter
             regions={regionsStore}
-            districts={districtsStore}
-            businessTypes={businessTypes}
             onApply={() => { setOpenFilter(false) }}
             onClose={() => setOpenFilter(false)}
           />

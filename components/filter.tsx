@@ -19,8 +19,6 @@ type FilterValues = {
 
 type Props = {
     regions: Item[];
-    districts: Item[];
-    businessTypes: Item[];
     onApply?: (data: FilterValues) => void;
     onClose?: () => void;
 };
@@ -35,7 +33,7 @@ type Sorting = {
     title: string
 }
 
-export default function Filter({ regions, businessTypes, onApply, onClose }: Props) {
+export default function Filter({ regions, onApply, onClose }: Props) {
 
     const t = useTranslations();
 
@@ -74,10 +72,6 @@ export default function Filter({ regions, businessTypes, onApply, onClose }: Pro
         },
         {
             id: 1,
-            title: t("components.rating")
-        },
-        {
-            id: 2,
             title: t("components.latest")
         }
     ]
@@ -87,15 +81,6 @@ export default function Filter({ regions, businessTypes, onApply, onClose }: Pro
         fetchDistricts(selectedRegion?.id ?? null);
     }, [selectedRegion, fetchDistricts]);
 
-    const toggleDistrict = (district: Item) => {
-        if (selectedDistricts.some((d) => d.id === district.id)) {
-            setSelectedDistricts((prev) =>
-                prev.filter((d) => d.id !== district.id)
-            );
-        } else {
-            setSelectedDistricts((prev) => [...prev, district]);
-        }
-    };
 
     const apply = () => {
         onApply?.({
@@ -163,43 +148,6 @@ export default function Filter({ regions, businessTypes, onApply, onClose }: Pro
                     </>
                 )}
 
-                {filterRouter === "district" && (
-                    <>
-                        <div className="w-full h-[42px] flex gap-[8px] justify-between items-center">
-                            <button onClick={() => setFilterRouter("")} className="w-[42px] h-[42px] bg-[#171717] flex justify-center items-center rounded-full">
-                                <img src="/images/arrow_left.svg" alt="arrow_left" />
-                            </button>
-                            <div className="flex-1 min-w-[100px] h-[42px] flex items-center bg-[#0f0f0f] px-4 border border-[#2b2b2b] rounded-xl focus-within:border-[#F94B00] transition">
-                                <Search className="w-5 h-5 text-white mr-3" />
-                                <input
-                                    type="text"
-                                    value={searchdistricts || ""}
-                                    onChange={(e) => setSearchDistricts(e.target.value)}
-                                    className="bg-transparent outline-none text-white placeholder-[#a7a7a7] w-full text-[14px]"
-                                />
-                            </div>
-
-                            <h3 className="text-[14px] font-bold" onClick={() => { setSelectedDistricts([]); setSearchDistricts(""); }}>{t("components.cancel")}</h3>
-                        </div>
-
-                        {filteredDistricts.map((item) => {
-                            const isSelected = selectedDistricts.some((d) => d.id === item.id);
-
-                            return (
-                                <div key={item.id} onClick={() => toggleDistrict(item)} className="h-[64px] p-4 border-b border-[#2b2b2b] flex justify-between items-center"      >
-                                    <span className={`text-[${isSelected ? "#F94B00" : "white"}]`}>
-                                        {item.name}
-                                    </span>
-
-                                    {isSelected && (
-                                        <img src="/images/fill_mark.svg" alt="mark" />
-                                    )}
-                                </div>
-                            );
-                        })}
-                    </>
-                )}
-
                 {filterRouter === "" && (
                     <>
 
@@ -212,13 +160,6 @@ export default function Filter({ regions, businessTypes, onApply, onClose }: Pro
                                 </div>
                             </div>
 
-                            <div onClick={() => selectedRegion && setFilterRouter("district")} className={`h-[64px] flex justify-between items-center text-[14px] text-[#a7a7a7] border-b border-[#2b2b2b] pb-2 ${!selectedRegion && "opacity-40 pointer-events-none "}`}  >
-                                <span className="text-[#a7a7a7] text-[14px]">{t("components.district")}</span>
-                                <div className="flex items-center justofy-cetner">
-                                    <span className="text-white">{selectedDistricts.length > 0 && `${selectedDistricts.length} არჩეული`}</span>
-                                    <img src="/images/arrow_right.svg" alt="" />
-                                </div>
-                            </div>
 
                             <div className="flex flex-col justify-between border-b border-[#2b2b2b] pb-2 " >
                                 <span className="text-[#a7a7a7] text-[14px]">{t("components.status")}</span>
@@ -254,16 +195,18 @@ export default function Filter({ regions, businessTypes, onApply, onClose }: Pro
                         </div>
 
 
-                        <button onClick={apply} className="w-full bg-[#F94B00] mt-6 p-3 rounded-xl font-bold"      >
-                            {t("components.apply_filter")}
-                        </button>
+                        <div className="w-full absolute bottom-[5px] left-0 px-4">
+                            <button onClick={apply} className="w-full bg-[#F94B00] p-3 rounded-xl font-bold"       >
+                                {t("components.apply_filter")}
+                            </button>
 
-                        <div className="w-full h-[48px] mt-[12px] flex justify-center items-center">
-                            <div className="w-[50%] f-full flex justify-center items-center" onClick={onClose}>
-                                <h3>{t("components.close")}</h3>
-                            </div>
-                            <div className="w-[50%] h-full flex justify-center items-center border border-[#2b2b2b] rounded-[12px]" onClick={clear}>
-                                <h3>{t("components.clear")}</h3>
+                            <div className="w-full h-[48px] mt-[12px] flex justify-center items-center">
+                                <div className="w-[50%] flex justify-center items-center" onClick={onClose}>
+                                    <h3>{t("components.close")}</h3>
+                                </div>
+                                <div className="w-[50%] h-full flex justify-center items-center border border-[#2b2b2b] rounded-[12px]" onClick={clear}>
+                                    <h3>{t("components.clear")}</h3>
+                                </div>
                             </div>
                         </div>
                     </>

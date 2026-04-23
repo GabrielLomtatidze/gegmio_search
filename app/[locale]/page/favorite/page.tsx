@@ -185,13 +185,6 @@ export default function Favorite() {
                                         </option>
                                     ))}
                                 </select>
-
-                                <select className="border border-[#2b2b2b] bg-[#0f0f0f] p-[10px] rounded-xl">
-                                    <option value="">შენთან ახლოს</option>
-                                    <option value="#">შორს</option>
-                                    <option value="#1">შორიახლოს</option>
-                                    <option value="#2">ძაან იქით</option>
-                                </select>
                             </div>
                         </div>
 
@@ -207,7 +200,7 @@ export default function Favorite() {
                     </div>
                 </div>
 
-                <div className="flex flex-wrap justify-center gap-6 mt-6 mb-6 max-w-7xl mx-auto">
+                <div className="flex flex-wrap justify-start items-start gap-6 mt-6 mb-6 max-w-7xl mx-auto px-4 md:px-[100px]">
                     {loading ? (
                         Array.from({ length: 8 }).map((_, i) => (
                             <CardSkeleton key={i} />

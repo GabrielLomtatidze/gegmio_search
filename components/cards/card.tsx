@@ -18,6 +18,8 @@ type Props = {
 
 export default function Card({ businessId, isFavorite, isOpen, title, image, address, businessCategory, distance }: Props) {
 
+    const apiUrl = process.env.NEXT_PUBLIC_API_URL;
+
     const t = useTranslations();
     const { isAuthenticated } = useAuthPositionStore();
 
@@ -35,7 +37,7 @@ export default function Card({ businessId, isFavorite, isOpen, title, image, add
 
             if (!heart) {
 
-                await axios.post(`https://bookitcrm.runasp.net/api/v1/favorites/${businessId}`, {}, {
+                await axios.post(`${apiUrl}/api/v1/favorites/${businessId}`, {}, {
 
                     headers: {
                         Accept: "application/json",
@@ -45,7 +47,7 @@ export default function Card({ businessId, isFavorite, isOpen, title, image, add
                 });
             } else {
 
-                await axios.delete(`https://bookitcrm.runasp.net/api/v1/favorites/${businessId}`, {
+                await axios.delete(`${apiUrl}/api/v1/favorites/${businessId}`, {
                     headers: {
                         Authorization: `Bearer ${accessToken}`,
                     },

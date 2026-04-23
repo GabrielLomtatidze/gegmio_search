@@ -151,9 +151,9 @@ export default function Main() {
               onClick={() => setSelectedCategoryId(0)}
               className="cursor-pointer py-2 flex flex-col items-center"
             >
-              <img src={categoryImages[0]} alt="ყველა" className="w-8 h-8 mb-1" />
+              <img src={categoryImages[0]} alt="all" className="w-8 h-8 mb-1" />
               <h2 className={`text-sm mt-[10px] ${selectedCategoryId === 0 ? "text-[#F94B00] font-bold" : "text-white"}`}>
-                ყველა
+                {t("components.all")}
               </h2>
             </div>
 

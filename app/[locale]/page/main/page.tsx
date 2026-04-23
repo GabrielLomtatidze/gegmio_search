@@ -146,7 +146,7 @@ export default function Main() {
       <div className="w-full flex justify-center mt-5">
         <div className="w-full max-w-7xl px-4 md:px-[100px] flex flex-col gap-5">
 
-          <div className="flex gap-6 border-[#2b2b2b] overflow-x-auto">
+          <div className="flex gap-6 border-[#2b2b2b] overflow-x-auto no-scrollbar">
             <div
               onClick={() => setSelectedCategoryId(0)}
               className="cursor-pointer py-2 flex flex-col items-center"

@@ -30,18 +30,20 @@ export default function MenuService() {
     const params = useParams();
     const id = params?.id as string;
 
-    const [canScroll, setCanScroll] = useState<{ left: boolean; right: boolean }>({ left: false, right: false });
+    const [canScroll, setCanScroll] = useState({ left: false, right: false });
     const containerRef = useRef<HTMLDivElement>(null);
     const hasFetched = useRef(false);
 
     const [filterText, setfilterText] = useState<FilterText[]>([]);
-    const [selectedFilterId, setSelectedFilterId] = useState<number | null>(null);
+    const [selectedFilterId, setSelectedFilterId] = useState<number>(0);
     const [menu, setMenu] = useState<Menu[]>([]);
 
     const updateScrollButtons = () => {
         const container = containerRef.current;
         if (!container) return;
+
         const { scrollLeft, scrollWidth, clientWidth } = container;
+
         setCanScroll({
             left: scrollLeft > 0,
             right: scrollLeft + clientWidth < scrollWidth,
@@ -57,7 +59,9 @@ export default function MenuService() {
     const scroll = (direction: "left" | "right") => {
         const container = containerRef.current;
         if (!container) return;
+
         const scrollAmount = container.clientWidth / 2;
+
         container.scrollBy({
             left: direction === "left" ? -scrollAmount : scrollAmount,
             behavior: "smooth",
@@ -71,23 +75,25 @@ export default function MenuService() {
             );
 
             const data = response.data;
-            setfilterText(data);
 
-            if (data.length > 0) {
-                setSelectedFilterId(data[0].id);
-            }
+            setfilterText([
+                { id: 0, name: "ყველა" },
+                ...data,
+            ]);
+
+            setSelectedFilterId(0);
         } catch (error) {
             console.log(error);
         }
     };
 
-    const getMenu = async (categoryId?: number | null) => {
+    const getMenu = async (categoryId?: number) => {
         try {
             const response = await axios.get(
                 `${apiUrl}/api/v1/public/services/${id}`,
                 {
                     params: {
-                        categoryId: categoryId ?? undefined,
+                        categoryId: categoryId && categoryId !== 0 ? categoryId : undefined,
                     },
                 }
             );
@@ -102,24 +108,28 @@ export default function MenuService() {
         if (!id || hasFetched.current) return;
 
         getFiltertext();
+        getMenu();
 
         hasFetched.current = true;
     }, [id]);
 
     useEffect(() => {
-        if (!id || selectedFilterId === null) return;
+        if (!id) return;
 
         getMenu(selectedFilterId);
     }, [selectedFilterId, id]);
 
     return (
         <div className="w-full mb-[100px]">
+
             <div className="w-full h-[44px] mt-[30px] inline-flex items-center gap-2">
-                <div ref={containerRef} className="w-full h-full gap-[8px] flex overflow-x-hidden no-scrollbar scrollbar-hide" onScroll={updateScrollButtons} >
+
+                <div ref={containerRef} className="w-full h-full gap-[8px] flex overflow-x-hidden no-scrollbar scrollbar-hide" onScroll={updateScrollButtons}  >
                     {filterText.map((item) => {
                         const isSelected = item.id === selectedFilterId;
+
                         return (
-                            <div key={item.id} onClick={() => setSelectedFilterId(item.id)} className={`px-[10px] py-[22px] rounded-full flex items-center cursor-pointer ${isSelected ? "bg-[#F94B00] text-white" : "bg-[#171717] text-[#A7A7A7]"}`}  >
+                            <div key={item.id} onClick={() => setSelectedFilterId(item.id)} className={`px-[10px] py-[22px] rounded-full flex items-center cursor-pointer ${isSelected ? "bg-[#F94B00] text-white" : "bg-[#171717] text-[#A7A7A7]"}`} >
                                 <h1 className="truncate whitespace-nowrap">
                                     {item.name}
                                 </h1>
@@ -129,14 +139,17 @@ export default function MenuService() {
                 </div>
 
                 <div className="inline-flex gap-[4px] h-full items-center">
-                    <div className={`w-[36px] h-[36px] rounded-full flex items-center justify-center cursor-pointer border-[2px] ${canScroll.left ? "border-[#F94B00] text-white" : "border-[#2B2B2B] text-[#A7A7A7]"}`} onClick={() => scroll("left")}   >
+
+                    <div className={`w-[36px] h-[36px] rounded-full flex items-center justify-center cursor-pointer border-[2px] ${canScroll.left ? "border-[#F94B00] text-white" : "border-[#2B2B2B] text-[#A7A7A7]"}`} onClick={() => scroll("left")}       >
                         <FaChevronLeft size={14} color={canScroll.left ? "white" : "#A7A7A7"} />
                     </div>
 
-                    <div className={`w-[36px] h-[36px] rounded-full flex items-center justify-center cursor-pointer border-[2px] ${canScroll.right ? "border-[#F94B00] bg-[#22140E] text-white" : "border-[#2B2B2B] bg-[#1A1A1A] text-[#A7A7A7]"}`} onClick={() => scroll("right")}  >
+                    <div className={`w-[36px] h-[36px] rounded-full flex items-center justify-center cursor-pointer border-[2px] ${canScroll.right ? "border-[#F94B00] bg-[#22140E] text-white" : "border-[#2B2B2B] bg-[#1A1A1A] text-[#A7A7A7]"}`} onClick={() => scroll("right")}>
                         <FaChevronRight size={14} color={canScroll.right ? "white" : "#A7A7A7"} />
                     </div>
+
                 </div>
+
             </div>
 
             <div className="w-full mt-[20px] rounded-xl flex flex-wrap gap-[24px]">
@@ -146,14 +159,11 @@ export default function MenuService() {
                         name={item.name}
                         durationInMinutes={item.durationInMinutes}
                         price={item.price}
-                        img={
-                            item?.file?.url
-                                ? item.file.url
-                                : "/images/test.svg"
-                        }
+                        img={item?.file?.url || "/images/test.svg"}
                     />
                 ))}
             </div>
+
         </div>
     );
 }

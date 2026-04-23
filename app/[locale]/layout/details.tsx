@@ -47,15 +47,17 @@ export default function Details() {
                     <div className="w-full h-[48px] flex gap-[8px] py-[12px] items-center">
                         <img src="/images/call.svg" alt="call" />
                         <h4 className="font-bold text-white">
-                            +995 555 888 999
+                            +995 {business?.phoneNumber}
                         </h4>
                     </div>
 
                     <div className="w-full h-[48px] flex gap-[8px] py-[12px] items-center border-t-[1px] border-[#2b2b2b]">
                         <img src="/images/map_pin.svg" alt="map_pin" className="w-[12px]" />
-                        <h4 className="text-[#F94B00] underline">
-                            {business?.businessAddressName}
-                        </h4>
+                        <a href={`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(business?.businessAddressName ?? "")}`} target="_blank" rel="noopener noreferrer"  >
+                            <h4 className="text-[#F94B00] underline cursor-pointer">
+                                {business?.businessAddressName}
+                            </h4>
+                        </a>
                     </div>
 
                     <div className="w-full py-[12px] border-t-[1px] border-[#2b2b2b]">

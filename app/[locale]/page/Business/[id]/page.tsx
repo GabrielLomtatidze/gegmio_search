@@ -243,13 +243,16 @@ export default function Business() {
                 <div className="flex flex-col md:flex-row md:justify-between gap-4 mt-4">
 
                     <div className="w-full md:w-[35%]">
-                        <div className="w-full h-[42px] rounded-xl border border-[#2b2b2b] flex gap-[6px] px-[12px] items-center">
-                            <img src="/images/map_pin.svg" alt="map" />
-                            <h3 className="text-[#a7a7a7] text-[14px] truncate">
-                                {business.businessAddressName}
-                            </h3>
-                            <img src="/images/arrow_right.svg" alt="arrowRight" />
-                        </div>
+                        <a href={`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(business?.businessAddressName ?? "")}`} target="_blank" rel="noopener noreferrer" className="block no-underline" >
+                            <div className="w-full h-[42px] rounded-xl border border-[#2b2b2b] flex gap-[6px] px-[12px] items-center">
+                                <img src="/images/map_pin.svg" alt="map" />
+                                <h3 className="text-[#a7a7a7] text-[14px] truncate">
+                                    {business.businessAddressName}
+                                </h3>
+                                <img src="/images/arrow_right.svg" alt="arrowRight" />
+                            </div>
+                        </a>
+
                     </div>
 
                     <div className="flex gap-4 justify-start md:justify-end">

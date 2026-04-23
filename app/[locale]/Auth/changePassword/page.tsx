@@ -127,8 +127,8 @@ export default function changePassord() {
             setLoading(false);
         }
     };
-    return (
 
+    return (
 
         <>
             <div className="w-[400px] flex flex-col border border-[#2b2b2b] rounded-xl bg-[#0F0F0F] p-[24px]" onClick={(e) => e.stopPropagation()}>
@@ -152,12 +152,7 @@ export default function changePassord() {
                         <div className="relative">
                             <input placeholder="your@gmail.com" className="w-full h-[48px] rounded-xl text-white px-4 bg-transparent border border-[#2b2b2b]" value={email} onChange={(e) => setEmail(e.target.value.replace(/\s/g, ""))} />
 
-                            <button
-                                type="button"
-                                onClick={getCode}
-                                disabled={isTimerActive}
-                                className="absolute right-2 top-1/2 -translate-y-1/2 px-[10px] py-[5px] text-sm bg-[#F94B00] text-white rounded-lg"
-                            >
+                            <button type="button" onClick={getCode} disabled={isTimerActive} className="absolute right-2 top-1/2 -translate-y-1/2 px-[10px] py-[5px] text-sm bg-[#F94B00] text-white rounded-lg cursor-pointer" >
                                 {isTimerActive ? `${timecounter}s` : t("pages.get_code")}
                             </button>
                         </div>
@@ -167,10 +162,10 @@ export default function changePassord() {
                         )}
                     </div>
 
-                    {showOtpInput && (
+                    {true && (
                         <div>
                             <InputOTP maxLength={6} onChange={setOtp}>
-                                <InputOTPGroup className="gap-2">
+                                <InputOTPGroup className="gap-4">
                                     {[0, 1, 2].map((i) => (
                                         <InputOTPSlot key={i} index={i} className="w-10 h-12 rounded-lg text-lg border border-[#2B2B2B] bg-transparent text-white" />
                                     ))}
@@ -178,7 +173,7 @@ export default function changePassord() {
 
                                 <InputOTPSeparator className="mx-2 text-gray-500" />
 
-                                <InputOTPGroup className="gap-2">
+                                <InputOTPGroup className="gap-4">
                                     {[3, 4, 5].map((i) => (
                                         <InputOTPSlot key={i} index={i} className="w-10 h-12 rounded-lg text-lg border border-[#2B2B2B] bg-transparent text-white" />
                                     ))}

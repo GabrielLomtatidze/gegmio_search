@@ -225,13 +225,13 @@ export default function Business() {
                             {business.name}
                         </h1>
 
-                        <div className="flex gap-1 text-[#FFB83F]">
+                        {/* <div className="flex gap-1 text-[#FFB83F]">
                             {[1, 2, 3, 4, 5].map((i) => {
                                 if (rating >= i) return <FaStar key={i} />;
                                 if (rating >= i - 0.5) return <FaStarHalfAlt key={i} />;
                                 return <FaRegStar key={i} />;
                             })}
-                        </div>
+                        </div> */}
                     </div>
 
                     <button className="w-full h-[42px] md:w-auto px-4 rounded-xl flex items-center justify-center gap-2 bg-[#00D34D] text-white font-bold whitespace-nowrap" onClick={() => { if (!isAuthenticated) setOpenModal(true); }} >

@@ -47,7 +47,7 @@ export default function Details() {
                     <div className="w-full h-[48px] flex gap-[8px] py-[12px] items-center">
                         <img src="/images/call.svg" alt="call" />
                         <h4 className="font-bold text-white">
-                            +995 {business?.phoneNumber}
+                            {business?.phoneNumber}
                         </h4>
                     </div>
 

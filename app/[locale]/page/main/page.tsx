@@ -191,7 +191,7 @@ export default function Main() {
         </div>
       </div>
 
-      <div className="flex flex-wrap justify-center gap-6 mt-6 mb-6 max-w-7xl mx-auto">
+      <div className="flex flex-wrap justify-start gap-6 mt-6 mb-6 w-full max-w-7xl px-4 md:px-[100px] mx-auto">
         {loading
           ? Array.from({ length: 8 }).map((_, i) => (
             <CardSkeleton key={i} />

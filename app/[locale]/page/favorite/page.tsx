@@ -14,24 +14,23 @@ import { useBusinessCategoriesStore } from "@/zustand/APIs/public/businessCateco
 import { useLocationStore } from "@/zustand/User/locationStore";
 
 export default function Favorite() {
+
     const apiUrl = process.env.NEXT_PUBLIC_API_URL;
 
     const t = useTranslations();
     const { regionsStore, fetchRegionsInfo } = useRegionsStore();
     const { categories, fetchCategories } = useBusinessCategoriesStore();
 
-    const {
-        latitude,
-        longitude,
-        locationEnabled,
-        getLocation,
-    } = useLocationStore();
+    const { latitude, longitude, locationEnabled, getLocation } =
+        useLocationStore();
 
     const [favorites, setFavorites] = useState<any[]>([]);
     const [search, setSearch] = useState<string>("");
     const [loading, setLoading] = useState<boolean>(false);
     const [selectedRegionId, setSelectedRegionId] = useState<number>(0);
     const [selectedCategoryId, setSelectedCategoryId] = useState<number>(0);
+    const [openStatus, setOpenStatus] =
+        useState<"all" | "open" | "closed">("all");
 
     const categoryImages: Record<number, string> = {
         0: "/images/business_category/home.svg",
@@ -71,6 +70,14 @@ export default function Favorite() {
         if (locationEnabled) getLocation();
     }, []);
 
+    const getIsOpenValue = () => {
+        if (openStatus === "open") return true;
+        if (openStatus === "closed") return false;
+        return undefined;
+    };
+
+    const isOpen = getIsOpenValue();
+
     const buildParams = () => {
         const params: Record<string, any> = {};
 
@@ -89,6 +96,10 @@ export default function Favorite() {
 
         if (selectedCategoryId !== 0) {
             params.BusinessCategoryId = selectedCategoryId;
+        }
+
+        if (typeof isOpen === "boolean") {
+            params.IsOpen = isOpen;
         }
 
         params.LocalTime = getLocalDateTimeWithOffset();
@@ -121,7 +132,14 @@ export default function Favorite() {
                 setLoading(false);
             }
         }, 500);
-    }, [search, selectedRegionId, selectedCategoryId, latitude, longitude]);
+    }, [
+        search,
+        selectedRegionId,
+        selectedCategoryId,
+        latitude,
+        longitude,
+        openStatus
+    ]);
 
     useEffect(() => {
         debouncedFetchFavorites();
@@ -199,6 +217,20 @@ export default function Favorite() {
                                             </option>
                                         ))}
                                     </select>
+
+                                    <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-[12px] text-white">
+                                        <img src="/images/arrow_down.svg" alt="arrow_down" />
+                                    </div>
+                                </div>
+
+                                <div className="relative">
+                                    <select value={openStatus} onChange={(e) => setOpenStatus(e.target.value as any)} className="border border-[#2b2b2b] py-[10px] px-[12px] pr-[40px] rounded-xl appearance-none w-full text-white bg-[#0f0f0f] text-[14px] outline-none focus:border-[#F94B00]"  >
+                                        <option value="all">{t("components.all")}</option>
+                                        <option value="open">{t("components.profile_open_now")}</option>
+                                        <option value="closed">{t("components.is_closed")}</option>
+                                    </select>
+
+                                    
 
                                     <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-[12px] text-white">
                                         <img src="/images/arrow_down.svg" alt="arrow_down" />

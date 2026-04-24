@@ -12,7 +12,7 @@ import debounce from "lodash.debounce";
 
 
 export default function Favorite() {
-    
+
     const apiUrl = process.env.NEXT_PUBLIC_API_URL;
 
     const t = useTranslations();
@@ -22,6 +22,7 @@ export default function Favorite() {
     const [search, setSearch] = useState<string>("");
     const [loading, setLoading] = useState<boolean>(false);
     const [selectedRegionId, setSelectedRegionId] = useState<number>(0);
+    const [openFilter, setOpenFilter] = useState<boolean>(false);
 
     const [latitude, setLatitude] = useState<number | null>(null);
     const [longitude, setLongitude] = useState<number | null>(null);
@@ -160,7 +161,6 @@ export default function Favorite() {
                 <div className="w-full flex justify-center mt-[20px]">
                     <div className="w-full max-w-7xl px-4 md:px-[100px] flex flex-col md:flex-row md:justify-between gap-3">
                         <div className="flex flex-wrap md:flex-nowrap gap-3 w-full md:w-auto justify-center md:justify-start">
-
                             <div className="flex-1 min-w-[180px] h-[42px] flex items-center bg-[#0f0f0f] px-4 border border-[#2b2b2b] rounded-xl focus-within:border-[#F94B00] transition">
                                 <Search className="w-5 h-5 text-white mr-3" />
                                 <input
@@ -168,26 +168,31 @@ export default function Favorite() {
                                     value={search}
                                     onChange={(e) => setSearch(e.target.value)}
                                     placeholder={t("pages.search_placeholder")}
-                                    className="bg-transparent outline-none text-white placeholder-[#a7a7a7] w-full"
+                                    className="bg-transparent outline-none text-white placeholder-[#a7a7a7] w-full h-[42px] text-[14px]"
                                 />
                             </div>
 
-                            <div className="md:hidden w-[44px] h-[42px] bg-[#F94B00] rounded-xl flex justify-center items-center">
+                            <div className="md:hidden w-[44px] h-[42px] bg-[#F94B00] rounded-xl flex justify-center items-center" onClick={() => setOpenFilter(true)}>
                                 <img src="/images/filter.svg" alt="filter" className="w-[20px] h-[20px]" />
                             </div>
 
                             <div className="hidden md:flex gap-2 text-[#a7a7a7]">
-                                <select value={selectedRegionId} onChange={(e) => setSelectedRegionId(Number(e.target.value))} className="border border-[#2b2b2b] bg-[#0f0f0f] p-[10px] rounded-xl" >
-                                    <option value={0}>{t("pages.city")}</option>
-                                    {regionsStore.map((item: any) => (
-                                        <option key={item.id} value={item.id}>
-                                            {item.name}
-                                        </option>
-                                    ))}
-                                </select>
+                                <div className="relative">
+                                    <select value={selectedRegionId} onChange={(e) => setSelectedRegionId(Number(e.target.value))} className={`border py-[10px] px-[12px] pr-[40px] rounded-xl appearance-none w-full text-white bg-[#0f0f0f] text-[14px] outline-none focus:border-[#F94B00] ${selectedRegionId !== 0 ? "border-[#F94B00]" : "border-[#2b2b2b]"}`} >
+                                        <option value={0}>{t("pages.city")}</option>
+                                        {regionsStore.map((item: any) => (
+                                            <option key={item.id} value={item.id}>
+                                                {item.name}
+                                            </option>
+                                        ))}
+                                    </select>
+
+                                    <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-[12px] text-white">
+                                        <img src="/images/arrow_down.svg" alt="arrow_down" />
+                                    </div>
+                                </div>
                             </div>
                         </div>
-
                         <div className="flex md:justify-center w-full md:w-[109px] gap-[8px] items-center mt-2 md:mt-0">
                             <div className="w-[8px] h-[8px] bg-[#F94B00] rounded-full" />
                             <h3 className="text-[16px] text-white font-bold">

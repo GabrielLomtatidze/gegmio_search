@@ -208,13 +208,13 @@ export default function Business() {
                     <img src={images[sliderIndex]?.url} className="max-h-full max-w-full object-contain" />
 
                     <div className="absolute left-5 top-1/2 -translate-y-1/2">
-                        <div className={`w-[36px] h-[36px] rounded-full flex items-center justify-center cursor-pointer border-[2px] ${sliderIndex > 0 ? "border-[#F94B00] text-white" : "border-[#2B2B2B] text-[#A7A7A7]"}`} onClick={() => sliderIndex > 0 && setSliderIndex(sliderIndex - 1)}    >
+                        <div className={`w-[36px] h-[36px] rounded-full flex items-center justify-center cursor-pointer border-[2px] ${sliderIndex > 0 ? "border-[#F94B00] text-white" : "border-[#2B2B2B] text-[#A7A7A7]"}`} onClick={() => sliderIndex > 0 && setSliderIndex(sliderIndex - 1)}  >
                             <FaChevronLeft size={14} color={sliderIndex > 0 ? "white" : "#A7A7A7"} />
                         </div>
                     </div>
 
                     <div className="absolute right-5 top-1/2 -translate-y-1/2">
-                        <div className={`w-[36px] h-[36px] rounded-full flex items-center justify-center cursor-pointer border-[2px] ${sliderIndex < images.length - 1 ? "border-[#F94B00] bg-[#22140E] text-white" : "border-[#2B2B2B] bg-[#1A1A1A] text-[#A7A7A7]"}`}
+                        <div className={`w-[36px] h-[36px] rounded-full flex items-center justify-center cursor-pointer border-[2px] ${sliderIndex < images.length - 1 ? "border-[#F94B00] text-white" : "border-[#2B2B2B] bg-[#1A1A1A] text-[#A7A7A7]"}`}
                             onClick={() => sliderIndex < images.length - 1 && setSliderIndex(sliderIndex + 1)}  >
                             <FaChevronRight size={14} color={sliderIndex < images.length - 1 ? "white" : "#A7A7A7"} />
                         </div>

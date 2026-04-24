@@ -64,22 +64,10 @@ export default function Card({ businessId, isFavorite, isOpen, title, image, add
 
     return (
         <>
-            <div className="w-full md:w-[252px] h-[260px] border border-[#2b2b2b] rounded-xl overflow-hidden relative">
+            <div className="w-full md:w-[252px] h-[274px] border border-[#2b2b2b] rounded-xl overflow-hidden relative">
 
-                <button
-                    type="button"
-                    onClick={(e) => {
-                        e.preventDefault();
-                        e.stopPropagation();
-                        addFavirite();
-                    }}
-                    className="absolute top-3 right-3 z-20 w-[38px] h-[38px] backdrop-blur-xl bg-black/40 rounded-full flex justify-center items-center cursor-pointer"
-                >
-                    <img
-                        src={`/images/${heart ? "fill-heart.svg" : "heart.svg"}`}
-                        alt="heart"
-                        className="w-5 h-5"
-                    />
+                <button type="button" onClick={(e) => { e.preventDefault(); e.stopPropagation(); addFavirite(); }} className="absolute top-3 right-3 z-20 w-[38px] h-[38px] backdrop-blur-xl bg-black/40 rounded-full flex justify-center items-center cursor-pointer"   >
+                    <img src={`/images/${heart ? "fill-heart.svg" : "heart.svg"}`} alt="heart" className="w-5 h-5" />
                 </button>
 
                 <div className="cursor-pointer">

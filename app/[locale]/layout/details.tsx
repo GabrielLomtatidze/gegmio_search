@@ -52,7 +52,7 @@ export default function Details() {
                         </h4>
                     </div>
 
-                    <a href={business?.googleMapURL} >
+                     <a href={business?.googleMapURL} target="_blank" rel="noopener noreferrer" className="block no-underline" >
                         <div className="w-full h-[48px] flex gap-[8px] py-[12px] items-center border-t-[1px] border-[#2b2b2b]">
                             <img src="/images/map_pin.svg" alt="map_pin" className="w-[12px]" />
 

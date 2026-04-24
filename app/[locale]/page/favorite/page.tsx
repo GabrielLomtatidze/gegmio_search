@@ -138,7 +138,7 @@ export default function Favorite() {
                 <div className="w-full flex justify-center mt-[20px]">
                     <div className="w-full max-w-7xl px-4 md:px-[100px] flex flex-col md:flex-row md:justify-between gap-3">
                         <h2 className="text-[#a7a7a7]">
-                            <Link href="/">
+                            <Link href="/" >
                                 <span className="cursor-pointer">
                                     {t("pages.main_page_title")}
                                 </span>
@@ -233,7 +233,7 @@ export default function Favorite() {
                     ) : (
                         favorites.map((item: any) => (
                             <div key={item.id} className="w-[calc(50%-12px)] md:w-[252px] flex-shrink-0" >
-                                <Link href={`/page/business/${item.id}`} className="cursor-pointer" prefetch={false}   >
+                                <Link href={`/page/business/${item.id}`} className="cursor-pointer" prefetch={false} >
                                     <Card
                                         businessId={item.id}
                                         isFavorite={true}

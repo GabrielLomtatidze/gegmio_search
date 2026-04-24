@@ -35,7 +35,7 @@ export default function Main() {
     5: "/images/business_category/team.svg",
     6: "/images/business_category/wash.svg",
     7: "/images/business_category/engine.svg",
-    8: "/images/business_category/health`.svg",
+    8: "/images/business_category/health.svg",
   };
 
   const hasLocation =
@@ -193,7 +193,7 @@ export default function Main() {
         </div>
       </div>
 
-      <div className="flex flex-wrap justify-start gap-6 mt-6 mb-6 w-full max-w-7xl px-4 md:px-[100px] mx-auto">
+      <div className="flex flex-wrap gap-6 mt-6 mb-6 w-full max-w-7xl px-4 md:px-[100px] mx-auto">
         {loading ? (
           Array.from({ length: 8 }).map((_, i) => <CardSkeleton key={i} />)
         ) : businessStore.length === 0 ? (
@@ -205,23 +205,25 @@ export default function Main() {
 
         ) : (
           businessStore.map((item: any) => (
-            <Link
-              key={item.id}
-              href={`/page/business/${item.id}`}
-              className="cursor-pointer"
-              prefetch={false}
-            >
-              <Card
-                businessId={item.id}
-                isFavorite={item.isFavorite}
-                isOpen={item.isOpen}
-                title={item.name}
-                image={item.file?.url || "/images/start.svg"}
-                address={item.addressName}
-                businessCategory={item.businessCategory.name}
-                distance={item.distnace?.toFixed(2)}
-              />
-            </Link>
+            <div key={item.id} className="w-[calc(50%-12px)] md:w-auto">
+              <Link
+                key={item.id}
+                href={`/page/business/${item.id}`}
+                className="cursor-pointer"
+                prefetch={false}
+              >
+                <Card
+                  businessId={item.id}
+                  isFavorite={item.isFavorite}
+                  isOpen={item.isOpen}
+                  title={item.name}
+                  image={item.file?.url || "/images/start.svg"}
+                  address={item.addressName}
+                  businessCategory={item.businessCategory.name}
+                  distance={item.distnace?.toFixed(2)}
+                />
+              </Link>
+            </div>
           ))
         )}
       </div>

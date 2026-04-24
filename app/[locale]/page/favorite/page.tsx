@@ -61,7 +61,7 @@ export default function Favorite() {
         const minutes = pad(now.getMinutes());
         const seconds = pad(now.getSeconds());
 
-        const offset = -now.getTimezoneOffset(); // minutes
+        const offset = -now.getTimezoneOffset();
         const sign = offset >= 0 ? "+" : "-";
         const offsetHours = pad(Math.floor(Math.abs(offset) / 60));
         const offsetMinutes = pad(Math.abs(offset) % 60);
@@ -170,8 +170,14 @@ export default function Favorite() {
                 <div className="w-full flex justify-center mt-[20px]">
                     <div className="w-full max-w-7xl px-4 md:px-[100px] flex flex-col md:flex-row md:justify-between gap-3">
                         <h2 className="text-[#a7a7a7]">
-                            {t("pages.main_page_title")}
+                            <Link href="/">
+                                <span className="cursor-pointer">
+                                    {t("pages.main_page_title")}
+                                </span>
+                            </Link>
+
                             <span className="mx-2">&gt;</span>
+
                             <span className="text-white font-bold">
                                 {t("pages.favorite_page")}
                             </span>
@@ -184,17 +190,17 @@ export default function Favorite() {
 
                         <div className="flex gap-8 overflow-x-auto no-scrollbar">
 
-                            <div onClick={() => setSelectedCategoryId(0)} className="cursor-pointer py-2 flex flex-col items-center flex-shrink-0"    >
+                            <div onClick={() => setSelectedCategoryId(0)} className="cursor-pointer py-2 flex flex-col items-center flex-shrink-0"  >
                                 <img src={categoryImages[0]} alt="all" className="w-8 h-8 mb-1" />
-                                <h2 className={`text-sm mt-[10px] whitespace-nowrap ${selectedCategoryId === 0 ? "text-[#F94B00] font-bold" : "text-white"}`}      >
+                                <h2 className={`text-sm mt-[10px] whitespace-nowrap ${selectedCategoryId === 0 ? "text-[#F94B00] font-bold" : "text-white"}`} >
                                     {t("components.all")}
                                 </h2>
                             </div>
 
                             {categories?.map((item) => (
-                                <div key={item.id} onClick={() => setSelectedCategoryId(item.id)} className="cursor-pointer py-2 flex flex-col items-center flex-shrink-0"     >
+                                <div key={item.id} onClick={() => setSelectedCategoryId(item.id)} className="cursor-pointer py-2 flex flex-col items-center flex-shrink-0" >
                                     <img src={categoryImages[item.id]} alt={item.name} className="w-8 h-8 mb-1" />
-                                    <h2 className={`text-sm mt-[10px] whitespace-nowrap ${selectedCategoryId === item.id ? "text-[#F94B00] font-bold" : "text-white"}`}      >
+                                    <h2 className={`text-sm mt-[10px] whitespace-nowrap ${selectedCategoryId === item.id ? "text-[#F94B00] font-bold" : "text-white"}`} >
                                         {item.name}
                                     </h2>
                                 </div>

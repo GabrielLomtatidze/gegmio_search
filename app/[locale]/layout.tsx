@@ -52,7 +52,7 @@ export const metadata: Metadata = {
   },
 
   icons: {
-     icon: [
+    icon: [
       {
         url: "/favicon.ico",
         type: "image/ico",
@@ -60,7 +60,7 @@ export const metadata: Metadata = {
     ],
     shortcut: "/images/logo.svg",
   },
-
+  viewport: "width=device-width, initial-scale=1",
   metadataBase: new URL("https://gegmio.com"),
 };
 

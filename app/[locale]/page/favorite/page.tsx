@@ -71,6 +71,7 @@ export default function Favorite() {
 
     useEffect(() => {
         fetchRegionsInfo();
+        fetchCategories();
     }, [fetchRegionsInfo]);
 
     useEffect(() => {

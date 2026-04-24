@@ -9,6 +9,7 @@ import CardSkeleton from "@/components/skeletons/cardSkeleton";
 import Card from "@/components/cards/card";
 import { useRegionsStore } from "@/zustand/APIs/public/regionsStore";
 import debounce from "lodash.debounce";
+import Link from "next/link";
 
 
 export default function Favorite() {
@@ -205,24 +206,37 @@ export default function Favorite() {
                     </div>
                 </div>
 
-                <div className="flex flex-wrap justify-start items-start gap-6 mt-6 mb-6 max-w-7xl mx-auto px-4 md:px-[100px]">
+                <div className="flex flex-wrap gap-6 mt-6 mb-6 w-full max-w-7xl px-4 md:px-[100px] mx-auto">
                     {loading ? (
                         Array.from({ length: 8 }).map((_, i) => (
                             <CardSkeleton key={i} />
                         ))
                     ) : favorites.length > 0 ? (
                         favorites.map((item: any) => (
-                            <Card
+                            <div
                                 key={item.id}
-                                businessId={item.id}
-                                isFavorite={true}
-                                isOpen={item.isOpen}
-                                title={item.name}
-                                image={item.file?.url || "/images/start.svg"}
-                                address={item.addressName}
-                                businessCategory={item.businessCategory.name}
-                                distance={item.distnace?.toFixed(2)}
-                            />
+                                className="w-[calc(50%-12px)] md:w-[252px] flex-shrink-0"
+                            >
+                                <Link
+                                    key={item.id}
+                                    href={`/page/business/${item.id}`}
+                                    className="cursor-pointer"
+                                    prefetch={false}
+                                >
+                                    <Card
+                                        key={item.id}
+                                        businessId={item.id}
+                                        isFavorite={true}
+                                        isOpen={item.isOpen}
+                                        title={item.name}
+                                        image={item.file?.url || "/images/start.svg"}
+                                        address={item.addressName}
+                                        businessCategory={item.businessCategory.name}
+                                        distance={item.distnace?.toFixed(2)}
+                                    />
+
+                                </Link>
+                            </div>
                         ))
                     ) : (
                         <></>

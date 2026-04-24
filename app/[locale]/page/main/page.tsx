@@ -35,7 +35,8 @@ export default function Main() {
     5: "/images/business_category/team.svg",
     6: "/images/business_category/wash.svg",
     7: "/images/business_category/engine.svg",
-    8: "/images/business_category/health.svg",
+    8: "/images/business_category/cafe.svg",
+    9: "/images/business_category/health.svg",
   };
 
   const hasLocation =

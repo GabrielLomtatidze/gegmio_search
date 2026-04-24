@@ -263,12 +263,14 @@ export default function Business() {
                             </div>
                         </a>
 
-                        <div className="h-[42px] px-[12px] rounded-xl border border-[#2b2b2b] flex items-center justify-center gap-[6px] self-start md:self-auto">
+                        <div className="h-[42px] px-[12px] rounded-xl border border-[#2b2b2b] flex items-center justify-center gap-[6px] self-start md:self-auto shrink-0 whitespace-nowrap">
                             <img src="/images/qisa.svg" alt="price" />
-                            <h4 className="text-[#a7a7a7] text-[14px] text-bold">{t("pages.on_the_person")}</h4>
+                            <h4 className="text-[#a7a7a7] text-[14px] font-bold">
+                                {t("pages.on_the_person")}
+                            </h4>
                             <span className="text-[#a7a7a7]">-</span>
                             <span className="text-white text-[14px]">
-                                {business.averagePricePerPerson.toFixed(2)} {t("pages.gel")} + 
+                                {business.averagePricePerPerson.toFixed(2)} {t("pages.gel")} +
                             </span>
                         </div>
 

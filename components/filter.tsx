@@ -3,6 +3,7 @@ import { useState, useEffect } from "react";
 import { Search } from "lucide-react";
 import { useTranslations } from "next-intl";
 import { useDistrictStore } from "@/zustand/APIs/public/districtStore";
+import { motion } from "framer-motion";
 
 type Item = {
     id: number;
@@ -108,9 +109,22 @@ export default function Filter({ regions, onApply, onClose }: Props) {
     }
 
     return (
-        <div className="w-full text-white">
+        <div className="fixed inset-0 bg-black/40 z-50">
 
-            <div className="absolute bottom-0 left-0 w-full h-[70vh] bg-[#0f0f0f] rounded-t-2xl p-4 animate-slideUp overflow-y-auto">
+            <motion.div
+                drag="y"
+                dragConstraints={{ top: 0, bottom: 300 }}
+                onDragEnd={(e, info) => {
+                    if (info.offset.y > 120) {
+                        onClose?.();
+                    }
+                }}
+                initial={{ y: "100%" }}
+                animate={{ y: 0 }}
+                exit={{ y: "100%" }}
+                transition={{ type: "spring", stiffness: 300, damping: 30 }}
+                className="absolute bottom-0 left-0 w-full h-[70vh] bg-[#0f0f0f] rounded-t-2xl p-4 overflow-y-auto text-white"
+            >
 
                 <div className="w-full flex justify-center mb-4">
                     <h2 className="text-white font-bold"> {filterRouter === "city" ? t("components.city") : t("components.filter")}</h2>
@@ -211,7 +225,7 @@ export default function Filter({ regions, onApply, onClose }: Props) {
                         </div>
                     </>
                 )}
-            </div>
+            </motion.div >
         </div>
     );
 }

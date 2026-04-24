@@ -13,6 +13,9 @@ import { useBusinessCategoriesStore } from "@/zustand/APIs/public/businessCateco
 import { useLocationStore } from "@/zustand/User/locationStore";
 
 export default function Main() {
+
+  const t = useTranslations();
+
   const { businessStore, loading, fetchBusiness } = useBusinessStore();
   const { regionsStore, fetchRegionsInfo } = useRegionsStore();
   const { categories, fetchCategories } = useBusinessCategoriesStore();
@@ -43,7 +46,7 @@ export default function Main() {
     7: "/images/business_category/engine.svg",
     8: "/images/business_category/cafe.svg",
     9: "/images/business_category/health.svg",
-  }; const t = useTranslations();
+  };
 
   const buildParams = (
     query: string,
@@ -130,22 +133,24 @@ export default function Main() {
       <div className="w-full flex justify-center mt-5">
         <div className="w-full max-w-7xl px-4 md:px-[100px] flex flex-col gap-5">
 
-          <div className="flex gap-6 border-[#2b2b2b] overflow-x-auto no-scrollbar">
-            <div onClick={() => setSelectedCategoryId(0)} className="cursor-pointer py-2 flex flex-col items-center"    >
+          <div className="flex gap-8 border-[#2b2b2b] overflow-x-auto no-scrollbar">
+
+            <div onClick={() => setSelectedCategoryId(0)} className="cursor-pointer py-2 flex flex-col items-center flex-shrink-0"     >
               <img src={categoryImages[0]} alt="all" className="w-8 h-8 mb-1" />
-              <h2 className={`text-sm mt-[10px] ${selectedCategoryId === 0 ? "text-[#F94B00] font-bold" : "text-white"}`}>
+              <h2 className={`text-sm mt-[10px] whitespace-nowrap ${selectedCategoryId === 0 ? "text-[#F94B00] font-bold" : "text-white"}`}>
                 {t("components.all")}
               </h2>
             </div>
 
             {categories?.map((item) => (
-              <div key={item.id} onClick={() => setSelectedCategoryId(item.id)} className="cursor-pointer py-2 flex flex-col items-center"  >
+              <div key={item.id} onClick={() => setSelectedCategoryId(item.id)} className="cursor-pointer py-2 flex flex-col items-center flex-shrink-0"  >
                 <img src={categoryImages[item.id]} alt={item.name} className="w-8 h-8 mb-1" />
-                <h2 className={`text-sm mt-[10px] ${selectedCategoryId === item.id ? "text-[#F94B00] font-bold" : "text-white"}`}>
+                <h2 className={`text-sm mt-[10px] whitespace-nowrap ${selectedCategoryId === item.id ? "text-[#F94B00] font-bold" : "text-white"}`}>
                   {item.name}
                 </h2>
               </div>
             ))}
+
           </div>
 
           <div className="flex flex-col md:flex-row md:justify-between gap-3">

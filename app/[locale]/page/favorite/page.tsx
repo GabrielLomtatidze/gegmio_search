@@ -10,6 +10,8 @@ import Card from "@/components/cards/card";
 import { useRegionsStore } from "@/zustand/APIs/public/regionsStore";
 import debounce from "lodash.debounce";
 import Link from "next/link";
+import { useBusinessCategoriesStore } from "@/zustand/APIs/public/businessCatecoryStore";
+
 
 
 export default function Favorite() {
@@ -18,18 +20,34 @@ export default function Favorite() {
 
     const t = useTranslations();
     const { regionsStore, fetchRegionsInfo } = useRegionsStore();
+    const { categories, fetchCategories } = useBusinessCategoriesStore();
 
     const [favorites, setFavorites] = useState<any[]>([]);
     const [search, setSearch] = useState<string>("");
     const [loading, setLoading] = useState<boolean>(false);
     const [selectedRegionId, setSelectedRegionId] = useState<number>(0);
     const [openFilter, setOpenFilter] = useState<boolean>(false);
+    const [selectedCategoryId, setSelectedCategoryId] = useState<number>(0);
+
 
     const [latitude, setLatitude] = useState<number | null>(null);
     const [longitude, setLongitude] = useState<number | null>(null);
     const [locationResolved, setLocationResolved] = useState<boolean>(false);
 
     const hasLocation = latitude !== null && longitude !== null;
+
+    const categoryImages: Record<number, string> = {
+        0: "/images/business_category/home.svg",
+        1: "/images/business_category/restaurant.svg",
+        2: "/images/business_category/salon.svg",
+        3: "/images/business_category/medic.svg",
+        4: "/images/business_category/cut.svg",
+        5: "/images/business_category/team.svg",
+        6: "/images/business_category/wash.svg",
+        7: "/images/business_category/engine.svg",
+        8: "/images/business_category/cafe.svg",
+        9: "/images/business_category/health.svg",
+    };
 
     function getLocalDateTimeWithOffset() {
         const now = new Date();
@@ -146,7 +164,8 @@ export default function Favorite() {
     return (
         <>
             <Header />
-            <div className="w-full justify-center mt-[20px]">
+            <div className="w-full mt-[20px]">
+
                 <div className="w-full flex justify-center mt-[20px]">
                     <div className="w-full max-w-7xl px-4 md:px-[100px] flex flex-col md:flex-row md:justify-between gap-3">
                         <h2 className="text-[#a7a7a7]">
@@ -156,6 +175,31 @@ export default function Favorite() {
                                 {t("pages.favorite_page")}
                             </span>
                         </h2>
+                    </div>
+                </div>
+
+                <div className="w-full flex justify-center">
+                    <div className="w-full max-w-7xl px-4 md:px-[100px] flex flex-col gap-5 mt-[44px]">
+
+                        <div className="flex gap-8 overflow-x-auto no-scrollbar">
+
+                            <div onClick={() => setSelectedCategoryId(0)} className="cursor-pointer py-2 flex flex-col items-center flex-shrink-0"    >
+                                <img src={categoryImages[0]} alt="all" className="w-8 h-8 mb-1" />
+                                <h2 className={`text-sm mt-[10px] whitespace-nowrap ${selectedCategoryId === 0 ? "text-[#F94B00] font-bold" : "text-white"}`}      >
+                                    {t("components.all")}
+                                </h2>
+                            </div>
+
+                            {categories?.map((item) => (
+                                <div key={item.id} onClick={() => setSelectedCategoryId(item.id)} className="cursor-pointer py-2 flex flex-col items-center flex-shrink-0"     >
+                                    <img src={categoryImages[item.id]} alt={item.name} className="w-8 h-8 mb-1" />
+                                    <h2 className={`text-sm mt-[10px] whitespace-nowrap ${selectedCategoryId === item.id ? "text-[#F94B00] font-bold" : "text-white"}`}      >
+                                        {item.name}
+                                    </h2>
+                                </div>
+                            ))}
+
+                        </div>
                     </div>
                 </div>
 

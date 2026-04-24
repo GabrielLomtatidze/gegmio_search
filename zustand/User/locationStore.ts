@@ -1,5 +1,6 @@
 "use client";
 import { create } from "zustand";
+import { persist } from "zustand/middleware";
 
 interface LocationState {
     latitude: number | null;
@@ -9,40 +10,68 @@ interface LocationState {
 
     setLocationEnabled: (value: boolean) => void;
     getLocation: () => void;
+    resetLocation: () => void;
 }
 
-export const useLocationStore = create<LocationState>((set, get) => ({
-    latitude: null,
-    longitude: null,
-    locationEnabled: false,
-    loading: false,
+export const useLocationStore = create<LocationState>()(
+    persist(
+        (set, get) => ({
+            latitude: null,
+            longitude: null,
+            locationEnabled: false,
+            loading: false,
 
-    setLocationEnabled: (value) => {
-        set({ locationEnabled: value });
+            setLocationEnabled: (value) => {
+                set({ locationEnabled: value });
 
-        if (value) {
-            get().getLocation();
-        } else {
-            set({ latitude: null, longitude: null });
-        }
-    },
+                if (value) {
+                    get().getLocation();
+                } else {
+                    set({ latitude: null, longitude: null });
+                }
+            },
 
-    getLocation: () => {
-        if (!navigator.geolocation) return;
-
-        set({ loading: true });
-
-        navigator.geolocation.getCurrentPosition(
-            ({ coords }) => {
+            resetLocation: () => {
                 set({
-                    latitude: coords.latitude,
-                    longitude: coords.longitude,
-                    loading: false,
+                    latitude: null,
+                    longitude: null,
                 });
             },
-            () => {
-                set({ loading: false });
-            }
-        );
-    },
-}));
+
+            getLocation: () => {
+                if (!navigator.geolocation) return;
+
+                set({ loading: true });
+
+                navigator.geolocation.getCurrentPosition(
+                    ({ coords }) => {
+                        set({
+                            latitude: coords.latitude,
+                            longitude: coords.longitude,
+                            loading: false,
+                        });
+                    },
+                    (error) => {
+                        console.log("Location error:", error);
+
+                        set({
+                            loading: false,
+                            latitude: null,
+                            longitude: null,
+                        });
+
+                        if (error.code === 1) {
+                            set({ locationEnabled: false });
+                        }
+                    },
+                    {
+                        enableHighAccuracy: true,
+                    }
+                );
+            },
+        }),
+        {
+            name: "location-storage",
+        }
+    )
+);

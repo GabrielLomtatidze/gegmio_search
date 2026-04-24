@@ -13,18 +13,24 @@ import { useBusinessCategoriesStore } from "@/zustand/APIs/public/businessCateco
 import { useLocationStore } from "@/zustand/User/locationStore";
 
 export default function Main() {
-  const t = useTranslations();
   const { businessStore, loading, fetchBusiness } = useBusinessStore();
   const { regionsStore, fetchRegionsInfo } = useRegionsStore();
   const { categories, fetchCategories } = useBusinessCategoriesStore();
 
-
-  const { latitude, longitude, locationEnabled, getLocation } = useLocationStore();
+  const {
+    latitude,
+    longitude,
+    locationEnabled,
+    getLocation,
+    setLocationEnabled,
+  } = useLocationStore();
 
   const [search, setSearch] = useState<string>("");
   const [selectedRegionId, setSelectedRegionId] = useState<number>(0);
   const [selectedCategoryId, setSelectedCategoryId] = useState<number>(0);
   const [openFilter, setOpenFilter] = useState<boolean>(false);
+
+  const hasLocation = locationEnabled && latitude !== null && longitude !== null;
 
   const categoryImages: Record<number, string> = {
     0: "/images/business_category/home.svg",
@@ -37,10 +43,7 @@ export default function Main() {
     7: "/images/business_category/engine.svg",
     8: "/images/business_category/cafe.svg",
     9: "/images/business_category/health.svg",
-  };
-
-  const hasLocation =
-    locationEnabled && latitude !== null && longitude !== null;
+  }; const t = useTranslations();
 
   const buildParams = (
     query: string,
@@ -52,22 +55,22 @@ export default function Main() {
     const params: Record<string, any> = {};
 
     if (query) params.searchKey = query;
-
     if (lat !== undefined && lng !== undefined) {
       params.latitude = lat;
       params.longitude = lng;
     }
-
-    if (regionId && regionId !== 0) {
-      params.regionId = regionId;
-    }
-
-    if (categoryId && categoryId !== 0) {
+    if (regionId && regionId !== 0) params.regionId = regionId;
+    if (categoryId && categoryId !== 0)
       params.businessCategoryId = categoryId;
-    }
 
     return params;
   };
+
+  useEffect(() => {
+    if (!locationEnabled) {
+      setLocationEnabled(true);
+    }
+  }, []);
 
   useEffect(() => {
     if (locationEnabled) {
@@ -98,10 +101,9 @@ export default function Main() {
   useEffect(() => {
     const lat = hasLocation ? latitude! : undefined;
     const lng = hasLocation ? longitude! : undefined;
-    const regionId =
-      selectedRegionId !== 0 ? selectedRegionId : undefined;
-    const categoryId =
-      selectedCategoryId !== 0 ? selectedCategoryId : undefined;
+
+    const regionId = selectedRegionId !== 0 ? selectedRegionId : undefined;
+    const categoryId = selectedCategoryId !== 0 ? selectedCategoryId : undefined;
 
     if (search === "") {
       fetchBusiness(buildParams("", lat, lng, regionId, categoryId));
@@ -121,6 +123,7 @@ export default function Main() {
     debouncedFetchBusiness,
     fetchBusiness,
   ]);
+
 
   return (
     <>

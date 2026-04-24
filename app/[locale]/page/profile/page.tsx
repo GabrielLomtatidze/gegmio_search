@@ -9,6 +9,7 @@ import { useUserStore } from '@/zustand/User/profileStore';
 import axios from 'axios';
 import { Spinner } from '@/components/ui/spinner';
 import { Switch } from '@/components/ui/switch';
+import { useLocationStore } from '@/zustand/User/locationStore';
 
 interface PasswordErrors {
     password: string;
@@ -47,6 +48,8 @@ export default function Profile() {
     const [profileLoading, setProfileLoading] = useState<boolean>(false);
 
     const [passwordErrors, setPasswordErrors] = useState<PasswordErrors>({ password: "", repeatPassword: "" });
+
+    const { locationEnabled, setLocationEnabled } = useLocationStore();
 
     const [profileForm, setProfileForm] = useState<ProfileForm>({
         firstName: "",
@@ -271,7 +274,9 @@ export default function Profile() {
                                             <label className="text-[14px] text-white">{t("pages.location_share")}</label>
                                             <div className="bg-transparent h-[48px] text-[14px] border border-[#2b2b2b] rounded-lg px-4 py-3 flex justify-between">
                                                 <h3>{t("pages.allowed")}</h3>
-                                                <Switch className="cursor-pointer data-[state=checked]:bg-[#F94B00] data-[state=unchecked]:bg-gray-300" />
+                                                <Switch className="cursor-pointer data-[state=checked]:bg-[#F94B00] data-[state=unchecked]:bg-gray-300" checked={locationEnabled}
+                                                    onCheckedChange={(value) => setLocationEnabled(value)}
+                                                />
                                             </div>
                                         </div>
 

@@ -10,6 +10,7 @@ import CardSkeleton from "@/components/skeletons/cardSkeleton";
 import Link from "next/link";
 import Filter from "@/components/filter";
 import { useBusinessCategoriesStore } from "@/zustand/APIs/public/businessCatecoryStore";
+import { useLocationStore } from "@/zustand/User/locationStore";
 
 export default function Main() {
   const t = useTranslations();
@@ -17,14 +18,13 @@ export default function Main() {
   const { regionsStore, fetchRegionsInfo } = useRegionsStore();
   const { categories, fetchCategories } = useBusinessCategoriesStore();
 
-  const [search, setSearch] = useState("");
-  const [latitude, setLatitude] = useState<number | null>(null);
-  const [longitude, setLongitude] = useState<number | null>(null);
-  const [locationResolved, setLocationResolved] = useState<boolean>(false);
+
+  const { latitude, longitude, locationEnabled, getLocation } = useLocationStore();
+
+  const [search, setSearch] = useState<string>("");
   const [selectedRegionId, setSelectedRegionId] = useState<number>(0);
   const [selectedCategoryId, setSelectedCategoryId] = useState<number>(0);
-  const [openFilter, setOpenFilter] = useState(false);
-
+  const [openFilter, setOpenFilter] = useState<boolean>(false);
 
   const categoryImages: Record<number, string> = {
     0: "/images/business_category/home.svg",
@@ -38,7 +38,8 @@ export default function Main() {
     8: "/images/business_category/wash.svg",
   };
 
-  const hasLocation = latitude !== null && longitude !== null;
+  const hasLocation =
+    locationEnabled && latitude !== null && longitude !== null;
 
   const buildParams = (
     query: string,
@@ -68,20 +69,10 @@ export default function Main() {
   };
 
   useEffect(() => {
-    if (!navigator.geolocation) {
-      setLocationResolved(true);
-      return;
+    if (locationEnabled) {
+      getLocation();
     }
-
-    navigator.geolocation.getCurrentPosition(
-      ({ coords }) => {
-        setLatitude(coords.latitude);
-        setLongitude(coords.longitude);
-        setLocationResolved(true);
-      },
-      () => setLocationResolved(true)
-    );
-  }, []);
+  }, [locationEnabled]);
 
   useEffect(() => {
     fetchRegionsInfo();
@@ -104,8 +95,6 @@ export default function Main() {
   }, [fetchBusiness]);
 
   useEffect(() => {
-    if (!locationResolved) return;
-
     const lat = hasLocation ? latitude! : undefined;
     const lng = hasLocation ? longitude! : undefined;
     const regionId =
@@ -125,7 +114,7 @@ export default function Main() {
     search,
     latitude,
     longitude,
-    locationResolved,
+    locationEnabled,
     selectedRegionId,
     selectedCategoryId,
     debouncedFetchBusiness,

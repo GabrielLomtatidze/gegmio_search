@@ -90,7 +90,9 @@
         "get_code": "Get code",
         "main_page_title": "Main page",
         "favorite_page": "Favorite page",
-        "no_business_found": "No businesses found"
+        "no_business_found": "No businesses found",
+        "location_share": "Location sharing",
+        "allowed": "Allowed"
     },
     "layout": {
         "working_hours": "Working Hours",

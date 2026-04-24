@@ -8,6 +8,7 @@ import { Eye, EyeOff } from "lucide-react";
 import { useUserStore } from '@/zustand/User/profileStore';
 import axios from 'axios';
 import { Spinner } from '@/components/ui/spinner';
+import { Switch } from '@/components/ui/switch';
 
 interface PasswordErrors {
     password: string;
@@ -264,6 +265,14 @@ export default function Profile() {
                                                 className="bg-transparent h-[48px] text-[14px] border border-[#2b2b2b] rounded-lg px-4 py-3 outline-none focus:border-white transition"
                                             />
                                             {profileErrors.phoneNumber && <span className="text-red-500 text-sm">{profileErrors.phoneNumber}</span>}
+                                        </div>
+
+                                        <div className="flex flex-col gap-2">
+                                            <label className="text-[14px] text-white">{t("pages.location_share")}</label>
+                                            <div className="bg-transparent h-[48px] text-[14px] border border-[#2b2b2b] rounded-lg px-4 py-3 flex justify-between">
+                                                <h3>{t("pages.allowed")}</h3>
+                                                <Switch className="cursor-pointer data-[state=checked]:bg-[#F94B00] data-[state=unchecked]:bg-gray-300" />
+                                            </div>
                                         </div>
 
                                     </div>

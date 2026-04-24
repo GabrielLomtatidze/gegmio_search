@@ -92,7 +92,9 @@
         "favorite_page": "Favorite page",
         "no_business_found": "No businesses found",
         "location_share": "Location sharing",
-        "allowed": "Allowed"
+        "allowed": "Allowed",
+        "on_the_person": "On the person",
+        "gel": "GEL"
     },
     "layout": {
         "working_hours": "Working Hours",

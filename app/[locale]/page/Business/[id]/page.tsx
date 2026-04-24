@@ -249,21 +249,29 @@ export default function Business() {
 
                 <div className="flex flex-col md:flex-row md:justify-between gap-4 mt-4">
 
-                    <div className="w-full md:w-[35%]">
-                        <a href={business.googleMapURL} target="_blank" rel="noopener noreferrer" className="block no-underline" >
-                            <div className="w-full h-[42px] rounded-xl border border-[#2b2b2b] flex items-center justify-between px-[12px]">
+                    <div className="w-full md:w-[35%] flex flex-col md:flex-row gap-[8px] items-start md:items-center">
 
+                        <a href={business.googleMapURL} target="_blank" rel="noopener noreferrer" className="block no-underline w-full md:flex-1"  >
+                            <div className="w-full h-[42px] rounded-xl border border-[#2b2b2b] flex items-center justify-between px-[12px]">
                                 <div className="flex items-center gap-[4px] min-w-0">
                                     <img src="/images/map_pin.svg" alt="map" />
-
-                                    <span className="text-[#a7a7a7] text-[14px] truncate min-w-0">
+                                    <span className="text-[#a7a7a7] text-[14px] truncate">
                                         {business.businessAddressName}
                                     </span>
                                 </div>
-
                                 <img src="/images/arrow_right.svg" alt="arrowRight" />
                             </div>
                         </a>
+
+                        <div className="h-[42px] px-[12px] rounded-xl border border-[#2b2b2b] flex items-center justify-center gap-[6px] self-start md:self-auto">
+                            <img src="/images/qisa.svg" alt="price" />
+                            <h4 className="text-[#a7a7a7] text-[14px] text-bold">{t("pages.on_the_person")}</h4>
+                            <span className="text-[#a7a7a7]">-</span>
+                            <span className="text-white text-[14px]">
+                                {business.averagePricePerPerson.toFixed(2)} {t("pages.gel")} + 
+                            </span>
+                        </div>
+
                     </div>
 
                     <div className="flex gap-4 justify-start md:justify-end">

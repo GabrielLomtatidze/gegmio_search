@@ -90,7 +90,9 @@
         "favorite_page": "ფავორიტების გვერდი",
         "no_business_found": "ბიზნესი არ მოიძებნა",
         "location_share": "ლოკაციის გაზიარება",
-        "allowed": "დაშვებულია"
+        "allowed": "დაშვებულია",
+        "on_the_person": "პერსონაზე",
+        "gel": "ლარი"
     },
     "layout": {
         "working_hours": "სამუშაო საათები",

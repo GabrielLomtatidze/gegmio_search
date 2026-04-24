@@ -30,12 +30,12 @@ export default function Main() {
     0: "/images/business_category/home.svg",
     1: "/images/business_category/restaurant.svg",
     2: "/images/business_category/salon.svg",
-    3: "/images/business_category/home.svg",
+    3: "/images/business_category/medic.svg",
     4: "/images/business_category/cut.svg",
-    5: "/images/business_category/engine.svg",
-    6: "/images/business_category/medic.svg",
-    7: "/images/business_category/team.svg",
-    8: "/images/business_category/wash.svg",
+    5: "/images/business_category/team.svg",
+    6: "/images/business_category/wash.svg",
+    7: "/images/business_category/engine.svg",
+    8: "/images/business_category/health`.svg",
   };
 
   const hasLocation =

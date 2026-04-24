@@ -11,30 +11,27 @@ import { useRegionsStore } from "@/zustand/APIs/public/regionsStore";
 import debounce from "lodash.debounce";
 import Link from "next/link";
 import { useBusinessCategoriesStore } from "@/zustand/APIs/public/businessCatecoryStore";
-
-
+import { useLocationStore } from "@/zustand/User/locationStore";
 
 export default function Favorite() {
-
     const apiUrl = process.env.NEXT_PUBLIC_API_URL;
 
     const t = useTranslations();
     const { regionsStore, fetchRegionsInfo } = useRegionsStore();
     const { categories, fetchCategories } = useBusinessCategoriesStore();
 
+    const {
+        latitude,
+        longitude,
+        locationEnabled,
+        getLocation,
+    } = useLocationStore();
+
     const [favorites, setFavorites] = useState<any[]>([]);
     const [search, setSearch] = useState<string>("");
     const [loading, setLoading] = useState<boolean>(false);
     const [selectedRegionId, setSelectedRegionId] = useState<number>(0);
-    const [openFilter, setOpenFilter] = useState<boolean>(false);
     const [selectedCategoryId, setSelectedCategoryId] = useState<number>(0);
-
-
-    const [latitude, setLatitude] = useState<number | null>(null);
-    const [longitude, setLongitude] = useState<number | null>(null);
-    const [locationResolved, setLocationResolved] = useState<boolean>(false);
-
-    const hasLocation = latitude !== null && longitude !== null;
 
     const categoryImages: Record<number, string> = {
         0: "/images/business_category/home.svg",
@@ -51,7 +48,6 @@ export default function Favorite() {
 
     function getLocalDateTimeWithOffset() {
         const now = new Date();
-
         const pad = (n: number) => String(n).padStart(2, "0");
 
         const year = now.getFullYear();
@@ -72,38 +68,27 @@ export default function Favorite() {
     useEffect(() => {
         fetchRegionsInfo();
         fetchCategories();
-    }, [fetchRegionsInfo]);
-
-    useEffect(() => {
-        if (!navigator.geolocation) {
-            setLocationResolved(true);
-            return;
-        }
-
-        navigator.geolocation.getCurrentPosition(
-            ({ coords }) => {
-                setLatitude(coords.latitude);
-                setLongitude(coords.longitude);
-                setLocationResolved(true);
-            },
-            () => setLocationResolved(true)
-        );
+        if (locationEnabled) getLocation();
     }, []);
 
-    const buildParams = (query: string, lat?: number, lng?: number, regionId?: number) => {
+    const buildParams = () => {
         const params: Record<string, any> = {};
 
-        if (query.trim() !== "") {
-            params.SearchKey = query;
+        if (search.trim() !== "") {
+            params.SearchKey = search;
         }
 
-        if (lat !== undefined && lng !== undefined) {
-            params.Latitude = lat;
-            params.Longtitude = lng;
+        if (latitude && longitude) {
+            params.Latitude = latitude;
+            params.Longtitude = longitude;
         }
 
-        if (regionId && regionId !== 0) {
-            params.RegionId = regionId;
+        if (selectedRegionId !== 0) {
+            params.RegionId = selectedRegionId;
+        }
+
+        if (selectedCategoryId !== 0) {
+            params.BusinessCategoryId = selectedCategoryId;
         }
 
         params.LocalTime = getLocalDateTimeWithOffset();
@@ -112,55 +97,38 @@ export default function Favorite() {
     };
 
     const debouncedFetchFavorites = useMemo(() => {
-        return debounce(
-            async (query: string, lat?: number, lng?: number, regionId?: number) => {
-                const accessToken = localStorage.getItem("accessToken");
-                if (!accessToken) return;
+        return debounce(async () => {
+            const accessToken = localStorage.getItem("accessToken");
+            if (!accessToken) return;
 
-                setLoading(true);
+            setLoading(true);
 
-                try {
-                    const response = await axios.get(
-                        `${apiUrl}/api/v1/favorites`,
-                        {
-                            headers: {
-                                Authorization: `Bearer ${accessToken}`,
-                            },
-                            params: buildParams(query, lat, lng, regionId),
-                        }
-                    );
+            try {
+                const response = await axios.get(
+                    `${apiUrl}/api/v1/favorites`,
+                    {
+                        headers: {
+                            Authorization: `Bearer ${accessToken}`,
+                        },
+                        params: buildParams(),
+                    }
+                );
 
-                    setFavorites(response.data);
-                } catch (error) {
-                    console.log("error loading favorites", error);
-                } finally {
-                    setLoading(false);
-                }
-            },
-            500
-        );
-    }, []);
+                setFavorites(response.data);
+            } catch (error) {
+                console.log(error);
+            } finally {
+                setLoading(false);
+            }
+        }, 500);
+    }, [search, selectedRegionId, selectedCategoryId, latitude, longitude]);
 
     useEffect(() => {
-        if (!locationResolved) return;
-
-        const lat = hasLocation ? latitude! : undefined;
-        const lng = hasLocation ? longitude! : undefined;
-        const regionId =
-            selectedRegionId !== 0 ? selectedRegionId : undefined;
-
-        if (search === "") {
-            debouncedFetchFavorites("", lat, lng, regionId);
-            return;
-        }
-
-        debouncedFetchFavorites(search, lat, lng, regionId);
-
+        debouncedFetchFavorites();
         return () => debouncedFetchFavorites.cancel();
-    }, [search, selectedRegionId, latitude, longitude, locationResolved, debouncedFetchFavorites,]);
+    }, [debouncedFetchFavorites]);
 
     const countedBusinesses = favorites.length;
-
 
     return (
         <>
@@ -175,9 +143,7 @@ export default function Favorite() {
                                     {t("pages.main_page_title")}
                                 </span>
                             </Link>
-
                             <span className="mx-2">&gt;</span>
-
                             <span className="text-white font-bold">
                                 {t("pages.favorite_page")}
                             </span>
@@ -187,20 +153,19 @@ export default function Favorite() {
 
                 <div className="w-full flex justify-center">
                     <div className="w-full max-w-7xl px-4 md:px-[100px] flex flex-col gap-5 mt-[44px]">
-
                         <div className="flex gap-8 overflow-x-auto no-scrollbar">
 
-                            <div onClick={() => setSelectedCategoryId(0)} className="cursor-pointer py-2 flex flex-col items-center flex-shrink-0"  >
+                            <div onClick={() => setSelectedCategoryId(0)} className="cursor-pointer py-2 flex flex-col items-center flex-shrink-0">
                                 <img src={categoryImages[0]} alt="all" className="w-8 h-8 mb-1" />
-                                <h2 className={`text-sm mt-[10px] whitespace-nowrap ${selectedCategoryId === 0 ? "text-[#F94B00] font-bold" : "text-white"}`} >
+                                <h2 className={`text-sm mt-[10px] whitespace-nowrap ${selectedCategoryId === 0 ? "text-[#F94B00] font-bold" : "text-white"}`}>
                                     {t("components.all")}
                                 </h2>
                             </div>
 
                             {categories?.map((item) => (
-                                <div key={item.id} onClick={() => setSelectedCategoryId(item.id)} className="cursor-pointer py-2 flex flex-col items-center flex-shrink-0" >
+                                <div key={item.id} onClick={() => setSelectedCategoryId(item.id)} className="cursor-pointer py-2 flex flex-col items-center flex-shrink-0">
                                     <img src={categoryImages[item.id]} alt={item.name} className="w-8 h-8 mb-1" />
-                                    <h2 className={`text-sm mt-[10px] whitespace-nowrap ${selectedCategoryId === item.id ? "text-[#F94B00] font-bold" : "text-white"}`} >
+                                    <h2 className={`text-sm mt-[10px] whitespace-nowrap ${selectedCategoryId === item.id ? "text-[#F94B00] font-bold" : "text-white"}`}>
                                         {item.name}
                                     </h2>
                                 </div>
@@ -224,13 +189,9 @@ export default function Favorite() {
                                 />
                             </div>
 
-                            <div className="md:hidden w-[44px] h-[42px] bg-[#F94B00] rounded-xl flex justify-center items-center" onClick={() => setOpenFilter(true)}>
-                                <img src="/images/filter.svg" alt="filter" className="w-[20px] h-[20px]" />
-                            </div>
-
                             <div className="hidden md:flex gap-2 text-[#a7a7a7]">
                                 <div className="relative">
-                                    <select value={selectedRegionId} onChange={(e) => setSelectedRegionId(Number(e.target.value))} className={`border py-[10px] px-[12px] pr-[40px] rounded-xl appearance-none w-full text-white bg-[#0f0f0f] text-[14px] outline-none focus:border-[#F94B00] ${selectedRegionId !== 0 ? "border-[#F94B00]" : "border-[#2b2b2b]"}`} >
+                                    <select value={selectedRegionId} onChange={(e) => setSelectedRegionId(Number(e.target.value))} className={`border py-[10px] px-[12px] pr-[40px] rounded-xl appearance-none w-full text-white bg-[#0f0f0f] text-[14px] outline-none focus:border-[#F94B00] ${selectedRegionId !== 0 ? "border-[#F94B00]" : "border-[#2b2b2b]"}`}>
                                         <option value={0}>{t("pages.city")}</option>
                                         {regionsStore.map((item: any) => (
                                             <option key={item.id} value={item.id}>
@@ -245,6 +206,7 @@ export default function Favorite() {
                                 </div>
                             </div>
                         </div>
+
                         <div className="flex md:justify-center w-full md:w-[109px] gap-[8px] items-center mt-2 md:mt-0">
                             <div className="w-[8px] h-[8px] bg-[#F94B00] rounded-full" />
                             <h3 className="text-[16px] text-white font-bold">
@@ -262,20 +224,17 @@ export default function Favorite() {
                         Array.from({ length: 8 }).map((_, i) => (
                             <CardSkeleton key={i} />
                         ))
-                    ) : favorites.length > 0 ? (
+                    ) : favorites.length === 0 ? (
+                        <div className="w-full">
+                            <div className="text-center py-10 text-gray-500">
+                                {t("pages.no_business_found")}
+                            </div>
+                        </div>
+                    ) : (
                         favorites.map((item: any) => (
-                            <div
-                                key={item.id}
-                                className="w-[calc(50%-12px)] md:w-[252px] flex-shrink-0"
-                            >
-                                <Link
-                                    key={item.id}
-                                    href={`/page/business/${item.id}`}
-                                    className="cursor-pointer"
-                                    prefetch={false}
-                                >
+                            <div key={item.id} className="w-[calc(50%-12px)] md:w-[252px] flex-shrink-0" >
+                                <Link href={`/page/business/${item.id}`} className="cursor-pointer" prefetch={false}   >
                                     <Card
-                                        key={item.id}
                                         businessId={item.id}
                                         isFavorite={true}
                                         isOpen={item.isOpen}
@@ -285,16 +244,12 @@ export default function Favorite() {
                                         businessCategory={item.businessCategory.name}
                                         distance={item.distnace?.toFixed(2)}
                                     />
-
                                 </Link>
                             </div>
                         ))
-                    ) : (
-                        <></>
                     )}
                 </div>
             </div>
-
             <Footer />
         </>
     );

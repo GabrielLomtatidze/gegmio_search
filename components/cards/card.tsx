@@ -64,7 +64,7 @@ export default function Card({ businessId, isFavorite, isOpen, title, image, add
 
     return (
         <>
-            <div className="w-full h-[260px] border border-[#2b2b2b] rounded-xl overflow-hidden relative">
+            <div className="w-full md:w-[252px] h-[260px] border border-[#2b2b2b] rounded-xl overflow-hidden relative">
 
                 <button
                     type="button"

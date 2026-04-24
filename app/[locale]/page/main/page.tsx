@@ -195,6 +195,7 @@ export default function Main() {
       </div>
 
       <div className="flex flex-wrap gap-6 mt-6 mb-6 w-full max-w-7xl px-4 md:px-[100px] mx-auto">
+
         {loading ? (
           Array.from({ length: 8 }).map((_, i) => <CardSkeleton key={i} />)
         ) : businessStore.length === 0 ? (
@@ -206,7 +207,10 @@ export default function Main() {
 
         ) : (
           businessStore.map((item: any) => (
-            <div key={item.id} className="w-[calc(50%-12px)] md:w-auto">
+            <div
+              key={item.id}
+              className="w-[calc(50%-12px)] md:w-[252px] flex-shrink-0"
+            >
               <Link
                 key={item.id}
                 href={`/page/business/${item.id}`}

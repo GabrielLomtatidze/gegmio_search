@@ -1,4 +1,4 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import ClientAxiosHandler from "./ClientAxiosHandler";
 import "./globals.css";
 import { NextIntlClientProvider } from "next-intl";
@@ -60,8 +60,12 @@ export const metadata: Metadata = {
     ],
     shortcut: "/images/logo.svg",
   },
-  viewport: "width=device-width, initial-scale=1",
   metadataBase: new URL("https://gegmio.com"),
+};
+
+export const viewport: Viewport = {
+  width: "device-width",
+  initialScale: 1,
 };
 
 export default async function RootLayout({ children, params }: LayoutProps<'/[locale]'>) {

@@ -138,10 +138,7 @@ export default function Main() {
         <div className="w-full max-w-7xl px-4 md:px-[100px] flex flex-col gap-5">
 
           <div className="flex gap-6 border-[#2b2b2b] overflow-x-auto no-scrollbar">
-            <div
-              onClick={() => setSelectedCategoryId(0)}
-              className="cursor-pointer py-2 flex flex-col items-center"
-            >
+            <div onClick={() => setSelectedCategoryId(0)} className="cursor-pointer py-2 flex flex-col items-center"    >
               <img src={categoryImages[0]} alt="all" className="w-8 h-8 mb-1" />
               <h2 className={`text-sm mt-[10px] ${selectedCategoryId === 0 ? "text-[#F94B00] font-bold" : "text-white"}`}>
                 {t("components.all")}
@@ -149,11 +146,7 @@ export default function Main() {
             </div>
 
             {categories?.map((item) => (
-              <div
-                key={item.id}
-                onClick={() => setSelectedCategoryId(item.id)}
-                className="cursor-pointer py-2 flex flex-col items-center"
-              >
+              <div key={item.id} onClick={() => setSelectedCategoryId(item.id)} className="cursor-pointer py-2 flex flex-col items-center"  >
                 <img src={categoryImages[item.id]} alt={item.name} className="w-8 h-8 mb-1" />
                 <h2 className={`text-sm mt-[10px] ${selectedCategoryId === item.id ? "text-[#F94B00] font-bold" : "text-white"}`}>
                   {item.name}
@@ -212,10 +205,23 @@ export default function Main() {
       </div>
 
       <div className="flex flex-wrap justify-start gap-6 mt-6 mb-6 w-full max-w-7xl px-4 md:px-[100px] mx-auto">
-        {loading
-          ? Array.from({ length: 8 }).map((_, i) => <CardSkeleton key={i} />)
-          : businessStore.map((item: any) => (
-            <Link key={item.id} href={`/page/business/${item.id}`} className="cursor-pointer" prefetch={false}>
+        {loading ? (
+          Array.from({ length: 8 }).map((_, i) => <CardSkeleton key={i} />)
+        ) : businessStore.length === 0 ? (
+          <div className="w-full">
+            <div className="text-center py-10 text-gray-500">
+              {t("pages.no_business_found")}
+            </div>
+          </div>
+
+        ) : (
+          businessStore.map((item: any) => (
+            <Link
+              key={item.id}
+              href={`/page/business/${item.id}`}
+              className="cursor-pointer"
+              prefetch={false}
+            >
               <Card
                 businessId={item.id}
                 isFavorite={item.isFavorite}
@@ -227,7 +233,8 @@ export default function Main() {
                 distance={item.distnace?.toFixed(2)}
               />
             </Link>
-          ))}
+          ))
+        )}
       </div>
 
       {openFilter && (

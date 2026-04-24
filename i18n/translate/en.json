@@ -89,7 +89,8 @@
         "menu_service": "Menu & Services",
         "get_code": "Get code",
         "main_page_title": "Main page",
-        "favorite_page": "Favorite page"
+        "favorite_page": "Favorite page",
+        "no_business_found": "No businesses found"
     },
     "layout": {
         "working_hours": "Working Hours",

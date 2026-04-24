@@ -118,6 +118,10 @@ export default function Business() {
         return number.slice(0, -4) + "****";
     };
 
+    const formatUrl = (url: string) => {
+        if (!url) return "#";
+        return url.startsWith("http://") || url.startsWith("https://") ? url : `https://${url}`;
+    };
 
     return (
         <div className="bg-[#0F0F0F]">
@@ -277,17 +281,17 @@ export default function Business() {
                     </div>
 
                     <div className="flex gap-4 justify-start md:justify-end">
-                        <a href="https://www.facebook.com/profile.php?id=61583853083725" target="_blank" className="group w-[42px] h-[42px] border-2 border-[#2b2b2b] rounded-full flex items-center justify-center relative overflow-hidden" >
+                        <a href={formatUrl(business.facebook)} target="_blank" rel="noopener noreferrer" className="group w-[42px] h-[42px] border-2 border-[#2b2b2b] rounded-full flex items-center justify-center relative overflow-hidden" >
                             <img src="/images/facebook-big.svg" className="w-[24px] absolute opacity-100 group-hover:opacity-0 transition duration-300" />
                             <img src="/images/fill_facebook_icon.svg" className="absolute opacity-0 group-hover:opacity-100 transition duration-300" />
                         </a>
 
-                        <a href="#" className="group w-[42px] h-[42px] border-2 border-[#2b2b2b] rounded-full flex items-center justify-center relative overflow-hidden" >
+                        <a href={formatUrl(business.tikTok)} target="_blank" rel="noopener noreferrer" className="group w-[42px] h-[42px] border-2 border-[#2b2b2b] rounded-full flex items-center justify-center relative overflow-hidden" >
                             <img src="/images/tiktok-big.svg" className="w-[24px] absolute opacity-100 group-hover:opacity-0 transition duration-300" />
                             <img src="/images/fill_tiktok_icon.svg" className="absolute opacity-0 group-hover:opacity-100 transition duration-300" />
                         </a>
 
-                        <a href="#" className="group w-[42px] h-[42px] border-2 border-[#2b2b2b] rounded-full flex items-center justify-center relative overflow-hidden" >
+                        <a href={formatUrl("#")} target="_blank" rel="noopener noreferrer" className="group w-[42px] h-[42px] border-2 border-[#2b2b2b] rounded-full flex items-center justify-center relative overflow-hidden" >
                             <img src="/images/Linkedin.svg" className="w-[24px] absolute opacity-100 group-hover:opacity-0 transition duration-300" />
                             <img src="/images/fill_linkedin_icon.svg" className="absolute opacity-0 group-hover:opacity-100 transition duration-300" />
                         </a>

@@ -5,7 +5,7 @@ export type ProfileDetails = {
   id: string;
   name: string;
   description: string;
-  phoneNumber: string,
+  phoneNumber: string;
   webSite: string;
   tikTok: string;
   instagram: string;
@@ -16,8 +16,8 @@ export type ProfileDetails = {
   distnace: number;
   serviceCount: number;
   isFavorite: boolean;
-  googleMapURL: string,
-  averagePricePerPerson: number,
+  googleMapURL: string;
+  averagePricePerPerson: number;
   businessBookingTime: {
     businessBookingTimeTypeId: number;
     name: string;
@@ -38,7 +38,13 @@ type BusinessByIdState = {
   favorite: boolean;
   currentId: string | null;
 
-  getBusinessById: (id: string) => Promise<void>;
+  getBusinessById: (
+    id: string,
+    latitude?: number,
+    longitude?: number,
+    localTime?: string
+  ) => Promise<void>;
+
   toggleFavorite: () => void;
   reset: () => void;
 };
@@ -52,7 +58,7 @@ export const useBusinessStoreId = create<BusinessByIdState>((set, get) => ({
   favorite: false,
   currentId: null,
 
-  getBusinessById: async (id: string) => {
+  getBusinessById: async (id, latitude, longitude, localTime) => {
     const state = get();
 
     if (state.loading) return;
@@ -64,6 +70,7 @@ export const useBusinessStoreId = create<BusinessByIdState>((set, get) => ({
       const accessToken = localStorage.getItem("accessToken");
 
       const res = await axios.get(`${apiUrl}/api/v1/public/${id}`, {
+        params: { latitude, longitude, localTime },
         ...(accessToken && {
           headers: {
             Authorization: `Bearer ${accessToken}`,
@@ -73,12 +80,7 @@ export const useBusinessStoreId = create<BusinessByIdState>((set, get) => ({
 
       const data = res.data;
 
-      set({
-        business: data,
-        favorite: data.isFavorite,
-        loading: false,
-        currentId: id,
-      });
+      set({ business: data, favorite: data.isFavorite, loading: false, currentId: id });
     } catch (err: any) {
       set({
         error: err?.response?.data?.message || "Something went wrong",
@@ -93,11 +95,5 @@ export const useBusinessStoreId = create<BusinessByIdState>((set, get) => ({
     })),
 
   reset: () =>
-    set({
-      business: null,
-      loading: false,
-      error: null,
-      favorite: false,
-      currentId: null,
-    }),
+    set({ business: null, loading: false, error: null, favorite: false, currentId: null }),
 }));

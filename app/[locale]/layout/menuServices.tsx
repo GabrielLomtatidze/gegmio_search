@@ -121,35 +121,40 @@ export default function MenuService() {
 
     return (
         <div className="w-full mb-[100px]">
+            <div className="w-full h-[44px] mt-[30px] flex items-center gap-2">
+                <div className="relative w-full h-full">
+                    {canScroll.left && (
+                        <div className="pointer-events-none absolute left-0 top-0 h-full w-[40px] bg-gradient-to-r from-[#0f0f0f] to-transparent z-10" />
+                    )}
 
-            <div className="w-full h-[44px] mt-[30px] inline-flex items-center gap-2">
+                    {canScroll.right && (
+                        <div className="pointer-events-none absolute right-0 top-0 h-full w-[40px] bg-gradient-to-l from-[#0f0f0f] to-transparent z-10" />
+                    )}
 
-                <div ref={containerRef} className="w-full h-full gap-[8px] flex overflow-x-hidden no-scrollbar scrollbar-hide" onScroll={updateScrollButtons}  >
-                    {filterText.map((item) => {
-                        const isSelected = item.id === selectedFilterId;
+                    <div ref={containerRef} onScroll={updateScrollButtons} className="w-full h-full flex gap-[8px] overflow-x-auto no-scrollbar px-[8px]"  >
+                        {filterText.map((item) => {
+                            const isSelected = item.id === selectedFilterId;
 
-                        return (
-                            <div key={item.id} onClick={() => setSelectedFilterId(item.id)} className={`px-[10px] py-[22px] rounded-full flex items-center cursor-pointer ${isSelected ? "bg-[#F94B00] text-white" : "bg-[#171717] text-[#A7A7A7]"}`} >
-                                <h1 className="truncate whitespace-nowrap">
-                                    {item.name}
-                                </h1>
-                            </div>
-                        );
-                    })}
+                            return (
+                                <div key={item.id} onClick={() => setSelectedFilterId(item.id)} className={`px-[10px] py-[22px] rounded-full flex items-center cursor-pointer ${isSelected ? "bg-[#F94B00] text-white" : "bg-[#171717] text-[#A7A7A7]"}`} >
+                                    <h1 className="truncate whitespace-nowrap">
+                                        {item.name}
+                                    </h1>
+                                </div>
+                            );
+                        })}
+                    </div>
                 </div>
 
-                <div className="inline-flex gap-[4px] h-full items-center">
-
-                    <div className={`w-[36px] h-[36px] rounded-full flex items-center justify-center cursor-pointer border-[2px] ${canScroll.left ? "border-[#F94B00] text-white" : "border-[#2B2B2B] text-[#A7A7A7]"}`} onClick={() => scroll("left")}       >
+                <div className="hidden md:inline-flex gap-[4px] h-full items-center">
+                    <div className={`w-[36px] h-[36px] rounded-full flex items-center justify-center cursor-pointer border-[2px] ${canScroll.left ? "border-[#F94B00] text-white" : "border-[#2B2B2B] text-[#A7A7A7]"}`} onClick={() => scroll("left")}     >
                         <FaChevronLeft size={14} color={canScroll.left ? "white" : "#A7A7A7"} />
                     </div>
 
-                    <div className={`w-[36px] h-[36px] rounded-full flex items-center justify-center cursor-pointer border-[2px] ${canScroll.right ? "border-[#F94B00] bg-[#22140E] text-white" : "border-[#2B2B2B] bg-[#1A1A1A] text-[#A7A7A7]"}`} onClick={() => scroll("right")}>
+                    <div className={`w-[36px] h-[36px] rounded-full flex items-center justify-center cursor-pointer border-[2px] ${canScroll.right ? "border-[#F94B00] bg-[#22140E] text-white" : "border-[#2B2B2B] bg-[#1A1A1A] text-[#A7A7A7]"}`} onClick={() => scroll("right")}  >
                         <FaChevronRight size={14} color={canScroll.right ? "white" : "#A7A7A7"} />
                     </div>
-
                 </div>
-
             </div>
 
             <div className="w-full mt-[20px] rounded-xl flex flex-wrap gap-[24px]">
@@ -163,7 +168,6 @@ export default function MenuService() {
                     />
                 ))}
             </div>
-
         </div>
     );
 }

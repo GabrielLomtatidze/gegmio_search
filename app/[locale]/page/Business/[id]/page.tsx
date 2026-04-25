@@ -16,6 +16,7 @@ import axios from "axios";
 import { useAuthPositionStore } from "@/zustand/User/userPositionStore";
 import Link from "next/link";
 import { FaChevronLeft, FaChevronRight } from "react-icons/fa";
+import { useLocationStore } from "@/zustand/User/locationStore";
 
 
 export default function Business() {
@@ -25,20 +26,20 @@ export default function Business() {
     const t = useTranslations();
     const params = useParams();
     const id = params?.id as string;
-    const hasFetched = useRef(false);
 
     const { business, loading, getBusinessById } = useBusinessStoreId();
     const { guessMode, isAuthenticated } = useAuthPositionStore();
+    const { latitude, longitude } = useLocationStore();
 
     const [selectedNavId, setSelectedNavId] = useState<number>(0);
-    const [favorite, setFavorite] = useState(false);
+    const [favorite, setFavorite] = useState<boolean>(false);
     const [openModal, setOpenModal] = useState<boolean>(false);
 
-    const [currentIndex, setCurrentIndex] = useState(0);
+    const [currentIndex, setCurrentIndex] = useState<number>(0);
     const [touchStartX, setTouchStartX] = useState<number | null>(null);
 
-    const [sliderOpen, setSliderOpen] = useState(false);
-    const [sliderIndex, setSliderIndex] = useState(0);
+    const [sliderOpen, setSliderOpen] = useState<boolean>(false);
+    const [sliderIndex, setSliderIndex] = useState<number>(0);
 
     const navItems = [
         { id: 0, name: t("pages.menu_service") },
@@ -46,15 +47,10 @@ export default function Business() {
     ];
 
     useEffect(() => {
-        if (id) getBusinessById(id);
-    }, [id]);
-
-    useEffect(() => {
-        if (id && !hasFetched.current) {
-            getBusinessById(id);
-            hasFetched.current = true;
-        }
-    }, [id]);
+        if (!id || latitude == null || longitude == null) return;
+        const localTime = new Date().toISOString();
+        getBusinessById(id, latitude, longitude, localTime);
+    }, [id, latitude, longitude]);
 
     useEffect(() => {
         if (business) setFavorite(!!business.isFavorite);
@@ -86,12 +82,15 @@ export default function Business() {
 
     const handleTouchMove = (e: React.TouchEvent<HTMLDivElement>) => {
         if (touchStartX === null) return;
+
         const diff = touchStartX - e.touches[0].clientX;
 
         if (diff > 50 && currentIndex < (business?.files?.length || 0) - 1) {
             setCurrentIndex(prev => prev + 1);
             setTouchStartX(null);
-        } else if (diff < -50 && currentIndex > 0) {
+        }
+
+        if (diff < -50 && currentIndex > 0) {
             setCurrentIndex(prev => prev - 1);
             setTouchStartX(null);
         }
@@ -125,7 +124,6 @@ export default function Business() {
     };
 
 
-
     return (
         <div className="bg-[#0F0F0F]">
             <Header />
@@ -141,7 +139,7 @@ export default function Business() {
 
                     <div className="flex items-center gap-3">
                         <div className="px-3 py-2 border border-[#2b2b2b] bg-[#141414] rounded-full flex items-center">
-                            <h4 className="font-bold">{business.averagePricePerPerson != null ? business.averagePricePerPerson.toFixed(2) : "-"}  {t("pages.distance")}</h4>
+                            <h4 className="font-bold">{business.distnace != null ? business.distnace.toFixed(2) : ""}  {t("pages.distance")}</h4>
                             <img src="/images/map_pin.svg" className="w-[12px] ml-2" />
                         </div>
 
@@ -161,7 +159,7 @@ export default function Business() {
 
                     <div className="flex gap-2">
                         <div className="bg-black/50 px-3 py-2 rounded-full text-white">
-                            {business.averagePricePerPerson != null ? business.averagePricePerPerson.toFixed(2) : "-"}  {t("pages.distance")}
+                            {business.distnace != null ? business.distnace.toFixed(2) : " "}  {t("pages.distance")}
                         </div>
 
                         <div onClick={addFavorite} className="bg-black/50 p-2 rounded-full" >
@@ -277,7 +275,7 @@ export default function Business() {
                             </h4>
                             <span className="text-[#a7a7a7]">-</span>
                             <span className="text-white text-[14px]">
-                                {business.averagePricePerPerson.toFixed(2)} {t("pages.gel")} +
+                                {business.averagePricePerPerson != null ? business.averagePricePerPerson.toFixed(2) : " "} +
                             </span>
                         </div>
 

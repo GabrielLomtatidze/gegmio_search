@@ -3,6 +3,7 @@ import Header from "@/components/header";
 import Footer from "@/components/footer";
 import { useEffect, useState, useRef } from "react";
 import { useParams } from "next/navigation";
+import { FaStar, FaStarHalfAlt, FaRegStar } from "react-icons/fa";
 import { Spinner } from "@/components/ui/spinner";
 import { motion } from "framer-motion";
 import MenuService from "@/app/[locale]/layout/menuServices";
@@ -15,7 +16,6 @@ import axios from "axios";
 import { useAuthPositionStore } from "@/zustand/User/userPositionStore";
 import Link from "next/link";
 import { FaChevronLeft, FaChevronRight } from "react-icons/fa";
-import { useLocationStore } from "@/zustand/User/locationStore";
 
 
 export default function Business() {
@@ -29,17 +29,16 @@ export default function Business() {
 
     const { business, loading, getBusinessById } = useBusinessStoreId();
     const { guessMode, isAuthenticated } = useAuthPositionStore();
-    const { latitude, longitude, locationEnabled, getLocation, setLocationEnabled } = useLocationStore();
 
     const [selectedNavId, setSelectedNavId] = useState<number>(0);
-    const [favorite, setFavorite] = useState<boolean>(false);
+    const [favorite, setFavorite] = useState(false);
     const [openModal, setOpenModal] = useState<boolean>(false);
 
-    const [currentIndex, setCurrentIndex] = useState<number>(0);
+    const [currentIndex, setCurrentIndex] = useState(0);
     const [touchStartX, setTouchStartX] = useState<number | null>(null);
 
-    const [sliderOpen, setSliderOpen] = useState<boolean>(false);
-    const [sliderIndex, setSliderIndex] = useState<number>(0);
+    const [sliderOpen, setSliderOpen] = useState(false);
+    const [sliderIndex, setSliderIndex] = useState(0);
 
     const navItems = [
         { id: 0, name: t("pages.menu_service") },
@@ -47,10 +46,15 @@ export default function Business() {
     ];
 
     useEffect(() => {
-        if (!id || latitude == null || longitude == null) return;
-        const localTime = new Date().toISOString();
-        getBusinessById(id, latitude, longitude, localTime);
-    }, [id, latitude, longitude]);
+        if (id) getBusinessById(id);
+    }, [id]);
+
+    useEffect(() => {
+        if (id && !hasFetched.current) {
+            getBusinessById(id);
+            hasFetched.current = true;
+        }
+    }, [id]);
 
     useEffect(() => {
         if (business) setFavorite(!!business.isFavorite);
@@ -82,15 +86,12 @@ export default function Business() {
 
     const handleTouchMove = (e: React.TouchEvent<HTMLDivElement>) => {
         if (touchStartX === null) return;
-
         const diff = touchStartX - e.touches[0].clientX;
 
         if (diff > 50 && currentIndex < (business?.files?.length || 0) - 1) {
             setCurrentIndex(prev => prev + 1);
             setTouchStartX(null);
-        }
-
-        if (diff < -50 && currentIndex > 0) {
+        } else if (diff < -50 && currentIndex > 0) {
             setCurrentIndex(prev => prev - 1);
             setTouchStartX(null);
         }
@@ -119,6 +120,7 @@ export default function Business() {
     };
 
 
+
     return (
         <div className="bg-[#0F0F0F]">
             <Header />
@@ -134,7 +136,7 @@ export default function Business() {
 
                     <div className="flex items-center gap-3">
                         <div className="px-3 py-2 border border-[#2b2b2b] bg-[#141414] rounded-full flex items-center">
-                            <h4 className="font-bold">{business.distnace.toFixed(2)} {t("pages.distance")}</h4>
+                            <h4 className="font-bold">{business.distnace} {t("pages.distance")}</h4>
                             <img src="/images/map_pin.svg" className="w-[12px] ml-2" />
                         </div>
 
@@ -154,7 +156,7 @@ export default function Business() {
 
                     <div className="flex gap-2">
                         <div className="bg-black/50 px-3 py-2 rounded-full text-white">
-                            {business.distnace.toFixed(2)} {t("pages.distance")}
+                            {business.distnace} {t("pages.distance")}
                         </div>
 
                         <div onClick={addFavorite} className="bg-black/50 p-2 rounded-full" >
@@ -251,19 +253,15 @@ export default function Business() {
 
                     <div className="w-full md:w-[35%]">
                         <a href={business.googleMapURL} target="_blank" rel="noopener noreferrer" className="block no-underline" >
-                            <div className="w-full h-[42px] rounded-xl border border-[#2b2b2b] flex items-center justify-between px-[12px]">
-
-                                <div className="flex items-center gap-[4px] min-w-0">
-                                    <img src="/images/map_pin.svg" alt="map" />
-
-                                    <span className="text-[#a7a7a7] text-[14px] truncate min-w-0">
-                                        {business.businessAddressName}
-                                    </span>
-                                </div>
-
+                            <div className="w-full h-[42px] rounded-xl border border-[#2b2b2b] flex gap-[6px] px-[12px] items-center">
+                                <img src="/images/map_pin.svg" alt="map" />
+                                <h3 className="text-[#a7a7a7] text-[14px] truncate">
+                                    {business.businessAddressName}
+                                </h3>
                                 <img src="/images/arrow_right.svg" alt="arrowRight" />
                             </div>
                         </a>
+
                     </div>
 
                     <div className="flex gap-4 justify-start md:justify-end">

@@ -157,16 +157,18 @@ export default function MenuService() {
                 </div>
             </div>
 
-            <div className="w-full mt-[20px] rounded-xl flex flex-wrap gap-[24px]">
-                {menu.map((item: Menu) => (
-                    <MenuCard
-                        key={item.id}
-                        name={item.name}
-                        durationInMinutes={item.durationInMinutes}
-                        price={item.price}
-                        img={item?.file?.url || "/images/test.svg"}
-                    />
-                ))}
+            <div className="w-full mt-[20px]">
+                <div className="grid grid-cols-2 md:grid-cols-[repeat(auto-fill,252px)] gap-6 w-full">
+                    {menu.map((item: Menu) => (
+                        <MenuCard
+                            key={item.id}
+                            name={item.name}
+                            durationInMinutes={item.durationInMinutes}
+                            price={item.price}
+                            img={item?.file?.url || "/images/test.svg"}
+                        />
+                    ))}
+                </div>
             </div>
         </div>
     );

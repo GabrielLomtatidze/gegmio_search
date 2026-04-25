@@ -224,7 +224,7 @@ export default function Header() {
                             <span className="text-[#FF2A2A] text-sm font-bold">{t("components.logout")}</span>
                         </button>
 
-                        <button className="h-[42px] bg-[#F94B00] rounded-xl font-bold" onClick={() => { setBePartner(true), setMobileMenuOpen(false) }}>{t("components.add_business_button")}</button>
+                        <button className="h-[42px] bg-[#F94B00] rounded-xl font-bold" onClick={() => { setBePartner(true), setMobileMenuOpen(false) }}>{t("components.become_partner")}</button>
 
                     </>
                     ) :
@@ -233,7 +233,7 @@ export default function Header() {
                                 <div className="w-full h-full p-[18px] flex flex-col justify-center items-center">
                                     <h1 className="text-[24px] text-white font-bold">{t("components.welcome_message")}</h1>
                                     <h3 className="text-[14px] text-[#a7a7a7]">{t("components.info_message")}</h3>
-                                    <button className="h-[42px] w-full bg-[#F94B00] rounded-xl font-bold mt-[20px]" onClick={() => { setBePartner(true), setMobileMenuOpen(false) }}>{t("components.add_business_button")}</button>
+                                    <button className="h-[42px] w-full bg-[#F94B00] rounded-xl font-bold mt-[20px]" onClick={() => { setBePartner(true), setMobileMenuOpen(false) }}>{t("components.become_partner")}</button>
                                 </div>
                             </>
                         )}

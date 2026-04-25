@@ -59,7 +59,8 @@
             "email_used": "Email is registered",
             "wrong_email_or_password": "Wrong Email or Password",
             "confirmation_code": "Invalid code",
-            "no_data": "No data available"
+            "no_data": "No data available",
+            "error_message": "Something went wrong, please try again"
         }
     },
     "pages": {

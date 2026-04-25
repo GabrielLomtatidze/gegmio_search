@@ -14,6 +14,7 @@ export default function Header() {
     const isAuthenticated = useAuthPositionStore((state) => state.isAuthenticated);
     const [accessToken, setAccessToken] = useState<string | null>(null);
     const [bePartner, setBePartner] = useState<boolean>(false);
+    const [requestStatus, setRequestStatus] = useState<"success" | "error" | null>(null);
 
     useEffect(() => {
         const token = localStorage.getItem("accessToken");
@@ -54,6 +55,25 @@ export default function Header() {
     return (
         <>
             <header className="border-b-2 border-b-[#242424] w-full flex justify-center bg-[#0F0F0F] sticky top-0 z-50">
+                {requestStatus && (
+                    <div className="fixed top-5 right-5 z-[99999]">
+                        {requestStatus === "success" ? (
+                            <div className="px-[24px] py-[12px] bg-[#E9FAEF] flex gap-[6px] rounded-[12px] items-center">
+                                <img src="/images/green_mark.svg" alt="green_mark" />
+                                <h3 className="text-[#008330]">
+                                    {t("components.request_sent_successfully")}
+                                </h3>
+                            </div>
+                        ) : (
+                            <div className="px-[24px] py-[12px] bg-[#E9FAEF] flex gap-[6px] rounded-[12px] items-center">
+                                <img src="/images/green_mark.svg" alt="green_mark" />
+                                <h3 className="text-[#008330]">
+                                    {t("auth.errors.error_message")}
+                                </h3>
+                            </div>
+                        )}
+                    </div>
+                )}
                 <div className="text-white flex justify-between items-center max-w-7xl w-full m-auto px-4 py-5 md:px-[100px]">
 
                     <Link href="/" className="logo">
@@ -255,7 +275,18 @@ export default function Header() {
             </div>
             {bePartner ?
                 (<div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50" onClick={() => setBePartner(false)}>
-                    <PartnerForm />
+                    <PartnerForm
+                        onSuccess={() => {
+                            setBePartner(false);
+                            setRequestStatus("success");
+                            setTimeout(() => setRequestStatus(null), 3000);
+                        }}
+                        onError={() => {
+                            setBePartner(false);
+                            setRequestStatus("error");
+                            setTimeout(() => setRequestStatus(null), 3000);
+                        }}
+                    />
                 </div>) :
                 (<></>)
             }

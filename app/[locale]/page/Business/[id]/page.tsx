@@ -3,7 +3,6 @@ import Header from "@/components/header";
 import Footer from "@/components/footer";
 import { useEffect, useState, useRef } from "react";
 import { useParams } from "next/navigation";
-import { FaStar, FaStarHalfAlt, FaRegStar } from "react-icons/fa";
 import { Spinner } from "@/components/ui/spinner";
 import { motion } from "framer-motion";
 import MenuService from "@/app/[locale]/layout/menuServices";
@@ -16,6 +15,7 @@ import axios from "axios";
 import { useAuthPositionStore } from "@/zustand/User/userPositionStore";
 import Link from "next/link";
 import { FaChevronLeft, FaChevronRight } from "react-icons/fa";
+import { useLocationStore } from "@/zustand/User/locationStore";
 
 
 export default function Business() {
@@ -29,16 +29,17 @@ export default function Business() {
 
     const { business, loading, getBusinessById } = useBusinessStoreId();
     const { guessMode, isAuthenticated } = useAuthPositionStore();
+    const { latitude, longitude, locationEnabled, getLocation, setLocationEnabled } = useLocationStore();
 
     const [selectedNavId, setSelectedNavId] = useState<number>(0);
-    const [favorite, setFavorite] = useState(false);
+    const [favorite, setFavorite] = useState<boolean>(false);
     const [openModal, setOpenModal] = useState<boolean>(false);
 
-    const [currentIndex, setCurrentIndex] = useState(0);
+    const [currentIndex, setCurrentIndex] = useState<number>(0);
     const [touchStartX, setTouchStartX] = useState<number | null>(null);
 
-    const [sliderOpen, setSliderOpen] = useState(false);
-    const [sliderIndex, setSliderIndex] = useState(0);
+    const [sliderOpen, setSliderOpen] = useState<boolean>(false);
+    const [sliderIndex, setSliderIndex] = useState<number>(0);
 
     const navItems = [
         { id: 0, name: t("pages.menu_service") },
@@ -46,15 +47,16 @@ export default function Business() {
     ];
 
     useEffect(() => {
-        if (id) getBusinessById(id);
-    }, [id]);
+        if (!id) return;
 
-    useEffect(() => {
-        if (id && !hasFetched.current) {
+        const localTime = new Date().toISOString();
+
+        if (latitude != null && longitude != null) {
+            getBusinessById(id, latitude, longitude, localTime);
+        } else {
             getBusinessById(id);
-            hasFetched.current = true;
         }
-    }, [id]);
+    }, [id, latitude, longitude]);
 
     useEffect(() => {
         if (business) setFavorite(!!business.isFavorite);
@@ -86,12 +88,15 @@ export default function Business() {
 
     const handleTouchMove = (e: React.TouchEvent<HTMLDivElement>) => {
         if (touchStartX === null) return;
+
         const diff = touchStartX - e.touches[0].clientX;
 
         if (diff > 50 && currentIndex < (business?.files?.length || 0) - 1) {
             setCurrentIndex(prev => prev + 1);
             setTouchStartX(null);
-        } else if (diff < -50 && currentIndex > 0) {
+        }
+
+        if (diff < -50 && currentIndex > 0) {
             setCurrentIndex(prev => prev - 1);
             setTouchStartX(null);
         }
@@ -119,7 +124,10 @@ export default function Business() {
         return number.slice(0, -4) + "****";
     };
 
-
+    const formatUrl = (url: string) => {
+        if (!url) return "#";
+        return url.startsWith("http://") || url.startsWith("https://") ? url : `https://${url}`;
+    };
 
     return (
         <div className="bg-[#0F0F0F]">
@@ -136,7 +144,7 @@ export default function Business() {
 
                     <div className="flex items-center gap-3">
                         <div className="px-3 py-2 border border-[#2b2b2b] bg-[#141414] rounded-full flex items-center">
-                            <h4 className="font-bold">{business.distnace} {t("pages.distance")}</h4>
+                            <h4 className="font-bold">{business.distnace.toFixed(2)} {t("pages.distance")}</h4>
                             <img src="/images/map_pin.svg" className="w-[12px] ml-2" />
                         </div>
 
@@ -156,7 +164,7 @@ export default function Business() {
 
                     <div className="flex gap-2">
                         <div className="bg-black/50 px-3 py-2 rounded-full text-white">
-                            {business.distnace} {t("pages.distance")}
+                            {business.distnace.toFixed(2)} {t("pages.distance")}
                         </div>
 
                         <div onClick={addFavorite} className="bg-black/50 p-2 rounded-full" >
@@ -251,31 +259,45 @@ export default function Business() {
 
                 <div className="flex flex-col md:flex-row md:justify-between gap-4 mt-4">
 
-                    <div className="w-full md:w-[35%]">
-                        <a href={business.googleMapURL} target="_blank" rel="noopener noreferrer" className="block no-underline" >
-                            <div className="w-full h-[42px] rounded-xl border border-[#2b2b2b] flex gap-[6px] px-[12px] items-center">
-                                <img src="/images/map_pin.svg" alt="map" />
-                                <h3 className="text-[#a7a7a7] text-[14px] truncate">
-                                    {business.businessAddressName}
-                                </h3>
+                    <div className="w-full md:w-[35%] flex flex-col md:flex-row gap-[8px] items-start md:items-center">
+
+                        <a href={business.googleMapURL} target="_blank" rel="noopener noreferrer" className="block no-underline w-full md:flex-1"  >
+                            <div className="w-full h-[42px] rounded-xl border border-[#2b2b2b] flex items-center justify-between px-[12px]">
+                                <div className="flex items-center gap-[4px] min-w-0">
+                                    <img src="/images/map_pin.svg" alt="map" />
+                                    <span className="text-[#a7a7a7] text-[14px] truncate">
+                                        {business.businessAddressName}
+                                    </span>
+                                </div>
                                 <img src="/images/arrow_right.svg" alt="arrowRight" />
                             </div>
                         </a>
 
+                        <div className="h-[42px] px-[12px] rounded-xl border border-[#2b2b2b] flex items-center justify-center gap-[6px] self-start md:self-auto shrink-0 whitespace-nowrap">
+                            <img src="/images/qisa.svg" alt="price" />
+                            <h4 className="text-[#a7a7a7] text-[14px] font-bold">
+                                {t("pages.on_the_person")}
+                            </h4>
+                            <span className="text-[#a7a7a7]">-</span>
+                            <span className="text-white text-[14px]">
+                                {business.averagePricePerPerson != null ? business.averagePricePerPerson.toFixed(2) : "-"} +
+                            </span>
+                        </div>
+
                     </div>
 
                     <div className="flex gap-4 justify-start md:justify-end">
-                        <a href="https://www.facebook.com/profile.php?id=61583853083725" target="_blank" className="group w-[42px] h-[42px] border-2 border-[#2b2b2b] rounded-full flex items-center justify-center relative overflow-hidden" >
+                        <a href={formatUrl(business.facebook)} target="_blank" rel="noopener noreferrer" className="group w-[42px] h-[42px] border-2 border-[#2b2b2b] rounded-full flex items-center justify-center relative overflow-hidden" >
                             <img src="/images/facebook-big.svg" className="w-[24px] absolute opacity-100 group-hover:opacity-0 transition duration-300" />
                             <img src="/images/fill_facebook_icon.svg" className="absolute opacity-0 group-hover:opacity-100 transition duration-300" />
                         </a>
 
-                        <a href="#" className="group w-[42px] h-[42px] border-2 border-[#2b2b2b] rounded-full flex items-center justify-center relative overflow-hidden" >
+                        <a href={formatUrl(business.tikTok)} target="_blank" rel="noopener noreferrer" className="group w-[42px] h-[42px] border-2 border-[#2b2b2b] rounded-full flex items-center justify-center relative overflow-hidden" >
                             <img src="/images/tiktok-big.svg" className="w-[24px] absolute opacity-100 group-hover:opacity-0 transition duration-300" />
                             <img src="/images/fill_tiktok_icon.svg" className="absolute opacity-0 group-hover:opacity-100 transition duration-300" />
                         </a>
 
-                        <a href="#" className="group w-[42px] h-[42px] border-2 border-[#2b2b2b] rounded-full flex items-center justify-center relative overflow-hidden" >
+                        <a href={formatUrl("#")} target="_blank" rel="noopener noreferrer" className="group w-[42px] h-[42px] border-2 border-[#2b2b2b] rounded-full flex items-center justify-center relative overflow-hidden" >
                             <img src="/images/Linkedin.svg" className="w-[24px] absolute opacity-100 group-hover:opacity-0 transition duration-300" />
                             <img src="/images/fill_linkedin_icon.svg" className="absolute opacity-0 group-hover:opacity-100 transition duration-300" />
                         </a>
@@ -290,7 +312,7 @@ export default function Business() {
                             <h1 className="text-[18px] text-bold text-white">{t("auth.complete_verification")}</h1>
                         </div>
                         <h5 className="text-[14px] text-bold text-[#a7a7a7] text-center mt-[8px]">{t("auth.register_prompt")}</h5>
-                        <Link href="/auth/registration">
+                        <Link href="/auth/registration" prefetch={false}>
                             <button className="w-full h-[48px] bg-[#F94B00] mt-[24px] rounded-xl text-white font-bold text-white cursor-pointer">
                                 {t("auth.create_account")}
                             </button>

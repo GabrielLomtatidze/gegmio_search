@@ -274,7 +274,7 @@ export default function Business() {
                             </h4>
                             <span className="text-[#a7a7a7]">-</span>
                             <span className="text-white text-[14px]">
-                                {business.averagePricePerPerson.toFixed(2)} {t("pages.gel")} +
+                                {business.averagePricePerPerson != null ? business.averagePricePerPerson.toFixed(2) : "-"} +
                             </span>
                         </div>
 

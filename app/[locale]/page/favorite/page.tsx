@@ -12,6 +12,7 @@ import debounce from "lodash.debounce";
 import Link from "next/link";
 import { useBusinessCategoriesStore } from "@/zustand/APIs/public/businessCatecoryStore";
 import { useLocationStore } from "@/zustand/User/locationStore";
+import Filter from "@/components/filter";
 
 export default function Favorite() {
 
@@ -21,16 +22,15 @@ export default function Favorite() {
     const { regionsStore, fetchRegionsInfo } = useRegionsStore();
     const { categories, fetchCategories } = useBusinessCategoriesStore();
 
-    const { latitude, longitude, locationEnabled, getLocation } =
-        useLocationStore();
+    const { latitude, longitude, locationEnabled, getLocation } = useLocationStore();
 
     const [favorites, setFavorites] = useState<any[]>([]);
     const [search, setSearch] = useState<string>("");
     const [loading, setLoading] = useState<boolean>(false);
     const [selectedRegionId, setSelectedRegionId] = useState<number>(0);
     const [selectedCategoryId, setSelectedCategoryId] = useState<number>(0);
-    const [openStatus, setOpenStatus] =
-        useState<"all" | "open" | "closed">("all");
+    const [openStatus, setOpenStatus] = useState<"all" | "open" | "closed">("all");
+    const [openFilter, setOpenFilter] = useState<boolean>(false);
 
     const categoryImages: Record<number, string> = {
         0: "/images/business_category/home.svg",
@@ -151,50 +151,41 @@ export default function Favorite() {
     return (
         <>
             <Header />
-            <div className="w-full mt-[20px]">
+            <div className="w-full flex justify-center mt-[20px]">
+                <div className="w-full max-w-7xl px-4 md:px-[100px] flex flex-col gap-5">
 
-                <div className="w-full flex justify-center mt-[20px]">
-                    <div className="w-full max-w-7xl px-4 md:px-[100px] flex flex-col md:flex-row md:justify-between gap-3">
-                        <h2 className="text-[#a7a7a7]">
-                            <Link href="/" >
-                                <span className="cursor-pointer">
-                                    {t("pages.main_page_title")}
-                                </span>
-                            </Link>
-                            <span className="mx-2">&gt;</span>
-                            <span className="text-white font-bold">
-                                {t("pages.favorite_page")}
+                    <h2 className="text-[#a7a7a7]">
+                        <Link href="/">
+                            <span className="cursor-pointer">
+                                {t("pages.main_page_title")}
                             </span>
-                        </h2>
-                    </div>
-                </div>
+                        </Link>
+                        <span className="mx-2">&gt;</span>
+                        <span className="text-white font-bold">
+                            {t("pages.favorite_page")}
+                        </span>
+                    </h2>
 
-                <div className="w-full flex justify-center">
-                    <div className="w-full max-w-7xl px-4 md:px-[100px] flex flex-col gap-5 mt-[44px]">
-                        <div className="flex gap-8 overflow-x-auto no-scrollbar">
+                    <div className="flex gap-8 overflow-x-auto no-scrollbar">
+                        <div onClick={() => setSelectedCategoryId(0)} className="cursor-pointer py-2 flex flex-col items-center flex-shrink-0" >
+                            <img src={categoryImages[0]} alt="all" className="w-8 h-8 mb-1" />
+                            <h2 className={`text-sm mt-[10px] whitespace-nowrap ${selectedCategoryId === 0 ? "text-[#F94B00] font-bold" : "text-white"}`} >
+                                {t("components.all")}
+                            </h2>
+                        </div>
 
-                            <div onClick={() => setSelectedCategoryId(0)} className="cursor-pointer py-2 flex flex-col items-center flex-shrink-0">
-                                <img src={categoryImages[0]} alt="all" className="w-8 h-8 mb-1" />
-                                <h2 className={`text-sm mt-[10px] whitespace-nowrap ${selectedCategoryId === 0 ? "text-[#F94B00] font-bold" : "text-white"}`}>
-                                    {t("components.all")}
+                        {categories?.map((item) => (
+                            <div key={item.id} onClick={() => setSelectedCategoryId(item.id)} className="cursor-pointer py-2 flex flex-col items-center flex-shrink-0"    >
+                                <img src={categoryImages[item.id]} alt={item.name} className="w-8 h-8 mb-1" />
+                                <h2 className={`text-sm mt-[10px] whitespace-nowrap ${selectedCategoryId === item.id ? "text-[#F94B00] font-bold" : "text-white"}`}  >
+                                    {item.name}
                                 </h2>
                             </div>
-
-                            {categories?.map((item) => (
-                                <div key={item.id} onClick={() => setSelectedCategoryId(item.id)} className="cursor-pointer py-2 flex flex-col items-center flex-shrink-0">
-                                    <img src={categoryImages[item.id]} alt={item.name} className="w-8 h-8 mb-1" />
-                                    <h2 className={`text-sm mt-[10px] whitespace-nowrap ${selectedCategoryId === item.id ? "text-[#F94B00] font-bold" : "text-white"}`}>
-                                        {item.name}
-                                    </h2>
-                                </div>
-                            ))}
-
-                        </div>
+                        ))}
                     </div>
-                </div>
 
-                <div className="w-full flex justify-center mt-[20px]">
-                    <div className="w-full max-w-7xl px-4 md:px-[100px] flex flex-col md:flex-row md:justify-between gap-3">
+
+                    <div className="flex flex-col md:flex-row md:justify-between gap-3">
                         <div className="flex flex-wrap md:flex-nowrap gap-3 w-full md:w-auto justify-center md:justify-start">
                             <div className="flex-1 min-w-[180px] h-[42px] flex items-center bg-[#0f0f0f] px-4 border border-[#2b2b2b] rounded-xl focus-within:border-[#F94B00] transition">
                                 <Search className="w-5 h-5 text-white mr-3" />
@@ -207,9 +198,13 @@ export default function Favorite() {
                                 />
                             </div>
 
+                            <div className="md:hidden w-[44px] h-[42px] bg-[#F94B00] rounded-xl flex justify-center items-center" onClick={() => setOpenFilter(true)}>
+                                <img src="/images/filter.svg" alt="filter" className="w-[20px] h-[20px]" />
+                            </div>
+
                             <div className="hidden md:flex gap-2 text-[#a7a7a7]">
                                 <div className="relative">
-                                    <select value={selectedRegionId} onChange={(e) => setSelectedRegionId(Number(e.target.value))} className={`border py-[10px] px-[12px] pr-[40px] rounded-xl appearance-none w-full text-white bg-[#0f0f0f] text-[14px] outline-none focus:border-[#F94B00] ${selectedRegionId !== 0 ? "border-[#F94B00]" : "border-[#2b2b2b]"}`}>
+                                    <select value={selectedRegionId} onChange={(e) => setSelectedRegionId(Number(e.target.value))} className={`border py-[10px] px-[12px] pr-[40px] rounded-xl appearance-none w-full text-white bg-[#0f0f0f] text-[14px] outline-none focus:border-[#F94B00] ${selectedRegionId !== 0 ? "border-[#F94B00]" : "border-[#2b2b2b]"}`} >
                                         <option value={0}>{t("pages.city")}</option>
                                         {regionsStore.map((item: any) => (
                                             <option key={item.id} value={item.id}>
@@ -230,8 +225,6 @@ export default function Favorite() {
                                         <option value="closed">{t("components.is_closed")}</option>
                                     </select>
 
-                                    
-
                                     <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-[12px] text-white">
                                         <img src="/images/arrow_down.svg" alt="arrow_down" />
                                     </div>
@@ -249,39 +242,57 @@ export default function Favorite() {
                             </h3>
                         </div>
                     </div>
-                </div>
 
-                <div className="flex flex-wrap gap-6 mt-6 mb-6 w-full max-w-7xl px-4 md:px-[100px] mx-auto">
-                    {loading ? (
-                        Array.from({ length: 8 }).map((_, i) => (
-                            <CardSkeleton key={i} />
-                        ))
-                    ) : favorites.length === 0 ? (
-                        <div className="w-full">
-                            <div className="text-center py-10 text-gray-500">
-                                {t("pages.no_business_found")}
-                            </div>
+                </div >
+            </div >
+
+
+            <div className="flex flex-wrap gap-6 mt-6 mb-6 w-full max-w-7xl px-4 md:px-[100px] mx-auto">
+                {loading ? (
+                    Array.from({ length: 8 }).map((_, i) => (
+                        <CardSkeleton key={i} />
+                    ))
+                ) : favorites.length === 0 ? (
+                    <div className="w-full">
+                        <div className="text-center py-10 text-gray-500">
+                            {t("pages.no_business_found")}
                         </div>
-                    ) : (
-                        favorites.map((item: any) => (
-                            <div key={item.id} className="w-[calc(50%-12px)] md:w-[252px] flex-shrink-0" >
-                                <Link href={`/page/business/${item.id}`} className="cursor-pointer" prefetch={false} >
-                                    <Card
-                                        businessId={item.id}
-                                        isFavorite={true}
-                                        isOpen={item.isOpen}
-                                        title={item.name}
-                                        image={item.file?.url || "/images/start.svg"}
-                                        address={item.addressName}
-                                        businessCategory={item.businessCategory.name}
-                                        distance={item.distnace?.toFixed(2)}
-                                    />
-                                </Link>
-                            </div>
-                        ))
-                    )}
-                </div>
+                    </div>
+                ) : (
+                    favorites.map((item: any) => (
+                        <div key={item.id} className="w-[calc(50%-12px)] md:w-[252px] flex-shrink-0" >
+                            <Link href={`/page/business/${item.id}`} className="cursor-pointer" prefetch={false} >
+                                <Card
+                                    businessId={item.id}
+                                    isFavorite={true}
+                                    isOpen={item.isOpen}
+                                    title={item.name}
+                                    image={item.file?.url || "/images/start.svg"}
+                                    address={item.addressName}
+                                    businessCategory={item.businessCategory.name}
+                                    distance={item.distnace?.toFixed(2)}
+                                />
+                            </Link>
+                        </div>
+                    ))
+                )}
             </div>
+            {openFilter && (
+                <div className="fixed inset-0 z-50 md:hidden">
+                    <div className="absolute inset-0 bg-black/50" onClick={() => setOpenFilter(false)} />
+                    <Filter
+                        regions={regionsStore}
+                        selectedRegionId={selectedRegionId}
+                        selectedCategoryId={selectedCategoryId}
+                        openStatus={openStatus}
+                        onChangeRegion={setSelectedRegionId}
+                        onChangeCategory={setSelectedCategoryId}
+                        onChangeOpenStatus={setOpenStatus}
+                        onApply={() => setOpenFilter(false)}
+                        onClose={() => setOpenFilter(false)}
+                    />
+                </div>
+            )}
             <Footer />
         </>
     );

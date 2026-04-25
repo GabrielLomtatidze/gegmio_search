@@ -13,19 +13,25 @@ import { useBusinessCategoriesStore } from "@/zustand/APIs/public/businessCateco
 import { useLocationStore } from "@/zustand/User/locationStore";
 
 export default function Main() {
+
   const t = useTranslations();
 
   const { businessStore, loading, fetchBusiness } = useBusinessStore();
   const { regionsStore, fetchRegionsInfo } = useRegionsStore();
   const { categories, fetchCategories } = useBusinessCategoriesStore();
 
-  const { latitude, longitude, locationEnabled, getLocation, setLocationEnabled } = useLocationStore();
+  const {
+    latitude,
+    longitude,
+    locationEnabled,
+    getLocation,
+    setLocationEnabled,
+  } = useLocationStore();
 
   const [search, setSearch] = useState<string>("");
   const [selectedRegionId, setSelectedRegionId] = useState<number>(0);
   const [selectedCategoryId, setSelectedCategoryId] = useState<number>(0);
   const [openFilter, setOpenFilter] = useState<boolean>(false);
-  const [openStatus, setOpenStatus] = useState<"all" | "open" | "closed">("all");
 
   const hasLocation = locationEnabled && latitude !== null && longitude !== null;
 
@@ -42,39 +48,23 @@ export default function Main() {
     9: "/images/business_category/health.svg",
   };
 
-  const getIsOpenValue = () => {
-    if (openStatus === "open") return true;
-    if (openStatus === "closed") return false;
-    return undefined;
-  };
-
-  const isOpen = getIsOpenValue();
-
   const buildParams = (
     query: string,
     lat?: number,
     lng?: number,
     regionId?: number,
-    categoryId?: number,
-    isOpen?: boolean
+    categoryId?: number
   ) => {
     const params: Record<string, any> = {};
 
     if (query) params.searchKey = query;
-
     if (lat !== undefined && lng !== undefined) {
       params.latitude = lat;
       params.longitude = lng;
     }
-
     if (regionId && regionId !== 0) params.regionId = regionId;
-
     if (categoryId && categoryId !== 0)
       params.businessCategoryId = categoryId;
-
-    if (typeof isOpen === "boolean") {
-      params.isOpen = isOpen;
-    }
 
     return params;
   };
@@ -103,12 +93,9 @@ export default function Main() {
         lat?: number,
         lng?: number,
         regionId?: number,
-        categoryId?: number,
-        isOpen?: boolean
+        categoryId?: number
       ) => {
-        fetchBusiness(
-          buildParams(query, lat, lng, regionId, categoryId, isOpen)
-        );
+        fetchBusiness(buildParams(query, lat, lng, regionId, categoryId));
       },
       500
     );
@@ -118,20 +105,15 @@ export default function Main() {
     const lat = hasLocation ? latitude! : undefined;
     const lng = hasLocation ? longitude! : undefined;
 
-    const regionId =
-      selectedRegionId !== 0 ? selectedRegionId : undefined;
-
-    const categoryId =
-      selectedCategoryId !== 0 ? selectedCategoryId : undefined;
+    const regionId = selectedRegionId !== 0 ? selectedRegionId : undefined;
+    const categoryId = selectedCategoryId !== 0 ? selectedCategoryId : undefined;
 
     if (search === "") {
-      fetchBusiness(
-        buildParams("", lat, lng, regionId, categoryId, isOpen)
-      );
+      fetchBusiness(buildParams("", lat, lng, regionId, categoryId));
       return;
     }
 
-    debouncedFetchBusiness(search, lat, lng, regionId, categoryId, isOpen);
+    debouncedFetchBusiness(search, lat, lng, regionId, categoryId);
 
     return () => debouncedFetchBusiness.cancel();
   }, [
@@ -141,11 +123,9 @@ export default function Main() {
     locationEnabled,
     selectedRegionId,
     selectedCategoryId,
-    openStatus,
     debouncedFetchBusiness,
     fetchBusiness,
   ]);
-
 
 
   return (
@@ -199,18 +179,6 @@ export default function Main() {
                         {item.name}
                       </option>
                     ))}
-                  </select>
-
-                  <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-[12px] text-white">
-                    <img src="/images/arrow_down.svg" alt="arrow_down" />
-                  </div>
-                </div>
-
-                <div className="relative">
-                  <select value={openStatus} onChange={(e) => setOpenStatus(e.target.value as any)} className="border border-[#2b2b2b] py-[10px] px-[12px] pr-[40px] rounded-xl appearance-none w-full text-white bg-[#0f0f0f] text-[14px] outline-none focus:border-[#F94B00]"  >
-                    <option value="all">{t("components.all")}</option>
-                    <option value="open">{t("components.profile_open_now")}</option>
-                    <option value="closed">{t("components.is_closed")}</option>
                   </select>
 
                   <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-[12px] text-white">
@@ -276,17 +244,11 @@ export default function Main() {
       {openFilter && (
         <div className="fixed inset-0 z-50 md:hidden">
           <div className="absolute inset-0 bg-black/50" onClick={() => setOpenFilter(false)} />
-          <Filter
+          {/* <Filter
             regions={regionsStore}
-            selectedRegionId={selectedRegionId}
-            selectedCategoryId={selectedCategoryId}
-            openStatus={openStatus}
-            onChangeRegion={setSelectedRegionId}
-            onChangeCategory={setSelectedCategoryId}
-            onChangeOpenStatus={setOpenStatus}
-            onApply={() => setOpenFilter(false)}
+            onApply={() => { setOpenFilter(false) }}
             onClose={() => setOpenFilter(false)}
-          />
+          /> */}
         </div>
       )}
     </>

@@ -25,11 +25,9 @@ export default function Main() {
   const [selectedRegionId, setSelectedRegionId] = useState<number>(0);
   const [selectedCategoryId, setSelectedCategoryId] = useState<number>(0);
   const [openFilter, setOpenFilter] = useState<boolean>(false);
-  const [openStatus, setOpenStatus] =
-    useState<"all" | "open" | "closed">("all");
+  const [openStatus, setOpenStatus] = useState<"all" | "open" | "closed">("all");
 
-  const hasLocation =
-    locationEnabled && latitude !== null && longitude !== null;
+  const hasLocation = locationEnabled && latitude !== null && longitude !== null;
 
   const categoryImages: Record<number, string> = {
     0: "/images/business_category/home.svg",
@@ -133,14 +131,7 @@ export default function Main() {
       return;
     }
 
-    debouncedFetchBusiness(
-      search,
-      lat,
-      lng,
-      regionId,
-      categoryId,
-      isOpen
-    );
+    debouncedFetchBusiness(search, lat, lng, regionId, categoryId, isOpen);
 
     return () => debouncedFetchBusiness.cancel();
   }, [
@@ -287,7 +278,13 @@ export default function Main() {
           <div className="absolute inset-0 bg-black/50" onClick={() => setOpenFilter(false)} />
           <Filter
             regions={regionsStore}
-            onApply={() => { setOpenFilter(false) }}
+            selectedRegionId={selectedRegionId}
+            selectedCategoryId={selectedCategoryId}
+            openStatus={openStatus}
+            onChangeRegion={setSelectedRegionId}
+            onChangeCategory={setSelectedCategoryId}
+            onChangeOpenStatus={setOpenStatus}
+            onApply={() => setOpenFilter(false)}
             onClose={() => setOpenFilter(false)}
           />
         </div>

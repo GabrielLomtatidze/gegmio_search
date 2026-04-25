@@ -59,6 +59,10 @@ export default function Business() {
     }, [id, latitude, longitude]);
 
     useEffect(() => {
+        getLocation();
+    }, []);
+
+    useEffect(() => {
         if (business) setFavorite(!!business.isFavorite);
     }, [business]);
 

@@ -199,7 +199,7 @@ export default function Filter({ regions, onApply, onClose }: Props) {
                                         const isSelected = item.id === selectedSorting;
 
                                         return (
-                                            <div key={item.id} className={`w-full h-full rounded-[12px] border border-[${isSelected ? "#F94B00" : "#2b2b2b"}] bg-[${isSelected ? "#22140E" : "transparant"}] flex justify-center items-center`} onClick={() => setSelectedSorting(item.id)}>
+                                            <div key={item.id} className={`w-full h-[40px] rounded-[12px] border border-[${isSelected ? "#F94B00" : "#2b2b2b"}] bg-[${isSelected ? "#22140E" : "transparant"}] flex justify-center items-center`} onClick={() => setSelectedSorting(item.id)}>
                                                 <h3 className={`text-[${isSelected ? "white" : "#a7a7a7"}] text-[14px]`}>{item.title}</h3>
                                             </div>
                                         )

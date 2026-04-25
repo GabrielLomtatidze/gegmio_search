@@ -278,8 +278,8 @@ export default function Favorite() {
                 )}
             </div>
             {openFilter && (
-                <div className="fixed inset-0 z-50 md:hidden">
-                    <div className="absolute inset-0 bg-black/50" onClick={() => setOpenFilter(false)} />
+                <div className="fixed inset-0 z-50 md:hidden" onClick={() => setOpenFilter(false)}>
+                    <div className="absolute inset-0 bg-black/50" />
                     <Filter
                         regions={regionsStore}
                         selectedRegionId={selectedRegionId}

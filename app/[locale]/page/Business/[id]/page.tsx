@@ -159,28 +159,57 @@ export default function Business() {
 
                     <div className="flex gap-2">
                         <div className="bg-black/50 px-3 py-2 rounded-full text-white">
-                            {business.distnace != null ? business.distnace.toFixed(2) : " "}  {t("pages.distance")}
+                            {business.distnace != null ? business.distnace.toFixed(2) : " "} {t("pages.distance")}
                         </div>
 
-                        <div onClick={addFavorite} className="bg-black/50 p-2 rounded-full" >
+                        <div onClick={addFavorite} className="bg-black/50 p-2 rounded-full">
                             <img src={favorite ? "/images/fill-heart.svg" : "/images/heart.svg"} />
                         </div>
                     </div>
                 </div>
 
+                <div
+                    className="md:hidden overflow-hidden h-[300px] relative"
+                    onTouchStart={handleTouchStart}
+                    onTouchMove={handleTouchMove}
+                    onTouchEnd={handleTouchEnd}
+                >
 
-                <div className="md:hidden overflow-hidden h-[300px]" onTouchStart={handleTouchStart} onTouchMove={handleTouchMove} onTouchEnd={handleTouchEnd}    >
-                    <div className="flex transition-transform duration-300" style={{ transform: `translateX(-${currentIndex * 100}%)` }} >
+                    <div
+                        className="flex transition-transform duration-300"
+                        style={{ transform: `translateX(-${currentIndex * 100}%)` }}
+                    >
                         {images.map((img, index) => (
-                            <img key={img.id} src={img.url} onClick={() => { setSliderOpen(true); setSliderIndex(index); }} className="w-full h-[300px] object-cover flex-shrink-0 rounded-2xl" />
+                            <img
+                                key={img.id}
+                                src={img.url}
+                                onClick={() => {
+                                    setSliderOpen(true);
+                                    setSliderIndex(index);
+                                }}
+                                className="w-full h-[300px] object-cover flex-shrink-0 rounded-2xl"
+                            />
                         ))}
                     </div>
+
+                    <div className="absolute bottom-3 right-3 bg-black/60 text-white text-sm px-[12px] py-[8px] py-1 rounded-full flex gap-[8px]">
+                    <img src="/images/img_icon.svg" alt="img_icons" />
+                        {currentIndex + 1} / {images.length}
+                    </div>
+
                 </div>
 
                 <div className="hidden md:flex gap-[5px] h-[417px]">
                     <div className="w-1/2">
                         {visibleImages[0] && (
-                            <img src={visibleImages[0].url} onClick={() => { setSliderOpen(true); setSliderIndex(0); }} className="w-full h-full object-cover rounded-2xl cursor-pointer" />
+                            <img
+                                src={visibleImages[0].url}
+                                onClick={() => {
+                                    setSliderOpen(true);
+                                    setSliderIndex(0);
+                                }}
+                                className="w-full h-full object-cover rounded-2xl cursor-pointer"
+                            />
                         )}
                     </div>
 
@@ -190,7 +219,14 @@ export default function Business() {
                             const isLast = index === 3 && extraCount > 0;
 
                             return (
-                                <div key={img.id} className="relative cursor-pointer" onClick={() => { setSliderOpen(true); setSliderIndex(realIndex); }}     >
+                                <div
+                                    key={img.id}
+                                    className="relative cursor-pointer"
+                                    onClick={() => {
+                                        setSliderOpen(true);
+                                        setSliderIndex(realIndex);
+                                    }}
+                                >
                                     <img src={img.url} className="w-full h-full object-cover rounded-xl" />
 
                                     {isLast && (
@@ -208,24 +244,46 @@ export default function Business() {
             {sliderOpen && (
                 <div className="fixed inset-0 z-50 bg-black flex items-center justify-center">
 
-                    <img src={images[sliderIndex]?.url} className="max-h-full max-w-full object-contain" />
+                    <img
+                        src={images[sliderIndex]?.url}
+                        className="max-h-full max-w-full object-contain"
+                    />
 
                     <div className="absolute left-5 top-1/2 -translate-y-1/2">
-                        <div className={`w-[36px] h-[36px] rounded-full flex items-center justify-center cursor-pointer border-[2px] ${sliderIndex > 0 ? "border-[#F94B00] text-white" : "border-[#2B2B2B] text-[#A7A7A7]"}`} onClick={() => sliderIndex > 0 && setSliderIndex(sliderIndex - 1)}  >
+                        <div
+                            className={`w-[36px] h-[36px] rounded-full flex items-center justify-center cursor-pointer border-[2px] ${sliderIndex > 0
+                                    ? "border-[#F94B00] text-white"
+                                    : "border-[#2B2B2B] text-[#A7A7A7]"
+                                }`}
+                            onClick={() => sliderIndex > 0 && setSliderIndex(sliderIndex - 1)}
+                        >
                             <FaChevronLeft size={14} color={sliderIndex > 0 ? "white" : "#A7A7A7"} />
                         </div>
                     </div>
 
                     <div className="absolute right-5 top-1/2 -translate-y-1/2">
-                        <div className={`w-[36px] h-[36px] rounded-full flex items-center justify-center cursor-pointer border-[2px] ${sliderIndex < images.length - 1 ? "border-[#F94B00] text-white" : "border-[#2B2B2B] bg-[#1A1A1A] text-[#A7A7A7]"}`}
-                            onClick={() => sliderIndex < images.length - 1 && setSliderIndex(sliderIndex + 1)}  >
-                            <FaChevronRight size={14} color={sliderIndex < images.length - 1 ? "white" : "#A7A7A7"} />
+                        <div
+                            className={`w-[36px] h-[36px] rounded-full flex items-center justify-center cursor-pointer border-[2px] ${sliderIndex < images.length - 1
+                                    ? "border-[#F94B00] text-white"
+                                    : "border-[#2B2B2B] bg-[#1A1A1A] text-[#A7A7A7]"
+                                }`}
+                            onClick={() =>
+                                sliderIndex < images.length - 1 && setSliderIndex(sliderIndex + 1)
+                            }
+                        >
+                            <FaChevronRight
+                                size={14}
+                                color={sliderIndex < images.length - 1 ? "white" : "#A7A7A7"} />
                         </div>
                     </div>
 
-                    <button className="absolute top-6 right-6 text-white text-2xl" onClick={() => setSliderOpen(false)} >
+                    <button
+                        className="absolute top-6 right-6 text-white text-2xl"
+                        onClick={() => setSliderOpen(false)}
+                    >
                         ✕
                     </button>
+
                 </div>
             )}
 

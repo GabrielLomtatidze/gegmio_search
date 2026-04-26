@@ -204,7 +204,7 @@ export default function Favorite() {
 
                             <div className="hidden md:flex gap-2 text-[#a7a7a7]">
                                 <div className="relative">
-                                    <select value={selectedRegionId} onChange={(e) => setSelectedRegionId(Number(e.target.value))} className={`border py-[10px] px-[12px] pr-[40px] rounded-xl appearance-none w-full text-white bg-[#0f0f0f] text-[14px] outline-none focus:border-[#F94B00] ${selectedRegionId !== 0 ? "border-[#F94B00]" : "border-[#2b2b2b]"}`} >
+                                    <select value={selectedRegionId} onChange={(e) => setSelectedRegionId(Number(e.target.value))} className={`h-[42px] border py-[10px] px-[12px] pr-[40px] rounded-xl appearance-none w-full text-white bg-[#0f0f0f] text-[14px] outline-none focus:border-[#F94B00] ${selectedRegionId !== 0 ? "border-[#F94B00]" : "border-[#2b2b2b]"}`} >
                                         <option value={0}>{t("pages.city")}</option>
                                         {regionsStore.map((item: any) => (
                                             <option key={item.id} value={item.id}>
@@ -219,7 +219,7 @@ export default function Favorite() {
                                 </div>
 
                                 <div className="relative">
-                                    <select value={openStatus} onChange={(e) => setOpenStatus(e.target.value as any)} className="border border-[#2b2b2b] py-[10px] px-[12px] pr-[40px] rounded-xl appearance-none w-full text-white bg-[#0f0f0f] text-[14px] outline-none focus:border-[#F94B00]"  >
+                                    <select value={openStatus} onChange={(e) => setOpenStatus(e.target.value as any)} className="h-[42px] border border-[#2b2b2b] py-[10px] px-[12px] pr-[40px] rounded-xl appearance-none w-full text-white bg-[#0f0f0f] text-[14px] outline-none focus:border-[#F94B00]"  >
                                         <option value="all">{t("components.all")}</option>
                                         <option value="open">{t("components.profile_open_now")}</option>
                                         <option value="closed">{t("components.is_closed")}</option>

@@ -24,10 +24,11 @@ export const useLocationStore = create<LocationState>()(
             setLocationEnabled: (value) => {
                 set({ locationEnabled: value });
 
-                if (value) {
-                    get().getLocation();
-                } else {
-                    set({ latitude: null, longitude: null });
+                if (!value) {
+                    set({
+                        latitude: null,
+                        longitude: null,
+                    });
                 }
             },
 
@@ -52,17 +53,14 @@ export const useLocationStore = create<LocationState>()(
                         });
                     },
                     (error) => {
-                        console.log("Location error:", error);
-
                         set({
                             loading: false,
                             latitude: null,
                             longitude: null,
+                            locationEnabled: false,
                         });
 
-                        if (error.code === 1) {
-                            set({ locationEnabled: false });
-                        }
+                        console.log("Location error:", error);
                     },
                     {
                         enableHighAccuracy: true,

@@ -310,9 +310,9 @@ export default function Business() {
                         </div> */}
                     </div>
 
-                    <button className="w-full h-[42px] md:w-auto px-4 rounded-xl flex items-center justify-center gap-2 bg-[#00D34D] text-white font-bold whitespace-nowrap" onClick={() => { if (!isAuthenticated) setOpenModal(true); }} >
+                    <button onClick={() => window.location.href = `tel:${business.phoneNumber}`} className="w-full h-[42px] md:w-auto px-4 rounded-xl flex items-center justify-center gap-2 bg-[#00D34D] text-white font-bold whitespace-nowrap cursor-pointer" >
                         <img src="/images/call.svg" alt="call" className="w-5 h-5" />
-                        {formatPhone(business.phoneNumber, isAuthenticated)}
+                        {business.phoneNumber}
                     </button>
                 </div>
 

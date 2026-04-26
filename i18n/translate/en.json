@@ -95,7 +95,8 @@
         "location_share": "Location sharing",
         "allowed": "Allowed",
         "on_the_person": "On the person",
-        "gel": "GEL"
+        "gel": "GEL",
+        "search_field": "Search field"
     },
     "layout": {
         "working_hours": "Working Hours",

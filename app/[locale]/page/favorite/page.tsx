@@ -29,6 +29,11 @@ export default function Favorite() {
     const [loading, setLoading] = useState<boolean>(false);
     const [selectedRegionId, setSelectedRegionId] = useState<number>(0);
     const [selectedCategoryId, setSelectedCategoryId] = useState<number>(0);
+    const statusOptions = [
+        { value: "all", label: t("components.all") },
+        { value: "open", label: t("components.profile_open_now") },
+        { value: "closed", label: t("components.is_closed") },
+    ];
     const [openStatus, setOpenStatus] = useState<"all" | "open" | "closed">("all");
     const [openFilter, setOpenFilter] = useState<boolean>(false);
 
@@ -187,15 +192,12 @@ export default function Favorite() {
 
                     <div className="flex flex-col md:flex-row md:justify-between gap-3">
                         <div className="flex flex-wrap md:flex-nowrap gap-3 w-full md:w-auto justify-center md:justify-start">
-                            <div className="flex-1 min-w-[180px] h-[42px] flex items-center bg-[#0f0f0f] px-4 border border-[#2b2b2b] rounded-xl focus-within:border-[#F94B00] transition">
-                                <Search className="w-5 h-5 text-white mr-3" />
-                                <input
-                                    type="text"
-                                    value={search}
-                                    onChange={(e) => setSearch(e.target.value)}
-                                    placeholder={t("pages.search_placeholder")}
-                                    className="bg-transparent outline-none text-white placeholder-[#a7a7a7] w-full h-[42px] text-[14px]"
-                                />
+                            <div className="flex flex-col gap-1">
+                                <span className="text-[12px] text-[#a7a7a7]">{t("pages.search_field")}</span>
+                                <div className="flex-1 min-w-[180px] h-[42px] flex items-center bg-[#0f0f0f] px-4 border border-[#2b2b2b] rounded-xl focus-within:border-[#F94B00] transition mt-[12px]">
+                                    <Search className="w-5 h-5 text-white mr-3" />
+                                    <input type="text" value={search} onChange={(e) => setSearch(e.target.value)} placeholder={t("pages.search_placeholder")} className="bg-transparent outline-none text-white placeholder-[#a7a7a7] w-full h-[42px] text-[14px]" />
+                                </div>
                             </div>
 
                             <div className="md:hidden w-[44px] h-[42px] bg-[#F94B00] rounded-xl flex justify-center items-center" onClick={() => setOpenFilter(true)}>
@@ -203,30 +205,30 @@ export default function Favorite() {
                             </div>
 
                             <div className="hidden md:flex gap-2 text-[#a7a7a7]">
-                                <div className="relative">
-                                    <select value={selectedRegionId} onChange={(e) => setSelectedRegionId(Number(e.target.value))} className={`h-[42px] border py-[10px] px-[12px] pr-[40px] rounded-xl appearance-none w-full text-white bg-[#0f0f0f] text-[14px] outline-none focus:border-[#F94B00] ${selectedRegionId !== 0 ? "border-[#F94B00]" : "border-[#2b2b2b]"}`} >
-                                        <option value={0}>{t("pages.city")}</option>
-                                        {regionsStore.map((item: any) => (
-                                            <option key={item.id} value={item.id}>
-                                                {item.name}
-                                            </option>
-                                        ))}
-                                    </select>
-
-                                    <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-[12px] text-white">
-                                        <img src="/images/arrow_down.svg" alt="arrow_down" />
+                                <div className="flex flex-col gap-1">
+                                    <span className="text-[12px] text-[#a7a7a7]">{t("pages.city")}</span>
+                                    <div className="relative mt-[12px]">
+                                        <select value={selectedRegionId} onChange={(e) => setSelectedRegionId(Number(e.target.value))} className={`h-[42px] border py-[10px] px-[12px] pr-[40px] rounded-xl appearance-none w-full text-white bg-[#0f0f0f] text-[14px] outline-none focus:border-[#F94B00] ${selectedRegionId !== 0 ? "border-[#F94B00]" : "border-[#2b2b2b]"}`}>
+                                            <option value={0}>{t("pages.city")}</option>
+                                            {regionsStore.map((item: any) => (
+                                                <option key={item.id} value={item.id}>{item.name}</option>
+                                            ))}
+                                        </select>
+                                        <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-[12px] text-white">
+                                            <img src="/images/arrow_down.svg" alt="arrow_down" />
+                                        </div>
                                     </div>
                                 </div>
 
-                                <div className="relative">
-                                    <select value={openStatus} onChange={(e) => setOpenStatus(e.target.value as any)} className="h-[42px] border border-[#2b2b2b] py-[10px] px-[12px] pr-[40px] rounded-xl appearance-none w-full text-white bg-[#0f0f0f] text-[14px] outline-none focus:border-[#F94B00]"  >
-                                        <option value="all">{t("components.all")}</option>
-                                        <option value="open">{t("components.profile_open_now")}</option>
-                                        <option value="closed">{t("components.is_closed")}</option>
-                                    </select>
-
-                                    <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-[12px] text-white">
-                                        <img src="/images/arrow_down.svg" alt="arrow_down" />
+                                <div className="flex flex-col gap-1">
+                                    <span className="text-[12px] text-[#a7a7a7]">{t("components.status")}</span>
+                                    <div className="flex gap-3 mt-[12px]">
+                                        {statusOptions.map(({ value, label }) => (
+                                            <label key={value} className={`flex items-center gap-[10px] h-[42px] px-4 rounded-xl border cursor-pointer transition-all select-none ${openStatus === value ? "border-[#F94B00] bg-[#1a0d00]" : "border-[#2b2b2b] bg-[#0f0f0f]"}`}>
+                                                <input type="radio" name="openStatus" value={value} checked={openStatus === value} onChange={() => setOpenStatus(value as any)} className="appearance-none w-[20px] h-[20px] rounded-full border-2 border-[#555] checked:border-[#F94B00] relative cursor-pointer flex-shrink-0 after:content-[''] after:absolute after:w-[10px] after:h-[10px] after:rounded-full after:bg-[#F94B00] after:top-1/2 after:left-1/2 after:-translate-x-1/2 after:-translate-y-1/2 after:opacity-0 checked:after:opacity-100" />
+                                                <span className={`text-[14px] whitespace-nowrap ${openStatus === value ? "text-white font-bold" : "text-[#a7a7a7]"}`}>{label}</span>
+                                            </label>
+                                        ))}
                                     </div>
                                 </div>
                             </div>

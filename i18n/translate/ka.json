@@ -93,7 +93,8 @@
         "location_share": "ლოკაციის გაზიარება",
         "allowed": "დაშვებულია",
         "on_the_person": "პერსონაზე",
-        "gel": "ლარი"
+        "gel": "ლარი",
+        "search_field": "საძიებო ველი"
     },
     "layout": {
         "working_hours": "სამუშაო საათები",

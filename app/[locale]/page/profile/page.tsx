@@ -38,7 +38,6 @@ export default function Profile() {
 
     const t = useTranslations();
     const { userInfo } = useUserStore();
-    const [initialProfile, setInitialProfile] = useState<ProfileForm | null>(null);
 
     const [openModal, setOpenModal] = useState<boolean>(false);
     const [oldPassword, setOldPassword] = useState<string>("");
@@ -79,33 +78,6 @@ export default function Profile() {
             });
         }
     }, [userInfo]);
-
-    useEffect(() => {
-        if (userInfo) {
-            const formatted = {
-                firstName: userInfo.firstName || "",
-                lastName: userInfo.lastName || "",
-                birthDate: userInfo.birthDate ? userInfo.birthDate.split("T")[0] : "",
-                phoneNumber: userInfo.phoneNumber || "",
-                email: userInfo.email || "",
-            };
-
-            setProfileForm(formatted);
-            setInitialProfile(formatted);
-        }
-    }, [userInfo]);
-
-    const isProfileChanged = () => {
-        if (!initialProfile) return false;
-
-        return (
-            profileForm.firstName !== initialProfile.firstName ||
-            profileForm.lastName !== initialProfile.lastName ||
-            profileForm.birthDate !== initialProfile.birthDate ||
-            profileForm.phoneNumber !== initialProfile.phoneNumber ||
-            profileForm.email !== initialProfile.email
-        );
-    };
 
     const handleProfileChange = (field: keyof ProfileForm, value: string) => {
         setProfileForm(prev => ({ ...prev, [field]: value }));
@@ -154,7 +126,6 @@ export default function Profile() {
                 }
             );
 
-            setInitialProfile(profileForm);
         } catch (error: any) {
             if (error?.response?.status === 400) {
                 setProfileErrors(prev => ({ ...prev, email: t("auth.errors.email_used") }));
@@ -304,7 +275,9 @@ export default function Profile() {
                                             <label className="text-[14px] text-white">{t("pages.location_share")}</label>
                                             <div className="bg-transparent h-[48px] text-[14px] border border-[#2b2b2b] rounded-lg px-4 py-3 flex justify-between">
                                                 <h3>{t("pages.allowed")}</h3>
-                                                <Switch className="cursor-pointer data-[state=checked]:bg-[#F94B00] data-[state=unchecked]:bg-gray-300" checked={locationEnabled} onCheckedChange={setLocationEnabled} />
+                                                <Switch className="cursor-pointer data-[state=checked]:bg-[#F94B00] data-[state=unchecked]:bg-gray-300" checked={locationEnabled}
+                                                    onCheckedChange={(value) => setLocationEnabled(value)}
+                                                />
                                             </div>
                                         </div>
 
@@ -328,7 +301,7 @@ export default function Profile() {
                                     </div>
 
                                     <div className="mt-6 flex justify-end">
-                                        <button type="submit" disabled={profileLoading || !isProfileChanged()} className={`px-6 py-3 rounded-lg transition ${profileLoading || !isProfileChanged() ? "bg-[#464646] text-[#a7a7a7]" : "bg-[#F94B00] text-white hover:bg-[#C73C00] cursor-pointer"}`}>
+                                        <button type="submit" disabled={profileLoading} className="bg-[#F94B00] text-white px-6 py-3 rounded-lg disabled:opacity-50 text-white disabled:cursor-not-allowed transition cursor-pointer hover:bg-[#C73C00]"  >
                                             {profileLoading ? <Spinner /> : t("pages.save_changes")}
                                         </button>
                                     </div>

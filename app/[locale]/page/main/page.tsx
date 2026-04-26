@@ -79,6 +79,17 @@ export default function Main() {
     return params;
   };
 
+  useEffect(() => {
+    if (!locationEnabled) {
+      setLocationEnabled(true);
+    }
+  }, []);
+
+  useEffect(() => {
+    if (locationEnabled) {
+      getLocation();
+    }
+  }, [locationEnabled]);
 
   useEffect(() => {
     fetchRegionsInfo();

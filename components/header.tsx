@@ -103,7 +103,7 @@ export default function Header() {
                         <div className="relative hidden md:block">
                             {accessToken ?
                                 (<>
-                                    <div className="flex gap-[16px]">
+                                    <div className="h-[42px] flex gap-[16px]">
                                         <div className="px-[12px] py-[8px] border-[1px] border-[#2b2b2b] flex justify-center items-center rounded-xl gap-[8px] cursor-pointer" onClick={() => setOpenProfileModal(!openProfileModal)} >
                                             <div className="w-[28px] h-[28px] bg-[#242424] rounded-full flex justify-center items-center">
                                                 {userInitial}
@@ -115,7 +115,7 @@ export default function Header() {
                                 </>)
                                 :
                                 (<>
-                                    <div className="flex gap-[16px]">
+                                    <div className="h-[42px] flex gap-[16px]">
                                         <Link href="/auth/login" prefetch={false}>
                                             <div className="px-[12px] py-[8px] border-[1px] border-[#2b2b2b] flex justify-center items-center rounded-xl gap-[8px] cursor-pointer">
                                                 <img src="/images/white_profile.svg" alt="profile" />

@@ -1,5 +1,5 @@
 "use client";
-import { FaChevronRight } from 'react-icons/fa';
+import { FaChevronRight, FaTimes } from 'react-icons/fa';
 import { useTranslations } from "next-intl";
 import Header from '@/components/header';
 import Footer from '@/components/footer';
@@ -10,6 +10,7 @@ import axios from 'axios';
 import { Spinner } from '@/components/ui/spinner';
 import { Switch } from '@/components/ui/switch';
 import { useLocationStore } from '@/zustand/User/locationStore';
+
 
 interface PasswordErrors {
     password: string;
@@ -313,7 +314,10 @@ export default function Profile() {
 
                 {openModal && (
                     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50" onClick={() => setOpenModal(false)}>
-                        <div className="w-[390px] flex flex-col border border-[#2b2b2b] rounded-xl bg-[#0F0F0F] p-[24px]" onClick={(e) => e.stopPropagation()}>
+
+                        <div className="relative w-[390px] flex flex-col border border-[#2b2b2b] rounded-xl bg-[#0F0F0F] pt-[44px] p-[24px]" onClick={(e) => e.stopPropagation()}>
+
+                            <FaTimes size={20} color="white" className="absolute top-[24px] right-[24px] cursor-pointer" onClick={() => setOpenModal(false)} />
 
                             <div className="w-full flex flex-col justify-center items-center">
                                 <h3 className="text-white text-[18px] font-bold">

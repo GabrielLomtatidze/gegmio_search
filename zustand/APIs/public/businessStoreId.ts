@@ -23,6 +23,7 @@ export type ProfileDetails = {
     name: string;
     bookingStartTime: string;
     bookingEndTime: string;
+    isActive: boolean
   }[];
   files: {
     id: number;

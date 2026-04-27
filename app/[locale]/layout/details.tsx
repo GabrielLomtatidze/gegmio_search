@@ -23,15 +23,14 @@ export default function Details() {
 
                     <div>
                         {business?.businessBookingTime?.map((item, index) => (
-                            <div key={index} className="w-full h-[48px] flex justify-between py-[12px] items-center border-t-[1px] border-[#2b2b2b]">
+                            <div key={index} className="w-full h-[48px] flex justify-between py-[12px] items-center border-t-[1px] border-[#2b2b2b]"  >
                                 <div className="gap-[8px] flex items-center">
                                     <img src="/images/clock.svg" alt="clock" />
                                     <h4 className="font-bold text-white">{item.name}</h4>
                                 </div>
 
                                 <h4 className="text-white">
-                                    {formatTime(item.bookingStartTime)} -{" "}
-                                    {formatTime(item.bookingEndTime)}
+                                    {item.isActive? `${formatTime(item.bookingStartTime)} - ${formatTime(item.bookingEndTime)}`: t("components.is_closed")}
                                 </h4>
                             </div>
                         ))}
@@ -52,7 +51,7 @@ export default function Details() {
                         </h4>
                     </div>
 
-                     <a href={business?.googleMapURL} target="_blank" rel="noopener noreferrer" className="block no-underline" >
+                    <a href={business?.googleMapURL} target="_blank" rel="noopener noreferrer" className="block no-underline" >
                         <div className="w-full h-[48px] flex gap-[8px] py-[12px] items-center border-t-[1px] border-[#2b2b2b]">
                             <img src="/images/map_pin.svg" alt="map_pin" className="w-[12px]" />
 

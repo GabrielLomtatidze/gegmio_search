@@ -32,7 +32,7 @@ export default function MenuService() {
 
     const [canScroll, setCanScroll] = useState({ left: false, right: false });
     const containerRef = useRef<HTMLDivElement>(null);
-    const hasFetched = useRef(false);
+    const isMounted = useRef(false);
 
     const [filterText, setfilterText] = useState<FilterText[]>([]);
     const [selectedFilterId, setSelectedFilterId] = useState<number>(0);
@@ -74,14 +74,10 @@ export default function MenuService() {
                 `${apiUrl}/api/v1/public/service-categories/${id}`
             );
 
-            const data = response.data;
-
             setfilterText([
                 { id: 0, name: "ყველა" },
-                ...data,
+                ...response.data,
             ]);
-
-            setSelectedFilterId(0);
         } catch (error) {
             console.log(error);
         }
@@ -105,16 +101,14 @@ export default function MenuService() {
     };
 
     useEffect(() => {
-        if (!id || hasFetched.current) return;
-
-        getFiltertext();
-        getMenu();
-
-        hasFetched.current = true;
-    }, [id]);
-
-    useEffect(() => {
         if (!id) return;
+
+        if (!isMounted.current) {
+            isMounted.current = true;
+            getFiltertext();
+            getMenu(0);
+            return;
+        }
 
         getMenu(selectedFilterId);
     }, [selectedFilterId, id]);

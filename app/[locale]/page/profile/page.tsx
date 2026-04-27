@@ -67,17 +67,35 @@ export default function Profile() {
         email: "",
     });
 
+    const [initialForm, setInitialForm] = useState<ProfileForm>({
+        firstName: "",
+        lastName: "",
+        birthDate: "",
+        phoneNumber: "",
+        email: "",
+    });
+
     useEffect(() => {
         if (userInfo) {
-            setProfileForm({
+            const form = {
                 firstName: userInfo.firstName || "",
                 lastName: userInfo.lastName || "",
                 birthDate: userInfo.birthDate ? userInfo.birthDate.split("T")[0] : "",
                 phoneNumber: userInfo.phoneNumber || "",
                 email: userInfo.email || "",
-            });
+            };
+            setProfileForm(form);
+            setInitialForm(form);
         }
     }, [userInfo]);
+
+
+    const isProfileUnchanged =
+        profileForm.firstName === initialForm.firstName &&
+        profileForm.lastName === initialForm.lastName &&
+        profileForm.birthDate === initialForm.birthDate &&
+        profileForm.phoneNumber === initialForm.phoneNumber &&
+        profileForm.email === initialForm.email;
 
     const handleProfileChange = (field: keyof ProfileForm, value: string) => {
         setProfileForm(prev => ({ ...prev, [field]: value }));
@@ -125,6 +143,8 @@ export default function Profile() {
                     }
                 }
             );
+
+            setInitialForm(profileForm);
 
         } catch (error: any) {
             if (error?.response?.status === 400) {
@@ -301,7 +321,7 @@ export default function Profile() {
                                     </div>
 
                                     <div className="mt-6 flex justify-end">
-                                        <button type="submit" disabled={profileLoading} className="bg-[#F94B00] text-white px-6 py-3 rounded-lg disabled:opacity-50 text-white disabled:cursor-not-allowed transition cursor-pointer hover:bg-[#C73C00]"  >
+                                        <button type="submit" disabled={profileLoading || isProfileUnchanged} className="bg-[#F94B00] text-white px-6 py-3 rounded-lg transition cursor-pointer hover:bg-[#C73C00] disabled:bg-[#464646] disabled:text-[#A7A7A7] disabled:opacity-100 disabled:cursor-not-allowed">
                                             {profileLoading ? <Spinner /> : t("pages.save_changes")}
                                         </button>
                                     </div>

@@ -190,17 +190,36 @@ export default function Favorite() {
                     </div>
 
 
+                    <div className="flex gap-8 border-[#2b2b2b] overflow-x-auto no-scrollbar">
+
+                        <div onClick={() => setSelectedCategoryId(0)} className="cursor-pointer py-2 flex flex-col items-center flex-shrink-0"     >
+                            <img src={categoryImages[0]} alt="all" className="w-8 h-8 mb-1" />
+                            <h2 className={`text-sm mt-[10px] whitespace-nowrap ${selectedCategoryId === 0 ? "text-[#F94B00] font-bold" : "text-white"}`}>
+                                {t("components.all")}
+                            </h2>
+                        </div>
+
+                        {categories?.map((item) => (
+                            <div key={item.id} onClick={() => setSelectedCategoryId(item.id)} className="cursor-pointer py-2 flex flex-col items-center flex-shrink-0"  >
+                                <img src={categoryImages[item.id]} alt={item.name} className="w-8 h-8 mb-1" />
+                                <h2 className={`text-sm mt-[10px] whitespace-nowrap ${selectedCategoryId === item.id ? "text-[#F94B00] font-bold" : "text-white"}`}>
+                                    {item.name}
+                                </h2>
+                            </div>
+                        ))}
+                    </div>
+
                     <div className="flex flex-col md:flex-row md:justify-between gap-3">
                         <div className="flex flex-wrap md:flex-nowrap gap-3 w-full md:w-auto justify-center md:justify-start">
-                            <div className="flex flex-col gap-1">
-                                <span className="text-[12px] text-[#a7a7a7]">{t("pages.search_field")}</span>
-                                <div className="flex-1 min-w-[180px] h-[42px] flex items-center bg-[#0f0f0f] px-4 border border-[#2b2b2b] rounded-xl focus-within:border-[#F94B00] transition mt-[12px]">
-                                    <Search className="w-5 h-5 text-white mr-3" />
+                            <div className="flex flex-col gap-1 flex-1 md:flex-none">
+                                <span className="hidden md:block text-[12px] text-[#a7a7a7]">{t("pages.search_field")}</span>
+                                <div className="flex-1 min-w-0 md:min-w-[180px] h-[42px] flex items-center bg-[#0f0f0f] px-4 border border-[#2b2b2b] rounded-xl focus-within:border-[#F94B00] transition md:mt-[12px]">
+                                    <Search className="w-5 h-5 text-white mr-3 flex-shrink-0" />
                                     <input type="text" value={search} onChange={(e) => setSearch(e.target.value)} placeholder={t("pages.search_placeholder")} className="bg-transparent outline-none text-white placeholder-[#a7a7a7] w-full h-[42px] text-[14px]" />
                                 </div>
                             </div>
 
-                            <div className="md:hidden w-[44px] h-[42px] bg-[#F94B00] rounded-xl flex justify-center items-center" onClick={() => setOpenFilter(true)}>
+                            <div className="md:hidden flex-shrink-0 w-[44px] h-[42px] bg-[#F94B00] rounded-xl flex justify-center items-center self-end" onClick={() => setOpenFilter(true)}>
                                 <img src="/images/filter.svg" alt="filter" className="w-[20px] h-[20px]" />
                             </div>
 
@@ -208,7 +227,7 @@ export default function Favorite() {
                                 <div className="flex flex-col gap-1">
                                     <span className="text-[12px] text-[#a7a7a7]">{t("pages.city")}</span>
                                     <div className="relative mt-[12px]">
-                                        <select value={selectedRegionId} onChange={(e) => setSelectedRegionId(Number(e.target.value))} className={`h-[42px] border py-[10px] px-[12px] pr-[40px] rounded-xl appearance-none w-full text-white bg-[#0f0f0f] text-[14px] outline-none focus:border-[#F94B00] ${selectedRegionId !== 0 ? "border-[#F94B00]" : "border-[#2b2b2b]"}`}>
+                                        <select value={selectedRegionId} onChange={(e) => setSelectedRegionId(Number(e.target.value))} className={`h-[42px] border py-[10px] px-[12px] pr-[40px] rounded-xl appearance-none min-w-[160px] w-full text-white bg-[#0f0f0f] text-[14px] outline-none focus:border-[#F94B00] ${selectedRegionId !== 0 ? "border-[#F94B00]" : "border-[#2b2b2b]"}`}>
                                             <option value={0}>{t("pages.city")}</option>
                                             {regionsStore.map((item: any) => (
                                                 <option key={item.id} value={item.id}>{item.name}</option>

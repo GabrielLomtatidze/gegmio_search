@@ -84,7 +84,7 @@ export default function Header() {
 
                         <div className="flex w-[102px] h-[42px] border border-[#2b2b2b] rounded-[10px] p-[3px] items-center">
                             <div className="relative w-full h-full bg-[#111] rounded-full flex">
-                                <div className={`absolute top-0 h-full w-1/2 bg-[#F94B00] rounded-[10px] transition-all duration-300 ${currentLocale === "en" ? "left-0" : "left-1/2"}`} />
+                                <div className={`absolute top-0 h-full w-1/2 bg-[#22140E] border border-[#F94B00] rounded-[10px] transition-all duration-300 ${currentLocale === "en" ? "left-0" : "left-1/2"}`} />
 
                                 <button onClick={() => changeLanguage("en")} className={`w-1/2 z-10 text-sm cursor-pointer font-semibold ${currentLocale === "en" ? "text-white" : "text-[#6C6C6C]"}`}>
                                     EN
@@ -264,7 +264,7 @@ export default function Header() {
 
                         <div className="flex w-[102px] h-[42px] border-[1px] border-[#2b2b2b] rounded-[10px] p-[3px] flex items-center mt-4">
                             <div className="relative w-full h-full bg-[#111] rounded-full flex">
-                                <div className={`absolute top-0 h-full w-1/2 bg-[#F94B00] rounded-[10px] transition-all duration-300 ${currentLocale === "en" ? "left-0" : "left-1/2"}`} />
+                                <div className={`absolute top-0 h-full w-1/2 bg-[#22140E] border border-[#F94B00] rounded-[10px] transition-all duration-300 ${currentLocale === "en" ? "left-0" : "left-1/2"}`} />
                                 <button onClick={() => changeLanguage("en")} className={`w-1/2 z-10 text-sm font-semibold ${currentLocale === "en" ? "text-white" : "text-[#6C6C6C]"}`}>EN</button>
                                 <button onClick={() => changeLanguage("ka")} className={`w-1/2 z-10 text-sm font-semibold ${currentLocale === "ka" ? "text-white" : "text-[#6C6C6C]"}`}>GE</button>
                             </div>

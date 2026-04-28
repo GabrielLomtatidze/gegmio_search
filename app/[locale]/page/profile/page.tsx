@@ -10,6 +10,7 @@ import axios from 'axios';
 import { Spinner } from '@/components/ui/spinner';
 import { Switch } from '@/components/ui/switch';
 import { useLocationStore } from '@/zustand/User/locationStore';
+import ProtectedRoute from '../../ProtectedRoute';
 
 
 interface PasswordErrors {
@@ -210,206 +211,209 @@ export default function Profile() {
             <div className="min-h-screen flex flex-col bg-[#0F0F0F]">
 
                 <Header />
-                <div className="w-full bg-[#0F0F0F] flex justify-center mb-[150px]">
-                    <div className="text-white flex flex-col w-full max-w-7xl px-4 py-5 md:px-[100px]">
+                <ProtectedRoute>
 
-                        <a href="/">
-                            <div className="flex items-center gap-3 cursor-pointer mb-6">
-                                <div className="w-[42px] h-[42px] border border-[#2b2b2b] rounded-full flex justify-center items-center">
-                                    <img src="/images/arrow_left.svg" alt="back" />
+                    <div className="w-full bg-[#0F0F0F] flex justify-center mb-[150px]">
+                        <div className="text-white flex flex-col w-full max-w-7xl px-4 py-5 md:px-[100px]">
+
+                            <a href="/">
+                                <div className="flex items-center gap-3 cursor-pointer mb-6">
+                                    <div className="w-[42px] h-[42px] border border-[#2b2b2b] rounded-full flex justify-center items-center">
+                                        <img src="/images/arrow_left.svg" alt="back" />
+                                    </div>
+                                    <h3 className="text-[#a7a7a7]">{t("pages.back")}</h3>
                                 </div>
-                                <h3 className="text-[#a7a7a7]">{t("pages.back")}</h3>
-                            </div>
-                        </a>
+                            </a>
 
-                        <div className="w-full flex justify-start">
-                            <div className="w-full border border-[#2b2b2b] rounded-xl p-6 text-white">
+                            <div className="w-full flex justify-start">
+                                <div className="w-full border border-[#2b2b2b] rounded-xl p-6 text-white">
 
-                                <div className="mb-6">
-                                    <h1 className="text-xl font-semibold">{t("pages.profile_title")}</h1>
-                                    <p className="text-[#a7a7a7] text-sm">{t("pages.profile_subtitle")}</p>
-                                </div>
+                                    <div className="mb-6">
+                                        <h1 className="text-xl font-semibold">{t("pages.profile_title")}</h1>
+                                        <p className="text-[#a7a7a7] text-sm">{t("pages.profile_subtitle")}</p>
+                                    </div>
 
-                                <form onSubmit={saveProfile}>
-                                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                    <form onSubmit={saveProfile}>
+                                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
 
-                                        <div className="flex flex-col gap-2">
-                                            <label className="text-[14px] text-white">{t("auth.first_name")}</label>
-                                            <input
-                                                type="text"
-                                                placeholder={t("auth.first_name")}
-                                                value={profileForm.firstName}
-                                                onChange={(e) => handleProfileChange("firstName", e.target.value)}
-                                                className="bg-transparent h-[48px] text-[14px] border border-[#2b2b2b] rounded-lg p-3 outline-none focus:border-white transition"
-                                            />
-                                            {profileErrors.firstName && <span className="text-red-500 text-sm">{profileErrors.firstName}</span>}
-                                        </div>
+                                            <div className="flex flex-col gap-2">
+                                                <label className="text-[14px] text-white">{t("auth.first_name")}</label>
+                                                <input
+                                                    type="text"
+                                                    placeholder={t("auth.first_name")}
+                                                    value={profileForm.firstName}
+                                                    onChange={(e) => handleProfileChange("firstName", e.target.value)}
+                                                    className="bg-transparent h-[48px] text-[14px] border border-[#2b2b2b] rounded-lg p-3 outline-none focus:border-white transition"
+                                                />
+                                                {profileErrors.firstName && <span className="text-red-500 text-sm">{profileErrors.firstName}</span>}
+                                            </div>
 
-                                        <div className="flex flex-col gap-2">
-                                            <label className="text-[14px] text-white">{t("auth.last_name")}</label>
-                                            <input
-                                                type="text"
-                                                placeholder={t("auth.last_name")}
-                                                value={profileForm.lastName}
-                                                onChange={(e) => handleProfileChange("lastName", e.target.value)}
-                                                className="bg-transparent h-[48px] text-[14px] border border-[#2b2b2b] rounded-lg p-3 outline-none focus:border-white transition"
-                                            />
-                                            {profileErrors.lastName && <span className="text-red-500 text-sm">{profileErrors.lastName}</span>}
-                                        </div>
+                                            <div className="flex flex-col gap-2">
+                                                <label className="text-[14px] text-white">{t("auth.last_name")}</label>
+                                                <input
+                                                    type="text"
+                                                    placeholder={t("auth.last_name")}
+                                                    value={profileForm.lastName}
+                                                    onChange={(e) => handleProfileChange("lastName", e.target.value)}
+                                                    className="bg-transparent h-[48px] text-[14px] border border-[#2b2b2b] rounded-lg p-3 outline-none focus:border-white transition"
+                                                />
+                                                {profileErrors.lastName && <span className="text-red-500 text-sm">{profileErrors.lastName}</span>}
+                                            </div>
 
-                                        <div className="flex flex-col gap-2">
-                                            <label className="text-[14px] text-white">{t("auth.birth_date")}</label>
-                                            <input
-                                                type="date"
-                                                value={profileForm.birthDate}
-                                                onChange={(e) => handleProfileChange("birthDate", e.target.value)}
-                                                className="bg-transparent h-[48px] text-[14px] border border-[#2b2b2b] rounded-lg p-3 outline-none focus:border-white transition"
-                                            />
-                                        </div>
-
-                                        <div className="flex flex-col gap-2">
-                                            <label className="text-[14px] text-white">{t("auth.email_label")}</label>
-                                            <input
-                                                type="email"
-                                                placeholder="your@gmail.com"
-                                                value={profileForm.email}
-                                                onChange={(e) => handleProfileChange("email", e.target.value)}
-                                                className="bg-transparent h-[48px] text-[14px] border border-[#2b2b2b] rounded-lg p-3 outline-none focus:border-white transition"
-                                            />
-                                            {profileErrors.email && <span className="text-red-500 text-sm">{profileErrors.email}</span>}
-                                        </div>
-
-                                        <div className="flex flex-col gap-2">
-                                            <label className="text-[14px] text-white">{t("pages.mobile_number")}</label>
-                                            <input
-                                                type="text"
-                                                placeholder="+99555555555"
-                                                value={profileForm.phoneNumber}
-                                                onChange={(e) => handleProfileChange("phoneNumber", e.target.value)}
-                                                className="bg-transparent h-[48px] text-[14px] border border-[#2b2b2b] rounded-lg px-4 py-3 outline-none focus:border-white transition"
-                                            />
-                                            {profileErrors.phoneNumber && <span className="text-red-500 text-sm">{profileErrors.phoneNumber}</span>}
-                                        </div>
-
-                                        <div className="flex flex-col gap-2">
-                                            <label className="text-[14px] text-white">{t("pages.location_share")}</label>
-                                            <div className="bg-transparent h-[48px] text-[14px] border border-[#2b2b2b] rounded-lg px-4 py-3 flex justify-between">
-                                                <h3>{t("pages.allowed")}</h3>
-                                                <Switch className="cursor-pointer data-[state=checked]:bg-[#F94B00] data-[state=unchecked]:bg-gray-300" checked={locationEnabled}
-                                                    onCheckedChange={(value) => setLocationEnabled(value)}
+                                            <div className="flex flex-col gap-2">
+                                                <label className="text-[14px] text-white">{t("auth.birth_date")}</label>
+                                                <input
+                                                    type="date"
+                                                    value={profileForm.birthDate}
+                                                    onChange={(e) => handleProfileChange("birthDate", e.target.value)}
+                                                    className="bg-transparent h-[48px] text-[14px] border border-[#2b2b2b] rounded-lg p-3 outline-none focus:border-white transition"
                                                 />
                                             </div>
+
+                                            <div className="flex flex-col gap-2">
+                                                <label className="text-[14px] text-white">{t("auth.email_label")}</label>
+                                                <input
+                                                    type="email"
+                                                    placeholder="your@gmail.com"
+                                                    value={profileForm.email}
+                                                    onChange={(e) => handleProfileChange("email", e.target.value)}
+                                                    className="bg-transparent h-[48px] text-[14px] border border-[#2b2b2b] rounded-lg p-3 outline-none focus:border-white transition"
+                                                />
+                                                {profileErrors.email && <span className="text-red-500 text-sm">{profileErrors.email}</span>}
+                                            </div>
+
+                                            <div className="flex flex-col gap-2">
+                                                <label className="text-[14px] text-white">{t("pages.mobile_number")}</label>
+                                                <input
+                                                    type="text"
+                                                    placeholder="+99555555555"
+                                                    value={profileForm.phoneNumber}
+                                                    onChange={(e) => handleProfileChange("phoneNumber", e.target.value)}
+                                                    className="bg-transparent h-[48px] text-[14px] border border-[#2b2b2b] rounded-lg px-4 py-3 outline-none focus:border-white transition"
+                                                />
+                                                {profileErrors.phoneNumber && <span className="text-red-500 text-sm">{profileErrors.phoneNumber}</span>}
+                                            </div>
+
+                                            <div className="flex flex-col gap-2">
+                                                <label className="text-[14px] text-white">{t("pages.location_share")}</label>
+                                                <div className="bg-transparent h-[48px] text-[14px] border border-[#2b2b2b] rounded-lg px-4 py-3 flex justify-between">
+                                                    <h3>{t("pages.allowed")}</h3>
+                                                    <Switch className="cursor-pointer data-[state=checked]:bg-[#F94B00] data-[state=unchecked]:bg-gray-300" checked={locationEnabled}
+                                                        onCheckedChange={(value) => setLocationEnabled(value)}
+                                                    />
+                                                </div>
+                                            </div>
+
                                         </div>
 
-                                    </div>
-
-                                    <div className="mt-6" onClick={() => setOpenModal(true)}>
-                                        <div className="flex items-center justify-between bg-[#22140E] rounded-xl p-4 cursor-pointer hover:bg-[#22120c] transition">
-                                            <div className="flex items-center gap-3">
+                                        <div className="mt-6" onClick={() => setOpenModal(true)}>
+                                            <div className="flex items-center justify-between bg-[#22140E] rounded-xl p-4 cursor-pointer hover:bg-[#22120c] transition">
+                                                <div className="flex items-center gap-3">
+                                                    <div className="w-10 h-10 flex items-center justify-center rounded-lg bg-[#FFEDE5]">
+                                                        <img src="/images/lock.svg" alt="lock" />
+                                                    </div>
+                                                    <div>
+                                                        <p className="font-medium">{t("pages.password_section")}</p>
+                                                        <p className="text-sm text-[#a7a7a7]">{t("pages.password_subtext")}</p>
+                                                    </div>
+                                                </div>
                                                 <div className="w-10 h-10 flex items-center justify-center rounded-lg bg-[#FFEDE5]">
-                                                    <img src="/images/lock.svg" alt="lock" />
+                                                    <FaChevronRight color="#F94B00" />
                                                 </div>
-                                                <div>
-                                                    <p className="font-medium">{t("pages.password_section")}</p>
-                                                    <p className="text-sm text-[#a7a7a7]">{t("pages.password_subtext")}</p>
-                                                </div>
-                                            </div>
-                                            <div className="w-10 h-10 flex items-center justify-center rounded-lg bg-[#FFEDE5]">
-                                                <FaChevronRight color="#F94B00" />
                                             </div>
                                         </div>
+
+                                        <div className="mt-6 flex justify-end">
+                                            <button type="submit" disabled={profileLoading || isProfileUnchanged} className="bg-[#F94B00] text-white px-6 py-3 rounded-lg transition cursor-pointer hover:bg-[#C73C00] disabled:bg-[#464646] disabled:text-[#A7A7A7] disabled:opacity-100 disabled:cursor-not-allowed">
+                                                {profileLoading ? <Spinner /> : t("pages.save_changes")}
+                                            </button>
+                                        </div>
+                                    </form>
+
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    {openModal && (
+                        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50" onClick={() => setOpenModal(false)}>
+
+                            <div className="relative w-[390px] flex flex-col border border-[#2b2b2b] rounded-xl bg-[#0F0F0F] pt-[44px] p-[24px]" onClick={(e) => e.stopPropagation()}>
+
+                                <FaTimes size={20} color="white" className="absolute top-[24px] right-[24px] cursor-pointer" onClick={() => setOpenModal(false)} />
+
+                                <div className="w-full flex flex-col justify-center items-center">
+                                    <h3 className="text-white text-[18px] font-bold">
+                                        {t("auth.change_password")}
+                                    </h3>
+                                    <p className="text-[#a7a7a7] mt-2 text-center">
+                                        {t("auth.password_guideline")}
+                                    </p>
+                                </div>
+
+                                <form onSubmit={saveUpdatedPassword} className="flex flex-col gap-4 mt-[32px]">
+
+                                    <div>
+                                        <label className="text-sm text-white mb-1 block">
+                                            {t("auth.old_password")}
+                                        </label>
+                                        <input
+                                            type="password"
+                                            placeholder="********"
+                                            className="w-full h-[48px] rounded-xl text-white px-4 bg-transparent border border-[#2b2b2b]"
+                                            value={oldPassword}
+                                            onChange={(e) => setOldPassword(e.target.value.replace(/\s/g, ""))}
+                                        />
+                                        {passwordErrors.password && <p className="text-red-500 mt-[5px]">{passwordErrors.password}</p>}
                                     </div>
 
-                                    <div className="mt-6 flex justify-end">
-                                        <button type="submit" disabled={profileLoading || isProfileUnchanged} className="bg-[#F94B00] text-white px-6 py-3 rounded-lg transition cursor-pointer hover:bg-[#C73C00] disabled:bg-[#464646] disabled:text-[#A7A7A7] disabled:opacity-100 disabled:cursor-not-allowed">
-                                            {profileLoading ? <Spinner /> : t("pages.save_changes")}
+                                    <div className="relative">
+                                        <label className="text-sm text-white mb-1 block">
+                                            {t("auth.password_label")}
+                                        </label>
+                                        <input
+                                            type={showNewPassword ? "text" : "password"}
+                                            placeholder="********"
+                                            className="w-full h-[48px] rounded-xl text-white px-4 bg-transparent border border-[#2b2b2b]"
+                                            value={newPassword}
+                                            onChange={(e) => setNewPassword(e.target.value)}
+                                        />
+                                        <button type="button" onClick={() => setShowNewPassword(!showNewPassword)} className="absolute right-4 top-[38px] text-white">
+                                            {showNewPassword ? <EyeOff size={20} /> : <Eye size={20} />}
                                         </button>
                                     </div>
+
+                                    <div className="relative">
+                                        <label className="text-sm text-white mb-1 block">
+                                            {t("auth.repeat_password")}
+                                        </label>
+                                        <input
+                                            type={showRepeatNewPassword ? "text" : "password"}
+                                            placeholder="********"
+                                            className="w-full h-[48px] rounded-xl text-white px-4 bg-transparent border border-[#2b2b2b]"
+                                            value={repeatNewPassword}
+                                            onChange={(e) => setRepeatNewPassword(e.target.value)}
+                                        />
+                                        <button type="button" onClick={() => setShowRepeatNewPassword(!showRepeatNewPassword)} className="absolute right-4 top-[38px] text-white">
+                                            {showRepeatNewPassword ? <EyeOff size={20} /> : <Eye size={20} />}
+                                        </button>
+                                        {passwordErrors.repeatPassword && (
+                                            <span className="text-red-500 text-sm">{passwordErrors.repeatPassword}</span>
+                                        )}
+                                    </div>
+
+                                    <button
+                                        type="submit"
+                                        className="w-full h-[48px] mt-3 flex justify-center items-center rounded-xl bg-[#F94B00] text-white transition hover:bg-[#C73C00] hover:cursor-pointer disabled:bg-[#464646] disabled:text-[#A7A7A7] disabled:opacity-100 disabled:cursor-not-allowed"
+                                        disabled={disabledPassowrdChange}  >
+                                        {passwordLoading ? <Spinner /> : t("auth.change_password")}
+                                    </button>
+
                                 </form>
-
                             </div>
                         </div>
-                    </div>
-                </div>
-
-                {openModal && (
-                    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50" onClick={() => setOpenModal(false)}>
-
-                        <div className="relative w-[390px] flex flex-col border border-[#2b2b2b] rounded-xl bg-[#0F0F0F] pt-[44px] p-[24px]" onClick={(e) => e.stopPropagation()}>
-
-                            <FaTimes size={20} color="white" className="absolute top-[24px] right-[24px] cursor-pointer" onClick={() => setOpenModal(false)} />
-
-                            <div className="w-full flex flex-col justify-center items-center">
-                                <h3 className="text-white text-[18px] font-bold">
-                                    {t("auth.change_password")}
-                                </h3>
-                                <p className="text-[#a7a7a7] mt-2 text-center">
-                                    {t("auth.password_guideline")}
-                                </p>
-                            </div>
-
-                            <form onSubmit={saveUpdatedPassword} className="flex flex-col gap-4 mt-[32px]">
-
-                                <div>
-                                    <label className="text-sm text-white mb-1 block">
-                                        {t("auth.old_password")}
-                                    </label>
-                                    <input
-                                        type="password"
-                                        placeholder="********"
-                                        className="w-full h-[48px] rounded-xl text-white px-4 bg-transparent border border-[#2b2b2b]"
-                                        value={oldPassword}
-                                        onChange={(e) => setOldPassword(e.target.value.replace(/\s/g, ""))}
-                                    />
-                                    {passwordErrors.password && <p className="text-red-500 mt-[5px]">{passwordErrors.password}</p>}
-                                </div>
-
-                                <div className="relative">
-                                    <label className="text-sm text-white mb-1 block">
-                                        {t("auth.password_label")}
-                                    </label>
-                                    <input
-                                        type={showNewPassword ? "text" : "password"}
-                                        placeholder="********"
-                                        className="w-full h-[48px] rounded-xl text-white px-4 bg-transparent border border-[#2b2b2b]"
-                                        value={newPassword}
-                                        onChange={(e) => setNewPassword(e.target.value)}
-                                    />
-                                    <button type="button" onClick={() => setShowNewPassword(!showNewPassword)} className="absolute right-4 top-[38px] text-white">
-                                        {showNewPassword ? <EyeOff size={20} /> : <Eye size={20} />}
-                                    </button>
-                                </div>
-
-                                <div className="relative">
-                                    <label className="text-sm text-white mb-1 block">
-                                        {t("auth.repeat_password")}
-                                    </label>
-                                    <input
-                                        type={showRepeatNewPassword ? "text" : "password"}
-                                        placeholder="********"
-                                        className="w-full h-[48px] rounded-xl text-white px-4 bg-transparent border border-[#2b2b2b]"
-                                        value={repeatNewPassword}
-                                        onChange={(e) => setRepeatNewPassword(e.target.value)}
-                                    />
-                                    <button type="button" onClick={() => setShowRepeatNewPassword(!showRepeatNewPassword)} className="absolute right-4 top-[38px] text-white">
-                                        {showRepeatNewPassword ? <EyeOff size={20} /> : <Eye size={20} />}
-                                    </button>
-                                    {passwordErrors.repeatPassword && (
-                                        <span className="text-red-500 text-sm">{passwordErrors.repeatPassword}</span>
-                                    )}
-                                </div>
-
-                                <button
-                                    type="submit"
-                                    className="w-full h-[48px] mt-3 flex justify-center items-center rounded-xl bg-[#F94B00] text-white transition hover:bg-[#C73C00] hover:cursor-pointer disabled:bg-[#464646] disabled:text-[#A7A7A7] disabled:opacity-100 disabled:cursor-not-allowed"
-                                    disabled={disabledPassowrdChange}  >
-                                    {passwordLoading ? <Spinner /> : t("auth.change_password")}
-                                </button>
-
-                            </form>
-                        </div>
-                    </div>
-                )}
+                    )}
+                </ProtectedRoute>
 
                 <Footer />
             </div>

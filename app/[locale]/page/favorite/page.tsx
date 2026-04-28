@@ -189,26 +189,6 @@ export default function Favorite() {
                         ))}
                     </div>
 
-
-                    <div className="flex gap-8 border-[#2b2b2b] overflow-x-auto no-scrollbar">
-
-                        <div onClick={() => setSelectedCategoryId(0)} className="cursor-pointer py-2 flex flex-col items-center flex-shrink-0"     >
-                            <img src={categoryImages[0]} alt="all" className="w-8 h-8 mb-1" />
-                            <h2 className={`text-sm mt-[10px] whitespace-nowrap ${selectedCategoryId === 0 ? "text-[#F94B00] font-bold" : "text-white"}`}>
-                                {t("components.all")}
-                            </h2>
-                        </div>
-
-                        {categories?.map((item) => (
-                            <div key={item.id} onClick={() => setSelectedCategoryId(item.id)} className="cursor-pointer py-2 flex flex-col items-center flex-shrink-0"  >
-                                <img src={categoryImages[item.id]} alt={item.name} className="w-8 h-8 mb-1" />
-                                <h2 className={`text-sm mt-[10px] whitespace-nowrap ${selectedCategoryId === item.id ? "text-[#F94B00] font-bold" : "text-white"}`}>
-                                    {item.name}
-                                </h2>
-                            </div>
-                        ))}
-                    </div>
-
                     <div className="flex flex-col md:flex-row md:justify-between gap-3">
                         <div className="flex flex-wrap md:flex-nowrap gap-3 w-full md:w-auto justify-center md:justify-start">
                             <div className="flex flex-col gap-1 flex-1 md:flex-none">
@@ -241,12 +221,11 @@ export default function Favorite() {
 
                                 <div className="flex flex-col gap-1">
                                     <span className="text-[12px] text-[#a7a7a7]">{t("components.status")}</span>
-                                    <div className="flex gap-3 mt-[12px]">
+                                    <div className="flex h-[42px] items-center gap-1 mt-[12px] bg-[#0f0f0f] border border-[#2b2b2b] rounded-2xl p-1">
                                         {statusOptions.map(({ value, label }) => (
-                                            <label key={value} className={`flex items-center gap-[10px] h-[42px] px-4 rounded-xl border cursor-pointer transition-all select-none ${openStatus === value ? "border-[#F94B00] bg-[#1a0d00]" : "border-[#2b2b2b] bg-[#0f0f0f]"}`}>
-                                                <input type="radio" name="openStatus" value={value} checked={openStatus === value} onChange={() => setOpenStatus(value as any)} className="appearance-none w-[20px] h-[20px] rounded-full border-2 border-[#555] checked:border-[#F94B00] relative cursor-pointer flex-shrink-0 after:content-[''] after:absolute after:w-[10px] after:h-[10px] after:rounded-full after:bg-[#F94B00] after:top-1/2 after:left-1/2 after:-translate-x-1/2 after:-translate-y-1/2 after:opacity-0 checked:after:opacity-100" />
-                                                <span className={`text-[14px] whitespace-nowrap ${openStatus === value ? "text-white font-bold" : "text-[#a7a7a7]"}`}>{label}</span>
-                                            </label>
+                                            <button key={value} onClick={() => setOpenStatus(value as any)} className={`h-[42px] px-5 rounded-xl text-[14px] whitespace-nowrap transition-all select-none cursor-pointer ${openStatus === value ? "bg-[#1a0d00] border border-[#F94B00] text-white font-bold" : "text-[#a7a7a7] border border-transparent"}`} >
+                                                {label}
+                                            </button>
                                         ))}
                                     </div>
                                 </div>

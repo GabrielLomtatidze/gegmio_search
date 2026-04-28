@@ -209,12 +209,11 @@ export default function Main() {
 
                 <div className="flex flex-col gap-1">
                   <span className="text-[12px] text-[#a7a7a7]">{t("components.status")}</span>
-                  <div className="flex gap-3 mt-[12px]">
+                  <div className="h-[42px] flex items-center gap-1 mt-[12px] bg-[#0f0f0f] border border-[#2b2b2b] rounded-2xl p-1">
                     {statusOptions.map(({ value, label }) => (
-                      <label key={value} className={`flex items-center gap-[10px] h-[42px] px-4 rounded-xl border cursor-pointer transition-all select-none ${openStatus === value ? "border-[#F94B00] bg-[#1a0d00]" : "border-[#2b2b2b] bg-[#0f0f0f]"}`}>
-                        <input type="radio" name="openStatus" value={value} checked={openStatus === value} onChange={() => setOpenStatus(value as any)} className="appearance-none w-[20px] h-[20px] rounded-full border-2 border-[#555] checked:border-[#F94B00] relative cursor-pointer flex-shrink-0 after:content-[''] after:absolute after:w-[10px] after:h-[10px] after:rounded-full after:bg-[#F94B00] after:top-1/2 after:left-1/2 after:-translate-x-1/2 after:-translate-y-1/2 after:opacity-0 checked:after:opacity-100" />
-                        <span className={`text-[14px] whitespace-nowrap ${openStatus === value ? "text-white font-bold" : "text-[#a7a7a7]"}`}>{label}</span>
-                      </label>
+                      <button key={value} onClick={() => setOpenStatus(value as any)} className={`h-[42px] px-5 rounded-xl text-[14px] whitespace-nowrap transition-all select-none cursor-pointer ${openStatus === value ? "bg-[#1a0d00] border border-[#F94B00] text-white font-bold" : "text-[#a7a7a7] border border-transparent"}`} >
+                        {label}
+                      </button>
                     ))}
                   </div>
                 </div>

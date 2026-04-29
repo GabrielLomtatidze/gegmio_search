@@ -47,6 +47,17 @@ export default function Main() {
     9: "/images/business_category/health.svg",
   };
 
+
+  const categoritys = [
+    { id: 0, name: "ყველა" },
+    { id: 1, name: "ქართული სამზარეულო" },
+    { id: 2, name: "იტალიური" },
+    { id: 3, name: "სუში & იაპონური" },
+    { id: 4, name: "სწრაფი კვება" },
+    { id: 5, name: "კვება" },
+  ]
+
+
   const getIsOpenValue = () => {
     if (openStatus === "open") return true;
     if (openStatus === "closed") return false;
@@ -152,6 +163,7 @@ export default function Main() {
   ]);
 
 
+  const showData = selectedCategoryId !== 0;
 
   return (
     <>
@@ -176,6 +188,16 @@ export default function Main() {
               </div>
             ))}
           </div>
+
+          {/* {showData && (
+            <div className="flex items-center gap-2 mt-[5px] overflow-x-auto no-scrollbar">
+              {categoritys.map((item) => (
+                <button key={item.id} onClick={() => setSelectedCategoryId(item.id)} className={`h-[34px] px-4 rounded-2xl text-[13px] whitespace-nowrap transition-all select-none cursor-pointer flex-shrink-0 rounded-[10px] ${selectedCategoryId === item.id ? "border border-[#F94B00] text-white bg-[#0f0f0f]" : "border border-[#2b2b2b] text-[#a7a7a7] bg-[#0f0f0f]"}`} >
+                  {item.name}
+                </button>
+              ))}
+            </div>
+          )} */}
 
           <div className="flex flex-col md:flex-row md:justify-between gap-3">
             <div className="flex flex-wrap md:flex-nowrap gap-3 w-full md:w-auto justify-center md:justify-start">

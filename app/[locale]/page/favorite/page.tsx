@@ -14,6 +14,7 @@ import { useBusinessCategoriesStore } from "@/zustand/APIs/public/businessCateco
 import { useLocationStore } from "@/zustand/User/locationStore";
 import Filter from "@/components/filter";
 import ProtectedRoute from "../../ProtectedRoute";
+import { useSubCategoryStore } from "@/zustand/APIs/public/Usesubcategorystore";
 
 export default function Favorite() {
 
@@ -24,12 +25,15 @@ export default function Favorite() {
     const { categories, fetchCategories } = useBusinessCategoriesStore();
 
     const { latitude, longitude, locationEnabled, getLocation } = useLocationStore();
+    const { subCategories, fetchSubCategories, clearSubCategories } = useSubCategoryStore();
+
 
     const [favorites, setFavorites] = useState<any[]>([]);
     const [search, setSearch] = useState<string>("");
     const [loading, setLoading] = useState<boolean>(false);
     const [selectedRegionId, setSelectedRegionId] = useState<number>(0);
     const [selectedCategoryId, setSelectedCategoryId] = useState<number>(0);
+    const [selectedSubCategoryId, setSelectedSubCategoryId] = useState<number | null>(null);
     const statusOptions = [
         { value: "all", label: t("components.all") },
         { value: "open", label: t("components.profile_open_now") },
@@ -38,14 +42,6 @@ export default function Favorite() {
     const [openStatus, setOpenStatus] = useState<"all" | "open" | "closed">("all");
     const [openFilter, setOpenFilter] = useState<boolean>(false);
 
-    const categoritys = [
-        { id: 0, name: "ყველა" },
-        { id: 1, name: "ქართული სამზარეულო" },
-        { id: 2, name: "იტალიური" },
-        { id: 3, name: "სუში & იაპონური" },
-        { id: 4, name: "სწრაფი კვება" },
-        { id: 5, name: "კვება" },
-    ]
 
 
     const categoryImages: Record<number, string> = {
@@ -164,6 +160,16 @@ export default function Favorite() {
 
     const countedBusinesses = favorites.length;
 
+    useEffect(() => {
+        if (selectedCategoryId !== 0) {
+            fetchSubCategories(selectedCategoryId);
+            setSelectedSubCategoryId(null);
+        } else {
+            clearSubCategories();
+            setSelectedSubCategoryId(null);
+        }
+    }, [selectedCategoryId]);
+
     const showData = selectedCategoryId !== 0;
 
 
@@ -207,8 +213,8 @@ export default function Favorite() {
 
                         {/* {showData && (
                             <div className="flex items-center gap-2 mt-[5px] overflow-x-auto no-scrollbar">
-                                {categoritys.map((item) => (
-                                    <button key={item.id} onClick={() => setSelectedCategoryId(item.id)} className={`h-[34px] px-4 rounded-2xl text-[13px] whitespace-nowrap transition-all select-none cursor-pointer flex-shrink-0 rounded-[10px] ${selectedCategoryId === item.id ? "border border-[#F94B00] text-white bg-[#0f0f0f]" : "border border-[#2b2b2b] text-[#a7a7a7] bg-[#0f0f0f]"}`} >
+                                {subCategories?.map((item) => (
+                                    <button key={item.id} onClick={() => setSelectedSubCategoryId(prev => prev === item.id ? null : item.id)} className={`h-[34px] px-4 text-[13px] whitespace-nowrap transition-all select-none cursor-pointer flex-shrink-0 rounded-[10px] border ${selectedSubCategoryId === item.id ? "border-[#F94B00] text-white bg-[#0f0f0f]" : "border-[#2b2b2b] text-[#a7a7a7] bg-[#0f0f0f]"}`} >
                                         {item.name}
                                     </button>
                                 ))}

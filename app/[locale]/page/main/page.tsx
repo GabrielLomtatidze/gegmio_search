@@ -11,6 +11,8 @@ import Link from "next/link";
 import Filter from "@/components/filter";
 import { useBusinessCategoriesStore } from "@/zustand/APIs/public/businessCatecoryStore";
 import { useLocationStore } from "@/zustand/User/locationStore";
+import { useSubCategoryStore } from "@/zustand/APIs/public/Usesubcategorystore";
+
 
 export default function Main() {
   const t = useTranslations();
@@ -20,17 +22,21 @@ export default function Main() {
   const { categories, fetchCategories } = useBusinessCategoriesStore();
 
   const { latitude, longitude, locationEnabled, getLocation, setLocationEnabled } = useLocationStore();
+  const { subCategories, fetchSubCategories, clearSubCategories } = useSubCategoryStore();
 
   const [search, setSearch] = useState<string>("");
   const [selectedRegionId, setSelectedRegionId] = useState<number>(0);
   const [selectedCategoryId, setSelectedCategoryId] = useState<number>(0);
+  const [selectedSubCategoryId, setSelectedSubCategoryId] = useState<number | null>(null);
   const [openFilter, setOpenFilter] = useState<boolean>(false);
+  const [openStatus, setOpenStatus] = useState<"all" | "open" | "closed">("all");
+
   const statusOptions = [
     { value: "all", label: t("components.all") },
     { value: "open", label: t("components.profile_open_now") },
     { value: "closed", label: t("components.is_closed") },
   ];
-  const [openStatus, setOpenStatus] = useState<"all" | "open" | "closed">("all");
+
 
   const hasLocation = locationEnabled && latitude !== null && longitude !== null;
 
@@ -46,16 +52,6 @@ export default function Main() {
     8: "/images/business_category/cafe.svg",
     9: "/images/business_category/health.svg",
   };
-
-
-  const categoritys = [
-    { id: 0, name: "ყველა" },
-    { id: 1, name: "ქართული სამზარეულო" },
-    { id: 2, name: "იტალიური" },
-    { id: 3, name: "სუში & იაპონური" },
-    { id: 4, name: "სწრაფი კვება" },
-    { id: 5, name: "კვება" },
-  ]
 
 
   const getIsOpenValue = () => {
@@ -165,6 +161,16 @@ export default function Main() {
 
   const showData = selectedCategoryId !== 0;
 
+  useEffect(() => {
+    if (selectedCategoryId !== 0) {
+      fetchSubCategories(selectedCategoryId);
+      setSelectedSubCategoryId(null);
+    } else {
+      clearSubCategories();
+      setSelectedSubCategoryId(null);
+    }
+  }, [selectedCategoryId]);
+
   return (
     <>
       <div className="w-full flex justify-center mt-5">
@@ -191,8 +197,8 @@ export default function Main() {
 
           {/* {showData && (
             <div className="flex items-center gap-2 mt-[5px] overflow-x-auto no-scrollbar">
-              {categoritys.map((item) => (
-                <button key={item.id} onClick={() => setSelectedCategoryId(item.id)} className={`h-[34px] px-4 rounded-2xl text-[13px] whitespace-nowrap transition-all select-none cursor-pointer flex-shrink-0 rounded-[10px] ${selectedCategoryId === item.id ? "border border-[#F94B00] text-white bg-[#0f0f0f]" : "border border-[#2b2b2b] text-[#a7a7a7] bg-[#0f0f0f]"}`} >
+              {subCategories?.map((item) => (
+                <button key={item.id} onClick={() => setSelectedSubCategoryId(prev => prev === item.id ? null : item.id)} className={`h-[34px] px-4 text-[13px] whitespace-nowrap transition-all select-none cursor-pointer flex-shrink-0 rounded-[10px] border ${selectedSubCategoryId === item.id ? "border-[#F94B00] text-white bg-[#0f0f0f]" : "border-[#2b2b2b] text-[#a7a7a7] bg-[#0f0f0f]"}`} >
                   {item.name}
                 </button>
               ))}

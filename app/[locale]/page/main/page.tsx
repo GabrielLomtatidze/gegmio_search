@@ -243,9 +243,9 @@ export default function Main() {
 
                 <div className="flex flex-col gap-1">
                   <span className="text-[12px] text-[#a7a7a7]">{t("components.status")}</span>
-                  <div className="h-[42px] flex items-center gap-1 mt-[12px] bg-[#0f0f0f] border border-[#2b2b2b] rounded-2xl p-1">
+                  <div className="h-[42px] flex items-center gap-1 mt-[12px] bg-[#0f0f0f] border border-[#2b2b2b] rounded-[12px] p-1">
                     {statusOptions.map(({ value, label }) => (
-                      <button key={value} onClick={() => setOpenStatus(value as any)} className={`h-[42px] px-5 rounded-xl text-[14px] whitespace-nowrap transition-all select-none cursor-pointer ${openStatus === value ? "bg-[#1a0d00] border border-[#F94B00] text-white font-bold" : "text-[#a7a7a7] border border-transparent"}`} >
+                      <button key={value} onClick={() => setOpenStatus(value as any)} className={`h-[34px] px-5 rounded-[10px] text-[14px] whitespace-nowrap transition-all select-none cursor-pointer ${openStatus === value ? "bg-[#1a0d00] border border-[#F94B00] text-white font-bold" : "text-[#a7a7a7] border border-transparent"}`} >
                         {label}
                       </button>
                     ))}

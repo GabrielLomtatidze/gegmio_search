@@ -298,7 +298,7 @@ export default function Main() {
                   title={item.name}
                   image={item.file?.url || "/images/start.svg"}
                   address={item.addressName}
-                  businessCategory={item.businessCategory.name}
+                  businessCategory={item.businessCategory?.name}
                   distance={item.distnace?.toFixed(2)}
                 />
               </Link>

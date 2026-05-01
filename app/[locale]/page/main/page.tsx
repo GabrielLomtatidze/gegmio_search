@@ -113,7 +113,7 @@ export default function Main() {
 
   useEffect(() => {
     if (selectedCategoryId !== 0) {
-      // fetchSubCategories(selectedCategoryId);
+      fetchSubCategories(selectedCategoryId);
       setSelectedSubCategoryId(null);
     } else {
       clearSubCategories();

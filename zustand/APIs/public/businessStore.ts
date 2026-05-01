@@ -36,6 +36,7 @@ type BusinessResponse = {
 interface FetchBusinessParams {
     regionId?: number;
     districtIds?: number[];
+    subCategoryIds?: number[];
     searchKey?: string;
     latitude?: number;
     longitude?: number;
@@ -77,11 +78,12 @@ export const useBusinessStore = create<BusinessStore>((set) => ({
     fetchBusiness: async ({
         regionId,
         districtIds = [],
+        subCategoryIds = [],
         latitude,
         longitude,
         searchKey,
         businessCategoryId,
-        isOpen
+        isOpen,
     }) => {
         set({ loading: true });
 
@@ -93,6 +95,7 @@ export const useBusinessStore = create<BusinessStore>((set) => ({
                 Latitude: latitude,
                 Longtitude: longitude,
                 DistrictIds: districtIds.length ? districtIds : undefined,
+                SubCategoryIds: subCategoryIds.length ? subCategoryIds : undefined,
                 LocalTime: getLocalDateTimeWithOffset(),
                 BusinessCategoryId: businessCategoryId && businessCategoryId !== 0 ? businessCategoryId : undefined,
                 IsOpen: isOpen,

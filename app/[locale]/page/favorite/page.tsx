@@ -15,6 +15,7 @@ import { useLocationStore } from "@/zustand/User/locationStore";
 import Filter from "@/components/filter";
 import ProtectedRoute from "../../ProtectedRoute";
 import { useSubCategoryStore } from "@/zustand/APIs/public/Usesubcategorystore";
+import qs from "qs";
 
 export default function Favorite() {
 
@@ -114,6 +115,10 @@ export default function Favorite() {
             params.IsOpen = isOpen;
         }
 
+        if (selectedSubCategoryId !== null && selectedSubCategoryId !== undefined) {
+            params.SubCategoryIds = [selectedSubCategoryId];
+        }
+
         params.LocalTime = getLocalDateTimeWithOffset();
 
         return params;
@@ -134,6 +139,8 @@ export default function Favorite() {
                             Authorization: `Bearer ${accessToken}`,
                         },
                         params: buildParams(),
+                        paramsSerializer: (params) =>
+                            qs.stringify(params, { arrayFormat: "repeat" }),
                     }
                 );
 
@@ -148,6 +155,7 @@ export default function Favorite() {
         search,
         selectedRegionId,
         selectedCategoryId,
+        selectedSubCategoryId,
         latitude,
         longitude,
         openStatus
@@ -211,15 +219,19 @@ export default function Favorite() {
                             ))}
                         </div>
 
-                        {/* {showData && (
+                        {showData && (
                             <div className="flex items-center gap-2 mt-[5px] overflow-x-auto no-scrollbar">
+                                <button onClick={() => setSelectedSubCategoryId(null)} className={`h-[34px] px-4 text-[13px] whitespace-nowrap transition-all select-none cursor-pointer flex-shrink-0 rounded-[10px] border ${selectedSubCategoryId === null ? "border-[#F94B00] text-white bg-[#0f0f0f]" : "border-[#2b2b2b] text-[#a7a7a7] bg-[#0f0f0f]"}`} >
+                                    {t("components.all")}
+                                </button>
+
                                 {subCategories?.map((item) => (
                                     <button key={item.id} onClick={() => setSelectedSubCategoryId(prev => prev === item.id ? null : item.id)} className={`h-[34px] px-4 text-[13px] whitespace-nowrap transition-all select-none cursor-pointer flex-shrink-0 rounded-[10px] border ${selectedSubCategoryId === item.id ? "border-[#F94B00] text-white bg-[#0f0f0f]" : "border-[#2b2b2b] text-[#a7a7a7] bg-[#0f0f0f]"}`} >
                                         {item.name}
                                     </button>
                                 ))}
                             </div>
-                        )} */}
+                        )}
 
                         <div className="flex flex-col md:flex-row md:justify-between gap-3">
                             <div className="flex flex-wrap md:flex-nowrap gap-3 w-full md:w-auto justify-center md:justify-start">

@@ -1,37 +1,38 @@
 import { create } from "zustand";
 import axios from "axios";
 
+export type SubCategory = {
+    id: number;
+    name: string;
+};
 
-interface SubCategoryState {
-    subCategories: any[] | null;
-    loadingSubCategories: boolean;
+interface SubCategoryStore {
+    subCategories: SubCategory[];
+    loading: boolean;
     fetchSubCategories: (businessCategoryId: number) => Promise<void>;
     clearSubCategories: () => void;
 }
 
 const apiUrl = process.env.NEXT_PUBLIC_API_URL;
 
-export const useSubCategoryStore = create<SubCategoryState>((set) => ({
-    subCategories: null,
-    loadingSubCategories: false,
+export const useSubCategoryStore = create<SubCategoryStore>((set) => ({
+    subCategories: [],
+    loading: false,
 
-    fetchSubCategories: async (businessCategoryId: number) => {
-        set({ loadingSubCategories: true });
+    fetchSubCategories: async (businessCategoryId) => {
+        set({ loading: true });
         try {
-            const accessToken = localStorage.getItem("accessToken");
-            const response = await axios.get(`${apiUrl}/api/v1/public/sub-categories/${businessCategoryId}`, {
-                ...(accessToken && {
-                    headers: {
-                        Authorization: `Bearer ${accessToken}`,
-                    },
-                }),
-            });
-            set({ subCategories: response.data, loadingSubCategories: false });
-        } catch (error) {
-            console.error("error fetching sub-categories: ", error);
-            set({ loadingSubCategories: false });
+            const response = await axios.get<SubCategory[]>(
+                `${apiUrl}/api/v1/public/sub-categories/${businessCategoryId}`,
+                {
+                    headers: { "Accept-Language": "ka-GE" },
+                }
+            );
+            set({ subCategories: response.data, loading: false });
+        } catch {
+            set({ loading: false });
         }
     },
 
-    clearSubCategories: () => set({ subCategories: null }),
+    clearSubCategories: () => set({ subCategories: [] }),
 }));

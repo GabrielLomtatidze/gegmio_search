@@ -4,7 +4,7 @@ import Footer from "../../components/footer";
 import Main from "./page/main/page";
 
 
-// fixob42208@ryzid.com
+// sakopac294@inreur.com
 
 export default function Home() {
 

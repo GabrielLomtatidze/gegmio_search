@@ -4,7 +4,7 @@ import "./globals.css";
 import { NextIntlClientProvider } from "next-intl";
 import { GoogleAnalytics } from "@next/third-parties/google";
 
-// fikipo1000@agoalz.com
+// sakopac294@inreur.com
 
 export const metadata: Metadata = {
   title: {

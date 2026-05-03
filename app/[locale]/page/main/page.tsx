@@ -43,15 +43,14 @@ export default function Main() {
 
   const categoryImages: Record<number, string> = {
     0: "/images/business_category/home.svg",
-    1: "/images/business_category/restaurant.svg",
-    2: "/images/business_category/salon.svg",
-    3: "/images/business_category/medic.svg",
+    1: "/images/business_category/restaurant_icon.svg",
+    2: "/images/business_category/cafe_icon.svg",
+    3: "/images/business_category/bar_pub_icon.svg",
     4: "/images/business_category/cut.svg",
-    5: "/images/business_category/team.svg",
-    6: "/images/business_category/wash.svg",
-    7: "/images/business_category/engine.svg",
-    8: "/images/business_category/cafe.svg",
-    9: "/images/business_category/health.svg",
+    5: "/images/business_category/salon.svg",
+    6: "/images/business_category/spa_massage.svg",
+    7: "/images/business_category/aesthetic_center.svg",
+    8: "/images/business_category/stomatology.svg",
   };
 
 
@@ -187,7 +186,7 @@ export default function Main() {
               </h2>
             </div>
 
-            {categories?.map((item) => (
+            {categories?.filter(item => item.id !== 9).map((item) => (
               <div key={item.id} onClick={() => setSelectedCategoryId(item.id)} className="cursor-pointer py-2 flex flex-col items-center flex-shrink-0"  >
                 <img src={categoryImages[item.id]} alt={item.name} className="w-8 h-8 mb-1" />
                 <h2 className={`text-sm mt-[10px] whitespace-nowrap ${selectedCategoryId === item.id ? "text-[#F94B00] font-bold" : "text-white"}`}>

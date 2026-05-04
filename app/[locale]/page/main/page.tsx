@@ -177,18 +177,20 @@ export default function Main() {
       <div className="w-full flex justify-center mt-5">
         <div className="w-full max-w-7xl px-4 md:px-[100px] flex flex-col gap-5">
 
-          <div className="flex gap-8 border-[#2b2b2b] overflow-x-auto no-scrollbar">
+          <div className="flex gap-6 border-[#2b2b2b] h-[88px] overflow-x-auto no-scrollbar">
 
-            <div onClick={() => setSelectedCategoryId(0)} className="cursor-pointer py-2 flex flex-col items-center flex-shrink-0"     >
-              <img src={categoryImages[0]} alt="all" className="w-8 h-8 mb-1" />
-              <h2 className={`text-sm mt-[10px] whitespace-nowrap ${selectedCategoryId === 0 ? "text-[#F94B00] font-bold" : "text-white"}`}>
-                {t("components.all")}
-              </h2>
+            <div onClick={() => setSelectedCategoryId(0)} className="cursor-pointer flex flex-col flex-shrink-0 w-[70px] h-[70px]"     >
+              <div className="w-[45px] flex flex-col items-center">
+                <img src={categoryImages[0]} alt="all" className="w-8 h-8" />
+                <h2 className={`text-sm mt-[10px] whitespace-nowrap ${selectedCategoryId === 0 ? "text-[#F94B00] font-bold" : "text-white"}`}>
+                  {t("components.all")}
+                </h2>
+              </div>
             </div>
 
             {categories?.filter(item => item.id !== 9).map((item) => (
-              <div key={item.id} onClick={() => setSelectedCategoryId(item.id)} className="cursor-pointer py-2 flex flex-col items-center flex-shrink-0"  >
-                <img src={categoryImages[item.id]} alt={item.name} className="w-8 h-8 mb-1" />
+              <div key={item.id} onClick={() => setSelectedCategoryId(item.id)} className="cursor-pointer flex flex-col items-center flex-shrink-0 w-[115px] h-[70px]"  >
+                <img src={categoryImages[item.id]} alt={item.name} className="w-8 h-8" />
                 <h2 className={`text-sm mt-[10px] whitespace-nowrap ${selectedCategoryId === item.id ? "text-[#F94B00] font-bold" : "text-white"}`}>
                   {item.name.split(" ").map((word, index) =>
                     word === "&" ? null : (<span key={index} className="flex flex-col items-center">

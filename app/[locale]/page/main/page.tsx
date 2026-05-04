@@ -203,7 +203,7 @@ export default function Main() {
           </div>
 
           {showData && (
-            <div className="flex items-center gap-2 mt-[5px] overflow-x-auto no-scrollbar">
+            <div className="flex items-center gap-2  overflow-x-auto no-scrollbar">
               <button onClick={() => setSelectedSubCategoryId(null)} className={`h-[34px] px-4 text-[13px] whitespace-nowrap transition-all select-none cursor-pointer flex-shrink-0 rounded-[10px] border ${selectedSubCategoryId === null ? "border-[#F94B00] text-white bg-[#0f0f0f]" : "border-[#2b2b2b] text-[#a7a7a7] bg-[#0f0f0f]"}`} >
                 {t("components.all")}
               </button>

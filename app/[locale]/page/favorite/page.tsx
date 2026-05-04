@@ -202,26 +202,33 @@ export default function Favorite() {
                             </span>
                         </h2>
 
-                        <div className="flex gap-8 overflow-x-auto no-scrollbar">
-                            <div onClick={() => setSelectedCategoryId(0)} className="cursor-pointer py-2 flex flex-col items-center flex-shrink-0" >
-                                <img src={categoryImages[0]} alt="all" className="w-8 h-8 mb-1" />
-                                <h2 className={`text-sm mt-[10px] whitespace-nowrap ${selectedCategoryId === 0 ? "text-[#F94B00] font-bold" : "text-white"}`} >
-                                    {t("components.all")}
-                                </h2>
+                        <div className="flex gap-6 border-[#2b2b2b] h-[88px] overflow-x-auto no-scrollbar">
+
+                            <div onClick={() => setSelectedCategoryId(0)} className="cursor-pointer flex flex-col flex-shrink-0 w-[70px] h-[70px]"     >
+                                <div className="w-[45px] flex flex-col items-center">
+                                    <img src={categoryImages[0]} alt="all" className="w-8 h-8" />
+                                    <h2 className={`text-sm mt-[10px] whitespace-nowrap ${selectedCategoryId === 0 ? "text-[#F94B00] font-bold" : "text-white"}`}>
+                                        {t("components.all")}
+                                    </h2>
+                                </div>
                             </div>
 
-                            {categories?.map((item) => (
-                                <div key={item.id} onClick={() => setSelectedCategoryId(item.id)} className="cursor-pointer py-2 flex flex-col items-center flex-shrink-0"    >
-                                    <img src={categoryImages[item.id]} alt={item.name} className="w-8 h-8 mb-1" />
-                                    <h2 className={`text-sm mt-[10px] whitespace-nowrap ${selectedCategoryId === item.id ? "text-[#F94B00] font-bold" : "text-white"}`}  >
-                                        {item.name}
+                            {categories?.filter(item => item.id !== 9).map((item) => (
+                                <div key={item.id} onClick={() => setSelectedCategoryId(item.id)} className="cursor-pointer flex flex-col items-center flex-shrink-0 w-[115px] h-[70px]"  >
+                                    <img src={categoryImages[item.id]} alt={item.name} className="w-8 h-8" />
+                                    <h2 className={`text-sm mt-[10px] whitespace-nowrap ${selectedCategoryId === item.id ? "text-[#F94B00] font-bold" : "text-white"}`}>
+                                        {item.name.split(" ").map((word, index) =>
+                                            word === "&" ? null : (<span key={index} className="flex flex-col items-center">
+                                                {word}
+                                            </span>
+                                            ))}
                                     </h2>
                                 </div>
                             ))}
                         </div>
 
                         {showData && (
-                            <div className="flex items-center gap-2 mt-[5px] overflow-x-auto no-scrollbar">
+                            <div className="flex items-center gap-2 overflow-x-auto no-scrollbar">
                                 <button onClick={() => setSelectedSubCategoryId(null)} className={`h-[34px] px-4 text-[13px] whitespace-nowrap transition-all select-none cursor-pointer flex-shrink-0 rounded-[10px] border ${selectedSubCategoryId === null ? "border-[#F94B00] text-white bg-[#0f0f0f]" : "border-[#2b2b2b] text-[#a7a7a7] bg-[#0f0f0f]"}`} >
                                     {t("components.all")}
                                 </button>
@@ -233,7 +240,6 @@ export default function Favorite() {
                                 ))}
                             </div>
                         )}
-
                         <div className="flex flex-col md:flex-row md:justify-between gap-3">
                             <div className="flex flex-wrap md:flex-nowrap gap-3 w-full md:w-auto justify-center md:justify-start">
                                 <div className="flex flex-col gap-1 flex-1 md:flex-none">

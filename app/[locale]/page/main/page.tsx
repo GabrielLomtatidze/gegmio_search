@@ -190,7 +190,11 @@ export default function Main() {
               <div key={item.id} onClick={() => setSelectedCategoryId(item.id)} className="cursor-pointer py-2 flex flex-col items-center flex-shrink-0"  >
                 <img src={categoryImages[item.id]} alt={item.name} className="w-8 h-8 mb-1" />
                 <h2 className={`text-sm mt-[10px] whitespace-nowrap ${selectedCategoryId === item.id ? "text-[#F94B00] font-bold" : "text-white"}`}>
-                  {item.name}
+                  {item.name.split(" ").map((word, index) =>
+                    word === "&" ? null : (<span key={index} className="flex flex-col items-center">
+                      {word}
+                    </span>
+                  ))}
                 </h2>
               </div>
             ))}

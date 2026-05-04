@@ -59,9 +59,9 @@ export default function PartnerForm({ onSuccess, onError, onClose }: { onSuccess
             newErrors.name = "Business name is required";
         }
 
-        if (selectedCategoryId === 0) {
-            newErrors.category = "Please select a category";
-        }
+        // if (selectedCategoryId === 0) {
+        //     newErrors.category = "Please select a category";
+        // }
 
         if (!email.trim()) {
             newErrors.email = "Email is required";
@@ -85,7 +85,7 @@ export default function PartnerForm({ onSuccess, onError, onClose }: { onSuccess
         try {
             await axios.post(`${apiUrl}/api/v1/businessapplication`, {
                 businessName: businesssName,
-                businessCategory: selectedCategory?.name || "",
+                businessCategory: selectedCategory?.name || "რესტორანი",
                 ownerFullName: fullName,
                 ownerEmail: email,
                 ownerPhone: num,
@@ -108,7 +108,7 @@ export default function PartnerForm({ onSuccess, onError, onClose }: { onSuccess
     return (
         <div className=" relative w-[376px] flex flex-col justify-center border border-[#2b2b2b] rounded-xl bg-[#0F0F0F] pt-[44px] p-[24px]" onClick={(e) => e.stopPropagation()} >
 
-            <FaTimes size={20} color="white" className="absolute top-[24px] right-[24px] cursor-pointer" onClick={onClose}/>
+            <FaTimes size={20} color="white" className="absolute top-[24px] right-[24px] cursor-pointer" onClick={onClose} />
 
             <div className="w-full flex justify-center">
                 <h1 className="text-[18px] text-bold text-white">
@@ -146,7 +146,7 @@ export default function PartnerForm({ onSuccess, onError, onClose }: { onSuccess
                     {errors.name && (<span className="text-red-500 text-sm">{errors.name}</span>)}
                 </div>
 
-                <div>
+                {/* <div>
                     <label className="text-sm text-white mb-1 block">
                         {t("components.business_category")}
                     </label>
@@ -172,7 +172,7 @@ export default function PartnerForm({ onSuccess, onError, onClose }: { onSuccess
                             {errors.category}
                         </span>
                     )}
-                </div>
+                </div> */}
 
                 <div>
                     <label className="text-sm text-white mb-1 block">
